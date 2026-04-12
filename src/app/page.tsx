@@ -1,65 +1,177 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useRouter } from 'next/navigation';
+import { usePersona } from '@/contexts/PersonaContext';
+import { motion } from 'framer-motion';
+import { PersonaId } from '@/types';
+import { Compass, ArrowRight, Users, Building2, BookOpen, BarChart3 } from 'lucide-react';
+import Image from 'next/image';
+
+const personaDetails: Record<PersonaId, { gradient: string; photo: string; challenge: string; modules: string }> = {
+  mariana: {
+    gradient: 'from-[#1B5E20] via-[#2E7D32] to-[#4CAF50]',
+    photo: '/personas/mariana.png',
+    challenge: 'Quer crescer para Gerente de Agência. Busca clareza sobre o que desenvolver e oportunidades práticas de liderança.',
+    modules: 'Início · GPS de Carreira · Perfil · Expectativas · PDI · Theo',
+  },
+  roberto: {
+    gradient: 'from-[#0D47A1] via-[#1565C0] to-[#42A5F5]',
+    photo: '/personas/roberto.png',
+    challenge: 'Lidera 12 pessoas e perdeu um GN para o Itaú. Precisa de ferramentas para desenvolver e reter talentos.',
+    modules: 'Minha Equipe · 1:1s · Avaliação · Sucessão · Theo',
+  },
+  carla: {
+    gradient: 'from-[#4A148C] via-[#6A1B9A] to-[#AB47BC]',
+    photo: '/personas/carla.png',
+    challenge: 'Gerencia 400 pessoas com Excel e e-mail. Precisa de dados integrados e conexão com resultados do negócio.',
+    modules: 'Dashboard P&C · Conexão Negócio · Comitê de Carreira · Analytics',
+  },
+  marcos: {
+    gradient: 'from-[#BF360C] via-[#D84315] to-[#FF7043]',
+    photo: '/personas/marcos.png',
+    challenge: 'Quer respostas em 30 segundos. Precisa saber se tem pipeline para 3 novas agências.',
+    modules: 'Dashboard Executivo · 4 KPIs · Cenários',
+  },
+  lucas: {
+    gradient: 'from-[#006064] via-[#00838F] to-[#26C6DA]',
+    photo: '/personas/lucas.png',
+    challenge: 'Novo no Sicredi, vindo de banco. Precisa entender cooperativismo e descobrir seus caminhos de desenvolvimento.',
+    modules: 'Onboarding · GPS de Carreira · Desenvolvimento · Theo',
+  },
+  daniela: {
+    gradient: 'from-[#37474F] via-[#546E7A] to-[#90A4AE]',
+    photo: '/personas/daniela.png',
+    challenge: 'Define políticas para 50 mil pessoas. Precisa equilibrar padronização sistêmica com autonomia cooperativa.',
+    modules: 'Governança · Parametrização · Maturidade · Analytics Sistêmico',
+  },
+};
+
+export default function HomePage() {
+  const router = useRouter();
+  const { setPersona, personas } = usePersona();
+
+  const handleSelectPersona = (id: PersonaId) => {
+    setPersona(id);
+    router.push('/meu-gps');
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen flex flex-col bg-[#FAFAF9]">
+      {/* Hero */}
+      <header className="gradient-hero text-white relative overflow-hidden" style={{ minHeight: '260px' }}>
+        {/* Grid overlay */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="white" strokeWidth="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        {/* Radial glows */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, rgba(94,167,53,0.5) 0%, transparent 70%)' }} />
+        <div className="absolute -bottom-20 left-1/4 w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)' }} />
+        
+        <div className="max-w-6xl mx-auto relative z-10 px-6 py-16 md:py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <Compass className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">GPS de Carreira</h1>
+                <p className="text-green-200/80 text-sm font-semibold mt-0.5">Sicredi · Plataforma de Gestão de Carreira</p>
+              </div>
+            </div>
+            <p className="text-base md:text-lg text-white/70 max-w-2xl leading-relaxed font-medium">
+              Navegue sua jornada profissional com protagonismo, dados e o apoio do seu Parceiro de Jornada.
+              Explore possibilidades — sem promessas, com autonomia.
+            </p>
+          </motion.div>
         </div>
+      </header>
+
+      {/* Persona Selector */}
+      <main className="flex-1 max-w-6xl mx-auto px-6 py-10 w-full">
+        <motion.p
+          className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          Selecione uma persona para começar
+        </motion.p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {personas.map((persona, i) => {
+            const details = personaDetails[persona.id];
+            return (
+              <motion.button
+                key={persona.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * i, duration: 0.5 }}
+                onClick={() => handleSelectPersona(persona.id)}
+                className="card card-interactive text-left p-0 overflow-hidden group"
+              >
+                {/* Photo + Gradient Header */}
+                <div className={`bg-gradient-to-r ${details.gradient} relative overflow-hidden`} style={{ height: '160px' }}>
+                  {/* Photo */}
+                  <div className="absolute right-0 bottom-0 w-[55%] h-full">
+                    <Image
+                      src={details.photo}
+                      alt={persona.name}
+                      fill
+                      className="object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        maskImage: 'linear-gradient(to right, transparent 0%, black 40%), linear-gradient(to bottom, transparent 0%, black 25%)',
+                        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 40%), linear-gradient(to bottom, transparent 0%, black 25%)',
+                        maskComposite: 'intersect',
+                        WebkitMaskComposite: 'destination-in',
+                      }}
+                    />
+                  </div>
+                  {/* Text */}
+                  <div className="relative z-10 px-5 py-4 flex flex-col justify-end h-full">
+                    <p className="text-xl font-extrabold text-white drop-shadow-sm">{persona.name}</p>
+                    <p className="text-sm text-white/90 font-medium">{persona.jobTitle}</p>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="px-5 py-4 space-y-3">
+                  <p className="text-xs text-neutral-500">{persona.description}</p>
+                  <p className="text-sm text-neutral-700 leading-relaxed">{details.challenge}</p>
+                  <div className="pt-2 border-t border-neutral-100">
+                    <p className="text-xs text-neutral-400 font-semibold">Módulos</p>
+                    <p className="text-xs text-neutral-600 mt-0.5">{details.modules}</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-verde-digital font-bold text-sm pt-1">
+                    <span>Explorar jornada</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
+
+
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-neutral-200 py-6 px-6 bg-white">
+        <div className="max-w-6xl mx-auto flex items-center justify-between text-xs text-neutral-400">
+          <p>GPS de Carreira · Protótipo MVP · Pulsar Consultoria × Sicredi</p>
+          <p>Dados fictícios para demonstração</p>
+        </div>
+      </footer>
     </div>
   );
 }
