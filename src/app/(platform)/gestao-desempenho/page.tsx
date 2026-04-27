@@ -69,13 +69,19 @@ export default function GestaoDesempenhoPage() {
         </div>
         <div className="card p-4">
           <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">PDIs ativos na equipe</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{team.filter(t => t.aspirations.length > 0).length}/{totalTeam}</p>
-          <p className="text-xs font-semibold mt-1 text-green-600">{Math.round((team.filter(t => t.aspirations.length > 0).length / totalTeam) * 100)}% de adesão</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">
+            {team.filter(t => t.developmentPlanIds && t.developmentPlanIds.length > 0).length}/{totalTeam}
+          </p>
+          <p className="text-xs font-semibold mt-1 text-green-600">
+            {Math.round((team.filter(t => t.developmentPlanIds && t.developmentPlanIds.length > 0).length / totalTeam) * 100)}% com plano formal
+          </p>
         </div>
         <div className="card p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Aspirações declaradas</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{team.filter(t => t.aspirations.length > 0).length}/{totalTeam}</p>
-          <p className="text-xs font-semibold mt-1 text-gray-500">Compartilhadas com líder</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Aspirações compartilhadas</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">
+            {team.filter(t => t.aspirations.length > 0 && t.aspirations[0].sharedWithLeader).length}/{totalTeam}
+          </p>
+          <p className="text-xs font-semibold mt-1 text-gray-500">com você</p>
         </div>
         <div className="card p-4">
           <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Risco de turnover</p>
