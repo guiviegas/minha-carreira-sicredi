@@ -72,13 +72,13 @@ export default function AvaliacaoPage() {
 
       {/* Conceito Final */}
       <motion.div variants={item} className="card p-6">
-        <div className="flex items-center gap-6">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center" style={{ backgroundColor: conceitoConfig.bgCor }}>
-            <span className="text-xl font-extrabold" style={{ color: conceitoConfig.cor }}>{conceitoConfig.hashtag}</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-lg font-bold text-gray-900">Conceito Final do Ciclo</p>
-            <p className="text-sm text-gray-500 mt-0.5">{conceitoConfig.desc}</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Conceito Final do Ciclo</p>
+            <span className="inline-block text-lg font-extrabold px-4 py-2 rounded-xl" style={{ backgroundColor: conceitoConfig.bgCor, color: conceitoConfig.cor }}>
+              {conceitoConfig.hashtag}
+            </span>
+            <p className="text-sm text-gray-500 mt-3">{conceitoConfig.desc}</p>
             <div className="flex gap-3 mt-3 text-xs text-gray-400">
               <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Atualizado: Abr 2026</span>
               <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" /> {feedbacks.length} feedbacks recebidos</span>

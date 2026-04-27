@@ -171,24 +171,6 @@ export default function MeuCargoPage() {
         <p className="text-sm text-gray-600 leading-relaxed">{role.dayInLife}</p>
       </motion.div>
 
-      {/* Tempo e contexto do cargo */}
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card p-5 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Tempo médio no cargo</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">2,4 anos</p>
-          <p className="text-xs text-gray-500 mt-1">Média do sistema</p>
-        </div>
-        <div className="card p-5 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Seu tempo no cargo</p>
-          <p className="text-2xl font-bold text-verde-digital mt-1">{employee.tenure > 0 ? `${employee.tenure} anos` : `${employee.tenureMonths || 0} meses`}</p>
-          <p className="text-xs text-gray-500 mt-1">Desde seu ingresso</p>
-        </div>
-        <div className="card p-5 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Nível / Grade</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{role.level}</p>
-          <p className="text-xs text-gray-500 mt-1">de 3 faixas salariais</p>
-        </div>
-      </motion.div>
 
       {/* Skills Requirements Chart */}
       <motion.div variants={item} className="card p-5">

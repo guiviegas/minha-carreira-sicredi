@@ -245,19 +245,6 @@ export default function PdiPage() {
             )}
           </motion.div>
 
-          {/* Quick Stats */}
-          <motion.div variants={item} className="card p-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="text-center">
-                <p className="text-lg font-extrabold text-verde-digital metric-value">{activeActions.length}</p>
-                <p className="text-[10px] text-gray-400">Em andamento</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg font-extrabold text-green-500 metric-value">{completedActions.length}</p>
-                <p className="text-[10px] text-gray-400">Concluídos</p>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
     </motion.div>
