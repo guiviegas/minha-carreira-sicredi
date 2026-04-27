@@ -63,6 +63,22 @@ export const employees: Employee[] = [
       },
     ],
     developmentPlanIds: ['dp-001'],
+    currentSalary: 5800,
+    currentZone: 3,
+    monthsInGrade: 18,
+    monthsInZone: 12,
+    lastCareerConversation: {
+      date: '2026-03-15',
+      topic: 'Aspiração GA + plano de exposição a liderança',
+      outcome: 'Acordado: job shadow com GA em maio, mentoria com Paulo.',
+    },
+    proactiveAlerts: [
+      {
+        type: 'merito_elegivel',
+        message: 'Elegível para Mérito (Zona 3 → Zona 4) no próximo ciclo. Performance consistente nos últimos 4 trimestres.',
+        severity: 'info',
+      },
+    ],
   },
 
   // ===== ROBERTO MENDES — Líder =====
@@ -116,6 +132,10 @@ export const employees: Employee[] = [
       },
     ],
     developmentPlanIds: ['dp-002'],
+    currentSalary: 12500,
+    currentZone: 4,
+    monthsInGrade: 60,
+    monthsInZone: 24,
   },
 
   // ===== CARLA SANTOS — P&C =====
@@ -331,12 +351,33 @@ export const employees: Employee[] = [
         { type: 'vacation_pattern', description: 'Pediu folga para "compromisso pessoal" 2x no último mês', severity: 'medium', date: '2026-03-25' },
       ],
       recommendedActions: [
-        'Agendar stay conversation esta semana',
+        'Agendar conversa Papo Reto esta semana',
         'Explorar possibilidade de transição para PJ',
         'Oferecer projeto temporário na área PJ como teste',
       ],
     },
     developmentPlanIds: [],
+    currentSalary: 4900,
+    currentZone: 2,
+    monthsInGrade: 14,
+    monthsInZone: 14,
+    lastCareerConversation: {
+      date: '2026-02-10',
+      topic: 'Aspirações futuras e satisfação com cargo atual',
+      outcome: 'Juliana evasiva. Conversa precisa ser retomada com mais profundidade.',
+    },
+    proactiveAlerts: [
+      {
+        type: 'risco_turnover',
+        message: 'Probabilidade de saída de 78% nos próximos 90 dias. Sinais críticos detectados.',
+        severity: 'critical',
+      },
+      {
+        type: 'aspiracao_nao_compartilhada',
+        message: 'Aspiração declarada mas não compartilhada com líder. Vale uma conversa de carreira.',
+        severity: 'warning',
+      },
+    ],
   },
   {
     id: 'emp-102',
@@ -418,6 +459,22 @@ export const employees: Employee[] = [
     performanceRating: 3.8,
     readinessScores: [{ targetRoleId: 'role-gn-pf1', score: 52, lastUpdated: '2026-03-01', components: { skills: 55, experience: 40, performance: 65, development: 48, leadership: 30 } }],
     developmentPlanIds: [],
+    currentSalary: 3100,
+    currentZone: 2,
+    monthsInGrade: 14,
+    monthsInZone: 8,
+    lastCareerConversation: {
+      date: '2026-03-20',
+      topic: 'Plano para virar GN PF I em 12 meses',
+      outcome: 'Inscrito na trilha CPA-10. Job shadow com Pedro confirmado.',
+    },
+    proactiveAlerts: [
+      {
+        type: 'avaliacao_pendente',
+        message: 'Auto-avaliação Q3 ainda não preenchida. Conversa de PDI precisa ser agendada.',
+        severity: 'warning',
+      },
+    ],
   },
   {
     id: 'emp-105',
@@ -471,6 +528,22 @@ export const employees: Employee[] = [
     performanceRating: 3.9,
     readinessScores: [{ targetRoleId: 'role-gn-pf2', score: 65, lastUpdated: '2026-03-15', components: { skills: 68, experience: 62, performance: 72, development: 58, leadership: 40 } }],
     developmentPlanIds: [],
+    currentSalary: 4200,
+    currentZone: 4,
+    monthsInGrade: 36,
+    monthsInZone: 14,
+    lastCareerConversation: {
+      date: '2026-03-25',
+      topic: 'Janela de promoção para GN PF II',
+      outcome: 'Aprovado para promoção no próximo ciclo. Iniciar handover de carteira.',
+    },
+    proactiveAlerts: [
+      {
+        type: 'promocao_elegivel',
+        message: 'Pronto para promoção: GN PF I → GN PF II. Critérios atendidos. Iniciar processo.',
+        severity: 'info',
+      },
+    ],
   },
   {
     id: 'emp-107',
@@ -550,6 +623,22 @@ export const employees: Employee[] = [
     performanceRating: 4.1,
     readinessScores: [],
     developmentPlanIds: [],
+    currentSalary: 4500,
+    currentZone: 3,
+    monthsInGrade: 50,
+    monthsInZone: 18,
+    lastCareerConversation: {
+      date: '2026-01-30',
+      topic: 'Sem aspiração declarada: explorar interesse em transição',
+      outcome: 'Fernanda satisfeita no cargo. Sem interesse em movimentação no momento.',
+    },
+    proactiveAlerts: [
+      {
+        type: 'sem_aspiracao',
+        message: 'Sem aspiração declarada. Janela de Mérito (Z3 → Z4) abre em 4 meses. Vale revisitar a conversa.',
+        severity: 'info',
+      },
+    ],
   },
   {
     id: 'emp-110',
@@ -612,14 +701,26 @@ export const employees: Employee[] = [
     performanceRating: 4.0,
     readinessScores: [{ targetRoleId: 'role-gerente-agencia', score: 52, lastUpdated: '2026-03-15', components: { skills: 60, experience: 65, performance: 55, development: 40, leadership: 35 } }],
     developmentPlanIds: [],
+    currentSalary: 5400,
+    currentZone: 4,
+    monthsInGrade: 30,
+    monthsInZone: 18,
+    lastCareerConversation: {
+      date: '2026-03-12',
+      topic: 'Trilha de longo prazo para GA via segmento Agro',
+      outcome: 'Programa de liderança planejado para 2027. Mentoria com GA com perfil Agro definida.',
+    },
+    proactiveAlerts: [],
   },
 ];
 
 export const getEmployeeById = (id: string): Employee | undefined => employees.find(e => e.id === id);
 export const getEmployeesByBranch = (branchId: string): Employee[] => employees.filter(e => e.branchId === branchId);
 
-// Roberto's team: exactly 5 people (GN PF, GN PJ, GN Agro, Assistente, Backoffice)
-const robertoTeamIds = ['emp-001', 'emp-101', 'emp-111', 'emp-104', 'emp-109'];
+// Equipe de Roberto: 6 pessoas com cobertura por segmento conforme briefing
+// 1 GN PF (Mariana), 1 GN PJ (Juliana), 1 GN Agro (André),
+// 1 GN genérico (Pedro PF I), 1 junior (Carlos Assist Atend), 1 backoffice (Fernanda Operações)
+const robertoTeamIds = ['emp-001', 'emp-101', 'emp-111', 'emp-106', 'emp-104', 'emp-109'];
 
 export const getTeamForLeader = (leaderId: string): Employee[] => {
   if (leaderId === 'emp-002') {

@@ -44,6 +44,27 @@ export interface Employee {
   onboarding?: OnboardingProgress;
   developmentPlanIds: string[];
   bio?: string;
+  // === Campos para visão rica do líder ===
+  /** Salário atual (mock) */
+  currentSalary?: number;
+  /** Meses no grade atual (Z1-Z5) */
+  monthsInGrade?: number;
+  /** Meses na zona salarial atual (1-5) */
+  monthsInZone?: number;
+  /** Zona salarial atual (1-5) */
+  currentZone?: 1 | 2 | 3 | 4 | 5;
+  /** Última conversa formal de carreira */
+  lastCareerConversation?: {
+    date: string;
+    topic: string;
+    outcome: string;
+  };
+  /** Alertas proativos da IA (Theo) sobre essa pessoa */
+  proactiveAlerts?: Array<{
+    type: 'merito_elegivel' | 'promocao_elegivel' | 'sem_aspiracao' | 'risco_turnover' | 'aspiracao_nao_compartilhada' | 'avaliacao_pendente';
+    message: string;
+    severity: 'info' | 'warning' | 'critical';
+  }>;
 }
 
 export type EmployeeStatus = 'active' | 'onboarding' | 'on_leave' | 'exiting';
