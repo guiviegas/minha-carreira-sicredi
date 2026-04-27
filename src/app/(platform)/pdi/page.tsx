@@ -75,9 +75,19 @@ export default function PdiPage() {
               Nível {targetRole?.level} · Prazo: {pdi.goal.deadline}
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-3xl font-extrabold text-verde-digital metric-value">{pdi.goal.progress}%</p>
-            <p className="text-xs text-gray-400">Progresso</p>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <p className="text-3xl font-extrabold text-verde-digital metric-value">{pdi.goal.progress}%</p>
+              <p className="text-xs text-gray-400">Progresso</p>
+            </div>
+            <a
+              href="/mapa-carreira"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-verde-digital text-white text-xs font-semibold hover:bg-verde-600 transition-colors shrink-0"
+              title="Ver Plano de Rota completo no GPS"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Ver no GPS
+            </a>
           </div>
         </div>
         <div className="mt-3 h-2.5 bg-gray-100 rounded-full overflow-hidden">
@@ -130,12 +140,20 @@ export default function PdiPage() {
             </div>
           </motion.div>
 
-          {/* Competencies */}
+          {/* Competencies — vinculadas à avaliação Jeito Sicredi */}
           <motion.div variants={item} className="card p-5">
-            <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <Award className="w-4 h-4 text-purple-500" />
-              Competências em Desenvolvimento
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                <Award className="w-4 h-4 text-purple-500" />
+                Competências (Jeito Sicredi)
+              </h3>
+              <a
+                href="/avaliacao"
+                className="text-[11px] text-verde-digital font-semibold hover:underline flex items-center gap-1"
+              >
+                Ver na Avaliação <ArrowRight className="w-3 h-3" />
+              </a>
+            </div>
             <div className="space-y-3">
               {pdi.competencies.map((comp) => {
                 const progress = Math.round((comp.current / comp.target) * 100);

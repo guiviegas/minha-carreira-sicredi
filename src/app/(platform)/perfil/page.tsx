@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
-import { competenciasSicredi } from '@/data/competencias-sicredi';
 import { avaliacoesMock, reguaPerformance, reguaProntidao } from '@/data/elofy-config';
+import { getPersonaHub } from '@/data/persona-hub';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Award, BookOpen, Calendar, Edit3, Eye, EyeOff, MapPin, Share2, Star,
-  Target, TrendingUp, Zap, X, CheckCircle2, Download, Copy, ChevronDown,
-  ChevronUp, ExternalLink, Shield, Clock, Handshake, Lightbulb, Trophy,
-  Heart, Compass,
+  Target, TrendingUp, Zap, X, CheckCircle2, Copy, Download,
+  ExternalLink, Shield, Handshake, Lightbulb, Trophy,
+  Compass, Heart,
   type LucideIcon,
 } from 'lucide-react';
 import Image from 'next/image';
@@ -45,6 +45,7 @@ export default function PerfilPage() {
   const employee = getEmployeeById(currentPersona.employeeId);
   if (!employee) return null;
   const role = getRoleById(employee.roleId);
+  const hub = getPersonaHub(currentPersona.id);
 
   const categoryAverages = employee.skills.reduce<Record<string, { total: number; count: number }>>((acc, s) => {
     if (!acc[s.category]) acc[s.category] = { total: 0, count: 0 };
@@ -176,111 +177,98 @@ export default function PerfilPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Left Column (2/3) */}
         <div className="lg:col-span-2 space-y-5">
-          {/* Skills — Interactive */}
-          <motion.div variants={item} className="card p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                <Star className="w-4 h-4 text-amber-500" /> Competências
-              </h2>
-              <span className="text-[11px] text-gray-400">Clique para detalhes</span>
-            </div>
-            <div className="space-y-2">
-              {employee.skills
-                .sort((a, b) => b.level - a.level)
-                .map((skill) => {
-                  const isExpanded = expandedSkill === skill.id;
-                  const required = role?.requiredSkills.find(rs => rs.skillId === skill.id);
-                  return (
-                    <div key={skill.id} className="rounded-lg overflow-hidden">
-                      <button
-                        onClick={() => setExpandedSkill(isExpanded ? null : skill.id)}
-                        className="w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors"
+          {/* Competências Jeito Sicredi de Ser (vindas do hub — mesma fonte da Avaliação) */}
+          {hub && (
+            <motion.div variants={item} className="card p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-verde-digital" /> Competências Jeito Sicredi de Ser
+                </h2>
+                <a
+                  href="/avaliacao"
+                  className="text-[11px] text-verde-digital font-semibold hover:underline flex items-center gap-1"
+                >
+                  Ver na Avaliação <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                {hub.competenciasSicredi.map((c) => (
+                  <div
+                    key={c.competencia.id}
+                    className="p-3 rounded-lg bg-gray-50 border border-gray-100"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: c.competencia.cor }}
+                        />
+                        <p className="text-sm font-semibold text-gray-800">{c.competencia.nome}</p>
+                      </div>
+                      <span
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: c.conceito.bgCor, color: c.conceito.cor }}
                       >
-                        <div className="flex justify-between text-sm mb-1">
+                        {c.conceito.hashtag}
+                      </span>
+                    </div>
+                    {c.comentarioLider && (
+                      <p className="text-[11px] text-purple-600 italic mt-1">
+                        &ldquo;{c.comentarioLider}&rdquo;
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Habilidades técnicas do cargo atual (filtradas: só as que o cargo exige) */}
+          {hub && hub.habilidadesTecnicas.filter((h) => h.nivelEsperadoCargoAtual > 0).length > 0 && (
+            <motion.div variants={item} className="card p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                  <Star className="w-4 h-4 text-amber-500" /> Habilidades técnicas do cargo
+                </h2>
+                <span className="text-[11px] text-gray-400">Nível atual vs esperado</span>
+              </div>
+              <div className="space-y-3">
+                {hub.habilidadesTecnicas
+                  .filter((h) => h.nivelEsperadoCargoAtual > 0)
+                  .sort((a, b) => b.skill.level - a.skill.level)
+                  .map(({ skill, nivelEsperadoCargoAtual }) => {
+                    const atende = skill.level >= nivelEsperadoCargoAtual;
+                    return (
+                      <div key={skill.id}>
+                        <div className="flex items-center justify-between text-sm mb-1">
                           <span className="text-gray-700 flex items-center gap-1.5">
                             {skill.name}
-                            {required && skill.level >= required.minLevel && (
-                              <CheckCircle2 className="w-3 h-3 text-green-400" />
-                            )}
+                            {atende && <CheckCircle2 className="w-3 h-3 text-green-500" />}
                           </span>
-                          <span className="font-semibold text-gray-800 metric-value">{skill.level}%</span>
+                          <span className="text-xs font-semibold" style={{ color: atende ? '#16A34A' : '#D97706' }}>
+                            {skill.level} / {nivelEsperadoCargoAtual}
+                          </span>
                         </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden relative">
                           <motion.div
                             className="h-full rounded-full"
-                            style={{
-                              background: skill.level >= 80 ? 'linear-gradient(90deg, #22C55E, #16A34A)'
-                                : skill.level >= 60 ? 'linear-gradient(90deg, #F59E0B, #D97706)'
-                                : 'linear-gradient(90deg, #EF4444, #DC2626)',
-                            }}
+                            style={{ backgroundColor: atende ? '#16A34A' : '#D97706' }}
                             initial={{ width: 0 }}
-                            animate={{ width: `${skill.level}%` }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            animate={{ width: `${Math.min(100, skill.level)}%` }}
+                            transition={{ duration: 0.6 }}
+                          />
+                          <div
+                            className="absolute top-0 bottom-0 w-0.5 bg-gray-700"
+                            style={{ left: `${nivelEsperadoCargoAtual}%` }}
+                            title={`Esperado: ${nivelEsperadoCargoAtual}`}
                           />
                         </div>
-                      </button>
-
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="px-2 pb-2 pt-1 space-y-2">
-                              <div className="flex items-center gap-4 text-xs text-gray-500">
-                                <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> Categoria: {categoryLabels[skill.category] || skill.category}</span>
-                                {required && (
-                                  <span className="flex items-center gap-1">
-                                    <Target className="w-3 h-3" /> Esperado: {required.minLevel}%
-                                    {skill.level < required.minLevel && (
-                                      <span className="text-red-500 font-semibold"> (gap: {required.minLevel - skill.level})</span>
-                                    )}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex gap-2">
-                                <button className="text-[11px] px-2.5 py-1 rounded bg-blue-50 text-blue-600 font-medium hover:bg-blue-100 transition-colors flex items-center gap-1">
-                                  <BookOpen className="w-3 h-3" /> Cursos relacionados
-                                </button>
-                                <button className="text-[11px] px-2.5 py-1 rounded bg-verde-50 text-verde-digital font-medium hover:bg-verde-100 transition-colors flex items-center gap-1">
-                                  <TrendingUp className="w-3 h-3" /> Plano de desenvolvimento
-                                </button>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
-            </div>
-          </motion.div>
-
-          {/* Category Summary */}
-          <motion.div variants={item} className="card p-5">
-            <h2 className="text-sm font-semibold text-gray-800 mb-4">Perfil por Categoria</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {Object.entries(categoryAverages).map(([cat, data]) => {
-                const avg = Math.round(data.total / data.count);
-                return (
-                  <div key={cat} className="p-3 rounded-lg bg-gray-50 text-center hover:shadow-sm transition-shadow cursor-pointer">
-                    <p className="text-xl font-bold metric-value" style={{
-                      color: avg >= 80 ? '#22C55E' : avg >= 60 ? '#F59E0B' : '#EF4444'
-                    }}>{avg}%</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">{categoryLabels[cat] || cat}</p>
-                    <div className="h-1 bg-gray-200 rounded-full mt-2 overflow-hidden">
-                      <div className="h-full rounded-full" style={{
-                        width: `${avg}%`,
-                        backgroundColor: avg >= 80 ? '#22C55E' : avg >= 60 ? '#F59E0B' : '#EF4444'
-                      }} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </motion.div>
+          )}
 
           {/* Career Timeline */}
           <motion.div variants={item} className="card p-5">
@@ -428,16 +416,17 @@ export default function PerfilPage() {
               <BookOpen className="w-4 h-4 text-blue-500" /> Informações
             </h2>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between py-1.5 border-b border-gray-50">
-                <span className="text-gray-500">Performance</span>
-                <span className="font-semibold text-gray-800 metric-value">{employee.performanceRating.toFixed(1)}/5.0</span>
-              </div>
-              <div className="flex justify-between py-1.5 border-b border-gray-50">
-                <span className="text-gray-500">Engajamento</span>
-                <span className="font-semibold metric-value" style={{ color: employee.engagementScore > 70 ? '#22C55E' : '#F59E0B' }}>
-                  {employee.engagementScore}%
-                </span>
-              </div>
+              {hub && (
+                <div className="flex justify-between py-1.5 border-b border-gray-50">
+                  <span className="text-gray-500">Último conceito</span>
+                  <span
+                    className="font-bold text-xs px-2 py-0.5 rounded-full"
+                    style={{ color: hub.notaFinalPerformance.cor, backgroundColor: hub.notaFinalPerformance.bgCor }}
+                  >
+                    {hub.notaFinalPerformance.hashtag}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between py-1.5 border-b border-gray-50">
                 <span className="text-gray-500">Admissão</span>
                 <span className="text-gray-700">{employee.hireDate}</span>

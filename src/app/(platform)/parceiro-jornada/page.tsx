@@ -65,14 +65,14 @@ const initialMessages: Record<string, Message[]> = {
     {
       id: '1',
       role: 'assistant',
-      content: 'Olá Mariana! 👋\n\nSou o **Theo**, seu copiloto de carreira no Sicredi. Estou aqui para te ajudar a navegar sua jornada. desde entender o que falta para avançar até preparar conversas com seu líder.\n\n📊 **Seu status atual:**\n• Cargo: Gerente de Negócios PF II\n• Aspiração: Gerente de Agência\n• Prontidão: 68%\n• Último conceito: #mandoubem\n\nComo posso te ajudar hoje?',
+      content: 'Olá Mariana! 👋\n\nSou o **Theo**, seu parceiro de jornada de carreira no Sicredi. Eu cruzo seu perfil, sua avaliação e sua aspiração para sugerir os próximos passos certos. Tudo o que digo aqui é baseado nos seus dados reais na plataforma.\n\n📊 **Seu retrato hoje:**\n• Cargo: Gerente de Negócios PF II\n• Aspiração: Gerente de Agência (24 meses)\n• Conceito atual: #mandoubem · Prontidão: Em desenvolvimento\n\n💪 **Pontos fortes Jeito Sicredi:** #arrasou em Essência Cooperativista e Entender para Atender.\n\n⚠️ **Onde você precisa subir para virar GA:** Inovar para Transformar (#mandoubem → #arrasou) e habilidades técnicas de Liderança de Pessoas (62 → 80) e Planejamento Estratégico (55 → 70).\n\nComo posso te ajudar hoje?',
     },
   ],
   roberto: [
     {
       id: '1',
       role: 'assistant',
-      content: 'Olá Roberto! 👋\n\nSou o **Theo**, seu copiloto de liderança no Sicredi. Estou aqui para te apoiar na gestão e desenvolvimento do seu time.\n\n📊 **Visão do Time:**\n• 5 pessoas na equipe\n• 2 com alta prontidão para promoção\n• 1 em risco de turnover (Juliana, 78%)\n• Próxima 1:1: Mariana. quinta-feira\n\nComo posso te ajudar?',
+      content: 'Olá Roberto! 👋\n\nSou o **Theo**, seu parceiro de jornada como líder. Eu olho continuamente para sua equipe (cargo, avaliação, PDI, sinais de risco) e te sugiro o próximo movimento certo. Tudo a partir dos dados reais da plataforma.\n\n📊 **Sua equipe agora:**\n• 5 pessoas na Praça Central\n• Mariana: prontidão Em desenvolvimento para GA\n• 1 colaborador com alerta de retenção: priorizar conversa Papo Reto esta semana\n• Próximo Comitê de Carreira: 7 dias\n\nComo posso te apoiar?',
     },
   ],
   carla: [
@@ -85,24 +85,24 @@ const initialMessages: Record<string, Message[]> = {
 };
 
 const responses: Record<string, string> = {
-  'O que falta para eu avançar para o próximo cargo?': `Analisei seu perfil e aqui está o **gap analysis** para **Gerente de Agência**:
+  'O que falta para eu avançar para o próximo cargo?': `Cruzei sua avaliação atual com o que **Gerente de Agência** exige.
 
-✅ **Pontos fortes (já atende):**
-• Relacionamento com Associados: 92% (precisa 80%)
-• Habilidade Comercial: 85% (precisa 85%)
-• Cooperativismo: 88% (precisa 80%)
+✅ **Você já atende (mantém o nível):**
+• #arrasou em Essência Cooperativista e Entender para Atender (consenso da avaliação Q1/2026)
+• Relacionamento com Associados: 92 (esperado 80)
+• Cooperativismo técnico: 88 (esperado 80)
 
-⚠️ **Áreas de desenvolvimento:**
-• **Liderança de Pessoas:** 62% → precisa 80% (+18 pontos)
-• **Análise Financeira:** 58% → precisa 70% (+12 pontos)
-• **Planejamento Estratégico:** 55% → precisa 70% (+15 pontos)
+⚠️ **Onde precisa subir para virar GA:**
+• **Inovar para Transformar:** #mandoubem → precisa #arrasou (Roberto comentou na avaliação: "Pode explorar mais soluções digitais")
+• **Liderança de Pessoas:** 62 → precisa 80 (+18 pontos)
+• **Planejamento Estratégico:** 55 → precisa 70 (+15 pontos)
 
-📋 **Plano sugerido (90 dias):**
-1. **Mês 1:** Completar "Liderança Fundamentals" + iniciar mentoria com Paulo (GA Centro)
-2. **Mês 2:** "Análise Financeira para GNs" + Job Shadow de 2 dias
-3. **Mês 3:** Projeto de liderança na Agência Ipê + Assessment
+📋 **Plano sugerido para 90 dias:**
+1. **Mês 1:** Job Shadow com GA da Cooperativa Caminhos (1 semana) + módulo "Liderança Fundamentals"
+2. **Mês 2:** Mentoria mensal com Paulo Ferreira (GA III), foco em planejamento e gestão de pessoas
+3. **Mês 3:** Liderar mini-projeto de inovação na Praça Central (vivência prática para subir Inovar para Transformar)
 
-Quer que eu monte o PDI detalhado?`,
+Quer que eu adicione tudo isso ao seu PDI?`,
 
   'Me ajude a preparar a 1:1 com meu líder': `Preparei um roteiro para sua **1:1 com Roberto** na quinta:
 
