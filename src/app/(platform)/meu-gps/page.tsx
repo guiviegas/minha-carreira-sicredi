@@ -2,6 +2,8 @@
 
 import { usePersona } from '@/contexts/PersonaContext';
 import { getPersonaHub, PersonaHub } from '@/data/persona-hub';
+import { employees as allEmployees } from '@/data/employees';
+import { avaliacoesMock as allAvaliacoes } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
 import TheoCard from '@/components/theo/TheoCard';
 import {
@@ -386,30 +388,102 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
   );
 }
 
-// ===== CARLA — P&C Dashboard =====
+// ===== CARLA — P&C Dashboard com KPIs derivados de dados reais =====
 function PCAnalistaDashboard({ hub }: { hub: PersonaHub }) {
+  // KPIs calculados de employees real (em vez de hardcoded)
+  const total = allEmployees.length;
+  const comAval = allEmployees.filter((e) =>
+    allAvaliacoes.some((a) => a.employeeId === e.id && a.cicloId === 'ciclo-2026-1'),
+  ).length;
+  const comPdi = allEmployees.filter((e) => e.developmentPlanIds && e.developmentPlanIds.length > 0).length;
+  const aspCompartilhada = allEmployees.filter(
+    (e) => e.aspirations.length > 0 && e.aspirations[0].sharedWithLeader,
+  ).length;
+  const prontosAgora = allAvaliacoes.filter((a) => a.prontidaoId === 'pronto-agora').length;
+  const emRisco = allEmployees.filter((e) => e.turnoverRisk && e.turnoverRisk.probability > 70).length;
+
+  const kpis = [
+    { label: 'Avaliações concluídas', valor: `${comAval}/${total}`, sub: `${Math.round((comAval / total) * 100)}% do ciclo`, status: 'green' },
+    { label: 'Com PDI ativo', valor: `${comPdi}/${total}`, sub: `${Math.round((comPdi / total) * 100)}% adesão`, status: 'green' },
+    { label: 'Aspiração compartilhada', valor: `${aspCompartilhada}/${total}`, sub: 'com líder direto', status: aspCompartilhada / total >= 0.5 ? 'green' : 'yellow' },
+    { label: 'Em risco de saída', valor: `${emRisco}`, sub: emRisco > 0 ? 'requer atenção' : 'estável', status: emRisco > 0 ? 'red' : 'green' },
+  ];
+
+  // Próximos comitês (mock contextual coerente com agências fictícias)
+  const proximosComites = [
+    { agencia: 'Praça Central', data: '15 Mai 2026', preparacao: 75, casos: 6 },
+    { agencia: 'Mirante', data: '22 Mai 2026', preparacao: 50, casos: 4 },
+    { agencia: 'Jardim Botânico', data: '5 Jun 2026', preparacao: 20, casos: 5 },
+  ];
+
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
-      {/* KPIs */}
+      {/* Hero P&C */}
+      <motion.div variants={item} className="card p-5 bg-gradient-to-r from-purple-50 to-white border-l-4 border-l-purple-400">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-purple-600">
+          {hub.persona.cooperative || 'Cooperativa Convergência'}
+        </p>
+        <h2 className="text-lg font-bold text-gray-900 mt-1">Ciclo 1/2026 em curso</h2>
+        <p className="text-sm text-gray-600 mt-1">
+          {total} colaboradores · {comAval} avaliações concluídas · {emRisco}{' '}
+          {emRisco === 1 ? 'pessoa requer atenção' : 'pessoas requerem atenção'}
+        </p>
+      </motion.div>
+
+      {/* KPIs reais */}
       <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'PDIs Ativos', value: '78%', trend: '+5pp', status: 'green' },
-          { label: 'Avaliações Concluídas', value: '82%', trend: 'Ciclo Q3', status: 'green' },
-          { label: 'Sucessores GA Mapeados', value: '3/5', trend: '60%', status: 'yellow' },
-          { label: 'Turnover Trimestral', value: '4,2%', trend: '-1,1pp', status: 'green' },
-        ].map((kpi) => (
+        {kpis.map((kpi) => (
           <div key={kpi.label} className="card p-4">
             <p className="text-[11px] text-gray-500 uppercase tracking-wider font-semibold">{kpi.label}</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">{kpi.value}</p>
+            <p className="text-2xl font-bold text-gray-900 mt-1">{kpi.valor}</p>
             <p
               className={`text-xs font-semibold mt-1 ${
-                kpi.status === 'green' ? 'text-green-600' : 'text-amber-600'
+                kpi.status === 'green'
+                  ? 'text-green-600'
+                  : kpi.status === 'red'
+                  ? 'text-red-600'
+                  : 'text-amber-600'
               }`}
             >
-              {kpi.trend}
+              {kpi.sub}
             </p>
           </div>
         ))}
+      </motion.div>
+
+      {/* Próximos comitês */}
+      <motion.div variants={item} className="card p-5">
+        <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+          <Compass className="w-4 h-4 text-purple-600" />
+          Próximos comitês de carreira
+        </h3>
+        <div className="space-y-2">
+          {proximosComites.map((c) => (
+            <div key={c.agencia} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-800">{c.agencia}</p>
+                <p className="text-[11px] text-gray-500">
+                  {c.data} · {c.casos} casos em pauta
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <p
+                  className={`text-xs font-bold ${
+                    c.preparacao >= 75 ? 'text-green-600' : c.preparacao >= 50 ? 'text-amber-600' : 'text-red-600'
+                  }`}
+                >
+                  {c.preparacao}% preparado
+                </p>
+                <a
+                  href="/comite-carreira"
+                  className="text-[10px] text-verde-digital font-semibold hover:underline"
+                >
+                  Ver pauta →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
       </motion.div>
 
       {/* Theo Nudges P&C — vindos do hub */}
@@ -428,10 +502,11 @@ function PCAnalistaDashboard({ hub }: { hub: PersonaHub }) {
       {/* Ações Rápidas */}
       <motion.div variants={item} className="card p-5">
         <p className="text-sm font-semibold text-gray-500 mb-3">
-          Acesse o Painel de Pessoas para análise completa →
+          Acesse o Mapa de Talentos para visão consolidada →
         </p>
         <p className="text-sm text-gray-600">
-          14 pessoas prontas para movimentação · 23 planos em atraso · 2 lacunas de sucessão
+          {prontosAgora > 0 && `${prontosAgora} pessoa(s) pronta(s) para movimentação · `}
+          {comPdi}/{total} com PDI ativo · {aspCompartilhada}/{total} com aspiração compartilhada
         </p>
       </motion.div>
     </motion.div>
