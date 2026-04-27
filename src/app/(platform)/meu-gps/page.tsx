@@ -1,26 +1,18 @@
 'use client';
 
 import { usePersona } from '@/contexts/PersonaContext';
-import { getEmployeeById, getTeamForLeader } from '@/data/employees';
-import { getRoleById } from '@/data/roles';
+import { getPersonaHub, PersonaHub } from '@/data/persona-hub';
 import { motion } from 'framer-motion';
 import TheoCard from '@/components/theo/TheoCard';
 import {
-  TrendingUp,
-  Briefcase,
-  BookOpen,
   CheckCircle2,
   Users,
   AlertTriangle,
   Target,
   ArrowRight,
-  Clock,
   Compass,
   Calendar,
   MessageCircle,
-  BarChart3,
-  FileText,
-  Shield,
 } from 'lucide-react';
 
 const container = {
@@ -36,35 +28,32 @@ export default function MeuGPSPage() {
   const { currentPersona } = usePersona();
   if (!currentPersona) return null;
 
-  const employee = getEmployeeById(currentPersona.employeeId);
-  if (!employee) return null;
-
-  const role = getRoleById(employee.roleId);
+  const hub = getPersonaHub(currentPersona.id);
+  if (!hub) return null;
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-5xl">
-      {/* Page Header (sem badges) */}
+      {/* Page Header */}
       <motion.div variants={item}>
         <h1 className="text-2xl font-bold text-gray-900">Início</h1>
         <p className="text-sm text-gray-500 mt-1">
-          {role?.title} · {currentPersona.cooperative}
-          {currentPersona.branch && ` · ${currentPersona.branch}`}
+          {hub.cargoAtual.title} · {hub.persona.cooperative}
+          {hub.persona.branch && ` · ${hub.persona.branch}`}
         </p>
       </motion.div>
 
-      {currentPersona.role === 'colaborador' && <ColaboradorDashboard employee={employee} />}
-      {currentPersona.role === 'lider' && <LiderDashboard employee={employee} />}
-      {currentPersona.role === 'pc_analista' && <PCAnalistaDashboard employee={employee} />}
+      {hub.persona.role === 'colaborador' && <ColaboradorDashboard hub={hub} />}
+      {hub.persona.role === 'lider' && <LiderDashboard hub={hub} />}
+      {hub.persona.role === 'pc_analista' && <PCAnalistaDashboard hub={hub} />}
     </motion.div>
   );
 }
 
 // ===== MARIANA — Hub de Desenvolvimento Pessoal =====
-function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmployeeById> }) {
-  if (!employee) return null;
-  const readiness = employee.readinessScores[0];
-  const aspiration = employee.aspirations[0];
-  const aspirationRole = aspiration ? getRoleById(aspiration.targetRoleId) : null;
+function ColaboradorDashboard({ hub }: { hub: PersonaHub }) {
+  const aspiration = hub.employee.aspirations[0];
+  const pdi = hub.pdi;
+  const acoesPdi = pdi?.actions.slice(0, 3) ?? [];
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
@@ -78,27 +67,33 @@ function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmp
             </div>
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Minha Aspiração</p>
           </div>
-          <p className="text-lg font-bold text-gray-900">{aspirationRole?.title || 'Não definida'}</p>
+          <p className="text-lg font-bold text-gray-900">{hub.cargoAlvo?.title || 'Não definida'}</p>
           <p className="text-xs text-gray-500 mt-1">Horizonte: {aspiration?.timeframe || 'a definir'}</p>
 
-          {readiness && (
+          {hub.gapAlvo && (
             <div className="mt-4 space-y-2">
               <p className="text-[10px] font-semibold text-gray-400 uppercase">Prontidão</p>
-              {(() => {
-                const prontLabel = readiness.score >= 80 ? 'Pronto' : readiness.score >= 65 ? 'Quase pronto' : readiness.score >= 50 ? 'Em desenvolvimento' : 'Início da jornada';
-                const prontColor = readiness.score >= 80 ? 'text-green-600 bg-green-50' : readiness.score >= 65 ? 'text-verde-digital bg-verde-50' : readiness.score >= 50 ? 'text-amber-600 bg-amber-50' : 'text-orange-600 bg-orange-50';
-                return (
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${prontColor}`}>
-                    {prontLabel}
-                  </span>
-                );
-              })()}
+              <span
+                className="text-xs font-bold px-2.5 py-1 rounded-lg inline-block"
+                style={{
+                  color: hub.gapAlvo.prontidaoEstimada.cor,
+                  backgroundColor: hub.gapAlvo.prontidaoEstimada.bgCor,
+                }}
+              >
+                {hub.gapAlvo.prontidaoEstimada.nome}
+              </span>
+              <p className="text-[10px] text-gray-500 mt-1">
+                {hub.gapAlvo.prontidaoEstimada.descricao}
+              </p>
             </div>
           )}
 
-          <button className="flex items-center gap-1.5 text-sm font-semibold text-verde-digital mt-4 hover:gap-2.5 transition-all">
+          <a
+            href="/mapa-carreira"
+            className="flex items-center gap-1.5 text-sm font-semibold text-verde-digital mt-4 hover:gap-2.5 transition-all"
+          >
             Ver no GPS de Carreira <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </a>
         </motion.div>
 
         {/* Meu PDI */}
@@ -109,21 +104,37 @@ function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmp
             </div>
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Meu PDI</p>
           </div>
+          <p className="text-sm font-semibold text-gray-700 mb-2">
+            Foco: {pdi?.goal.targetRoleTitle ?? hub.cargoAlvo?.title ?? '-'}
+          </p>
           <div className="space-y-2.5">
-            {[
-              { text: 'Trilha de Liderança Essencial', status: 'Em andamento', color: 'text-verde-digital' },
-              { text: 'Mentoria com GA experiente', status: 'Pendente', color: 'text-amber-600' },
-              { text: 'Certificação CPA-20', status: 'Planejado', color: 'text-gray-400' },
-            ].map((init, i) => (
-              <div key={i} className="flex items-center justify-between">
-                <p className="text-sm text-gray-700 truncate mr-2">{init.text}</p>
-                <span className={`text-[10px] font-semibold ${init.color} whitespace-nowrap`}>{init.status}</span>
+            {acoesPdi.map((ac) => (
+              <div key={ac.id} className="flex items-center justify-between">
+                <p className="text-sm text-gray-700 truncate mr-2">{ac.title}</p>
+                <span
+                  className={`text-[10px] font-semibold whitespace-nowrap ${
+                    ac.status === 'completed'
+                      ? 'text-green-600'
+                      : ac.status === 'in_progress'
+                      ? 'text-verde-digital'
+                      : 'text-amber-600'
+                  }`}
+                >
+                  {ac.status === 'completed'
+                    ? 'Concluída'
+                    : ac.status === 'in_progress'
+                    ? 'Em andamento'
+                    : 'Pendente'}
+                </span>
               </div>
             ))}
           </div>
-          <button className="flex items-center gap-1.5 text-sm font-semibold text-purple-600 mt-4 hover:gap-2.5 transition-all">
+          <a
+            href="/pdi"
+            className="flex items-center gap-1.5 text-sm font-semibold text-purple-600 mt-4 hover:gap-2.5 transition-all"
+          >
             Ver PDI completo <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </a>
         </motion.div>
 
         {/* Próxima Conversa */}
@@ -134,42 +145,52 @@ function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmp
             </div>
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Próxima conversa</p>
           </div>
-          <p className="text-sm font-semibold text-gray-800">1:1 com Roberto Mendes</p>
-          <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-            <Calendar className="w-3 h-3" /> Quinta-feira, 14h
-          </p>
-          <div className="mt-3 p-2.5 rounded-lg bg-gray-50">
-            <p className="text-[11px] text-gray-500 font-medium">Sugestão de pauta do Theo:</p>
-            <p className="text-xs text-gray-700 mt-1">Conversar sobre aspiração de carreira e progresso na trilha de Liderança</p>
-          </div>
-          <button className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 mt-3 hover:gap-2.5 transition-all">
+          {(() => {
+            const proxCheckIn = pdi?.checkIns.find((c) => c.type === 'scheduled');
+            return (
+              <>
+                <p className="text-sm font-semibold text-gray-800">
+                  Conversa de carreira com {proxCheckIn?.leaderName || 'seu líder'}
+                </p>
+                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                  <Calendar className="w-3 h-3" /> {proxCheckIn?.date || 'A agendar'}
+                </p>
+                <div className="mt-3 p-2.5 rounded-lg bg-gray-50">
+                  <p className="text-[11px] text-gray-500 font-medium">Sugestão de pauta do Theo:</p>
+                  <p className="text-xs text-gray-700 mt-1">
+                    {hub.cargoAlvo
+                      ? `Compartilhar progresso na trilha de ${hub.cargoAlvo.title} e validar próximas vivências.`
+                      : 'Compartilhar progresso da trilha e validar próximos passos.'}
+                  </p>
+                </div>
+              </>
+            );
+          })()}
+          <a
+            href="/parceiro-jornada"
+            className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 mt-3 hover:gap-2.5 transition-all"
+          >
             Preparar conversa <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </a>
         </motion.div>
       </div>
 
-      {/* Row 2: Theo Nudges (TheoCard) + Checklist */}
+      {/* Row 2: Theo Nudges + Checklist */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Theo Nudges (2 cols) */}
+        {/* Theo Nudges (2 cols) — vindos do hub */}
         <motion.div variants={item} className="md:col-span-2 space-y-3">
-          <TheoCard
-            title="Autoavaliação pendente"
-            description="Você ainda não preencheu a autoavaliação do ciclo atual. O prazo encerra em 5 dias."
-            cta="Preencher agora"
-            ctaHref="/avaliacao"
-          />
-          <TheoCard
-            title="Vivência prática disponível"
-            description="Há uma experiência de acompanhamento de Gerente de Agência disponível na Cooperativa Caminhos."
-            cta="Ver experiência"
-            ctaHref="/experiencias"
-          />
-          <TheoCard
-            title="Retomar trilha de desenvolvimento"
-            description="Seu módulo de Liderança Essencial está parado há 2 semanas. Retomar pode acelerar sua prontidão."
-            cta="Retomar trilha"
-            ctaHref="/desenvolvimento"
-          />
+          {hub.nudges.length === 0 && (
+            <div className="card p-4 text-sm text-gray-500">Sem sugestões no momento.</div>
+          )}
+          {hub.nudges.map((n) => (
+            <TheoCard
+              key={n.id}
+              title={n.titulo}
+              description={n.descricao}
+              cta={n.ctaLabel}
+              ctaHref={n.ctaHref}
+            />
+          ))}
         </motion.div>
 
         {/* Checklist semanal */}
@@ -183,7 +204,7 @@ function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmp
           </div>
           <div className="space-y-2">
             {[
-              { text: 'Revisão 1:1 com Roberto', done: true },
+              { text: 'Conversa de carreira com Roberto', done: true },
               { text: 'Módulo Liderança Essencial', done: true },
               { text: 'Atualizar autoavaliação', done: false },
               { text: 'Reflexão: diário de carreira', done: false },
@@ -209,16 +230,17 @@ function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmp
 }
 
 // ===== ROBERTO — Líder Dashboard (Carreira + Equipe) =====
-function LiderDashboard({ employee }: { employee: ReturnType<typeof getEmployeeById> }) {
-  if (!employee) return null;
-  const team = getTeamForLeader(employee.id);
-  const aspiration = employee.aspirations[0];
-  const aspirationRole = aspiration ? getRoleById(aspiration.targetRoleId) : null;
+function LiderDashboard({ hub }: { hub: PersonaHub }) {
+  const team = hub.equipe ?? [];
+  const aspiration = hub.employee.aspirations[0];
 
-  const getStatusColor = (emp: NonNullable<ReturnType<typeof getEmployeeById>>) => {
-    if (emp.turnoverRisk && emp.turnoverRisk.probability > 70) return { color: 'red', label: 'Risco', dotClass: 'status-dot-red' };
-    if (emp.onboarding && emp.onboarding.percentage < 100) return { color: 'blue', label: 'Onboarding', dotClass: 'status-dot-blue' };
-    if (emp.engagementScore < 60) return { color: 'yellow', label: 'Atenção', dotClass: 'status-dot-yellow' };
+  const getStatusColor = (emp: typeof team[number]) => {
+    if (emp.turnoverRisk && emp.turnoverRisk.probability > 70)
+      return { color: 'red', label: 'Risco', dotClass: 'status-dot-red' };
+    if (emp.onboarding && emp.onboarding.percentage < 100)
+      return { color: 'blue', label: 'Onboarding', dotClass: 'status-dot-blue' };
+    if (emp.engagementScore < 60)
+      return { color: 'yellow', label: 'Atenção', dotClass: 'status-dot-yellow' };
     return { color: 'green', label: 'No caminho', dotClass: 'status-dot-green' };
   };
 
@@ -233,20 +255,32 @@ function LiderDashboard({ employee }: { employee: ReturnType<typeof getEmployeeB
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Minha Carreira</p>
           </div>
           <p className="text-sm text-gray-500">Aspiração</p>
-          <p className="text-lg font-bold text-gray-900">{aspirationRole?.title || 'Gerente Regional'}</p>
-          <p className="text-xs text-gray-500 mt-1">Horizonte: {aspiration?.timeframe || '3-5 anos'}</p>
+          <p className="text-lg font-bold text-gray-900">{hub.cargoAlvo?.title || 'A definir'}</p>
+          <p className="text-xs text-gray-500 mt-1">Horizonte: {aspiration?.timeframe || 'a definir'}</p>
+
+          {hub.gapAlvo && (
+            <div className="mt-3">
+              <span
+                className="text-xs font-bold px-2.5 py-1 rounded-lg inline-block"
+                style={{
+                  color: hub.gapAlvo.prontidaoEstimada.cor,
+                  backgroundColor: hub.gapAlvo.prontidaoEstimada.bgCor,
+                }}
+              >
+                {hub.gapAlvo.prontidaoEstimada.nome}
+              </span>
+            </div>
+          )}
 
           <div className="mt-3 space-y-2">
-            <TheoCard
-              variant="compact"
-              title="Atualizar seu PDI do trimestre"
-              description="Seu plano de desenvolvimento precisa de revisão."
-            />
-            <TheoCard
-              variant="compact"
-              title="Programa Líderes com vagas"
-              description="Vagas abertas no programa de líderes seniores."
-            />
+            {hub.nudges.slice(0, 2).map((n) => (
+              <TheoCard
+                key={n.id}
+                variant="compact"
+                title={n.titulo}
+                description={n.descricao}
+              />
+            ))}
           </div>
         </motion.div>
 
@@ -258,27 +292,50 @@ function LiderDashboard({ employee }: { employee: ReturnType<typeof getEmployeeB
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Minha Equipe</p>
               <span className="text-xs text-gray-400">({team.length})</span>
             </div>
-            <button className="text-xs text-verde-digital font-semibold hover:underline">Ver equipe completa →</button>
+            <a href="/equipe" className="text-xs text-verde-digital font-semibold hover:underline">
+              Ver equipe completa →
+            </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {team.slice(0, 5).map((member) => {
+            {team.slice(0, 6).map((member) => {
               const status = getStatusColor(member);
-              const memberRole = getRoleById(member.roleId);
               return (
-                <div key={member.id} className="p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                <a
+                  key={member.id}
+                  href={`/equipe/${member.id}`}
+                  className="block p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                >
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg avatar-initials text-[10px]" style={{
-                      backgroundColor: status.color === 'green' ? '#16A34A' : status.color === 'yellow' ? '#D97706' : status.color === 'red' ? '#DC2626' : '#2563EB'
-                    }}>
-                      {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                    <div
+                      className="w-8 h-8 rounded-lg avatar-initials text-[10px]"
+                      style={{
+                        backgroundColor:
+                          status.color === 'green'
+                            ? '#16A34A'
+                            : status.color === 'yellow'
+                            ? '#D97706'
+                            : status.color === 'red'
+                            ? '#DC2626'
+                            : '#2563EB',
+                      }}
+                    >
+                      {member.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .slice(0, 2)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-gray-800 truncate">{member.name.split(' ')[0]}</p>
-                      <p className="text-[10px] text-gray-500">{memberRole?.shortTitle}</p>
+                      <p className="text-sm font-semibold text-gray-800 truncate">
+                        {member.name.split(' ')[0]}
+                      </p>
+                      <p className="text-[10px] text-gray-500">
+                        {member.roleId.replace('role-', '').toUpperCase()}
+                      </p>
                     </div>
                     <div className={`status-dot ${status.dotClass}`} />
                   </div>
-                </div>
+                </a>
               );
             })}
           </div>
@@ -286,43 +343,51 @@ function LiderDashboard({ employee }: { employee: ReturnType<typeof getEmployeeB
       </div>
 
       {/* Alerta de Turnover */}
-      {team.some(t => t.turnoverRisk && t.turnoverRisk.probability > 70) && (
+      {team.some((t) => t.turnoverRisk && t.turnoverRisk.probability > 70) && (
         <motion.div variants={item} className="card p-4 border-l-4 border-l-red-400 bg-red-50/50">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-red-800">Alerta de risco de saída</p>
               <p className="text-sm text-red-700 mt-0.5">
-                Juliana Pereira apresenta sinais de risco. Recomendação: agendar conversa de retenção esta semana.
+                {(() => {
+                  const arrisc = team.find(
+                    (t) => t.turnoverRisk && t.turnoverRisk.probability > 70,
+                  );
+                  return arrisc
+                    ? `${arrisc.name} apresenta sinais de risco. Recomendação: agendar conversa de retenção esta semana.`
+                    : '';
+                })()}
               </p>
-              <button className="text-sm font-semibold text-red-600 mt-2 hover:text-red-800 flex items-center gap-1">
+              <a
+                href="/equipe"
+                className="text-sm font-semibold text-red-600 mt-2 hover:text-red-800 flex items-center gap-1"
+              >
                 Ver detalhes e ações <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
           </div>
         </motion.div>
       )}
 
-      {/* Theo Nudges Líder */}
+      {/* Theo Nudges Líder — restantes do hub */}
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <TheoCard
-          title="Conversa de carreira pendente"
-          description="Juliana Pereira não teve conversa de carreira nos últimos 3 meses."
-          cta="Agendar conversa"
-        />
-        <TheoCard
-          title="Reconhecimento para André"
-          description="André Moreira concluiu a trilha de Crédito Rural Avançado."
-          cta="Dar reconhecimento"
-        />
+        {hub.nudges.slice(2).map((n) => (
+          <TheoCard
+            key={n.id}
+            title={n.titulo}
+            description={n.descricao}
+            cta={n.ctaLabel}
+            ctaHref={n.ctaHref}
+          />
+        ))}
       </motion.div>
     </motion.div>
   );
 }
 
 // ===== CARLA — P&C Dashboard =====
-function PCAnalistaDashboard({ employee }: { employee: ReturnType<typeof getEmployeeById> }) {
-  if (!employee) return null;
+function PCAnalistaDashboard({ hub }: { hub: PersonaHub }) {
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
       {/* KPIs */}
@@ -336,37 +401,38 @@ function PCAnalistaDashboard({ employee }: { employee: ReturnType<typeof getEmpl
           <div key={kpi.label} className="card p-4">
             <p className="text-[11px] text-gray-500 uppercase tracking-wider font-semibold">{kpi.label}</p>
             <p className="text-2xl font-bold text-gray-900 mt-1">{kpi.value}</p>
-            <p className={`text-xs font-semibold mt-1 ${kpi.status === 'green' ? 'text-green-600' : 'text-amber-600'}`}>
+            <p
+              className={`text-xs font-semibold mt-1 ${
+                kpi.status === 'green' ? 'text-green-600' : 'text-amber-600'
+              }`}
+            >
               {kpi.trend}
             </p>
           </div>
         ))}
       </motion.div>
 
-      {/* Theo Nudges P&C */}
+      {/* Theo Nudges P&C — vindos do hub */}
       <motion.div variants={item} className="space-y-3">
-        <TheoCard
-          title="PDIs sem revisão"
-          description="5 PDIs sem revisão há mais de 90 dias. Considere notificar os líderes responsáveis."
-          cta="Gerar lista"
-        />
-        <TheoCard
-          title="Janela de movimentação"
-          description="12 colaboradores completarão 3 anos no grade este trimestre. Avaliar janela de movimentação."
-          cta="Ver colaboradores"
-        />
-        <TheoCard
-          title="Comitê de Carreira próximo"
-          description="Comitê de Carreira da Agência Ipê em 7 dias. 2 fichas de preparação pendentes."
-          cta="Preparar comitê"
-          ctaHref="/comite-carreira"
-        />
+        {hub.nudges.map((n) => (
+          <TheoCard
+            key={n.id}
+            title={n.titulo}
+            description={n.descricao}
+            cta={n.ctaLabel}
+            ctaHref={n.ctaHref}
+          />
+        ))}
       </motion.div>
 
       {/* Ações Rápidas */}
       <motion.div variants={item} className="card p-5">
-        <p className="text-sm font-semibold text-gray-500 mb-3">Acesse o Painel de Pessoas para análise completa →</p>
-        <p className="text-sm text-gray-600">14 pessoas prontas para movimentação · 23 planos em atraso · 2 lacunas de sucessão</p>
+        <p className="text-sm font-semibold text-gray-500 mb-3">
+          Acesse o Painel de Pessoas para análise completa →
+        </p>
+        <p className="text-sm text-gray-600">
+          14 pessoas prontas para movimentação · 23 planos em atraso · 2 lacunas de sucessão
+        </p>
       </motion.div>
     </motion.div>
   );

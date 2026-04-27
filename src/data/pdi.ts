@@ -54,44 +54,47 @@ export interface PersonaPdi {
 // ============================================================
 
 export const pdiData: Record<string, PersonaPdi> = {
-  // ── MARIANA — GN PF II → GN PF III ─────────────────────
+  // ── MARIANA — GN PF II → Gerente de Agência ──────────────
+  // Aspiração unificada: Mariana mira Gerente de Agência (alinhado com employees.ts:23)
   mariana: {
     id: 'pdi-mariana',
     employeeId: 'emp-001',
     goal: {
       id: 'goal-1',
-      targetRoleId: 'role-gn-pf3',
-      targetRoleTitle: 'Gerente de Negócios PF III',
-      deadline: 'Dez/2027',
+      targetRoleId: 'role-gerente-agencia',
+      targetRoleTitle: 'Gerente de Agência',
+      deadline: 'Abr/2028',
       progress: 35,
     },
+    // Competências oficiais Jeito Sicredi de Ser (consenso vindo da avaliação Q1/2026)
+    // Mesma fonte: competencias-sicredi.ts + elofy-config.ts:209-215
     competencies: [
-      { name: 'Carteira Alta Renda', current: 6, target: 10 },
-      { name: 'Liderança Informal', current: 5, target: 8 },
-      { name: 'Certificação CEA', current: 0, target: 10 },
-      { name: 'Planejamento Estratégico', current: 4, target: 7 },
-      { name: 'Negociação Avançada', current: 7, target: 9 },
+      { name: 'Essência Cooperativista', current: 4, target: 4 },
+      { name: 'Entender para Atender', current: 4, target: 4 },
+      { name: 'Vai lá e Faz', current: 3, target: 4 },
+      { name: 'Aprender e Mudar Rápido', current: 3, target: 4 },
+      { name: 'Inovar para Transformar', current: 3, target: 4 },
     ],
     actions: [
       {
-        id: 'act-1', title: 'Trilha para GN PF III — Fase 1', description: 'Completar módulos de Carteira Alta Renda',
+        id: 'act-1', title: 'Trilha para Gerente de Agência: Fundamentos de Liderança', description: 'Programa estruturado de liderança cooperativa, gestão de equipes e visão estratégica',
         type: 'trilha', status: 'in_progress', linkedTrackId: 'track-pf2-pf3',
       },
       {
-        id: 'act-2', title: 'Mentoria com Ana Beatriz (GA)', description: 'Reuniões mensais sobre liderança e gestão de carteira premium',
+        id: 'act-2', title: 'Mentoria com Paulo Ferreira (GA)', description: 'Reuniões mensais sobre liderança, gestão de agência e desenvolvimento de equipe',
         type: 'mentoria', status: 'in_progress', dueDate: 'Mai/2026',
       },
       {
-        id: 'act-3', title: 'Observação em Comitê de Carreira', description: 'Acompanhar Roberto em comitê de carreira como observadora, vivência de liderança',
+        id: 'act-3', title: 'Observação em Comitê de Carreira', description: 'Acompanhar Roberto em comitê como observadora: vivência de tomada de decisão sobre pessoas',
         type: 'projeto', status: 'in_progress', dueDate: 'Jun/2026',
       },
       {
-        id: 'act-4', title: 'Iniciar preparatório CEA', description: 'Módulos de planejamento financeiro e alocação de ativos',
-        type: 'certificacao', status: 'pending', dueDate: 'Ago/2026',
+        id: 'act-4', title: 'Job Shadow: Gerente de Agência', description: 'Acompanhar dia a dia de uma GA experiente por uma semana',
+        type: 'projeto', status: 'pending', dueDate: 'Ago/2026',
       },
       {
-        id: 'act-5', title: 'Workshop de Feedback SCII', description: 'Participar do programa S2S de feedback estruturado',
-        type: 'livre', status: 'completed', completedDate: 'Mar/2026',
+        id: 'act-5', title: 'Liderança de mini-projeto na agência', description: 'Liderar campanha trimestral de relacionamento como vivência prática de liderança',
+        type: 'projeto', status: 'completed', completedDate: 'Mar/2026',
       },
       {
         id: 'act-6', title: 'Leitura: O Líder Cooperativo', description: 'Livro sobre liderança no contexto cooperativista',
@@ -104,16 +107,16 @@ export const pdiData: Record<string, PersonaPdi> = {
     ],
     theoSuggestions: [
       {
-        id: 'sug-1', title: 'Completar Fase 1 da Trilha', description: 'Falta 1 módulo para completar Carteira Alta Renda. Que tal terminar esta semana?',
+        id: 'sug-1', title: 'Próximo passo: aprofundar Inovar para Transformar', description: 'Sua avaliação ficou em #mandoubem nessa competência, mas para virar GA o esperado é #arrasou. Tem um curso de Pensamento Estratégico em Inovação no Sicredi Aprende.',
         type: 'trilha', priority: 'high', linkedTrackId: 'track-pf2-pf3',
       },
       {
-        id: 'sug-2', title: 'Preparatório CEA disponível', description: 'O módulo de planejamento financeiro já está disponível no Sicredi Aprende. É um diferencial forte para PF III.',
-        type: 'certificacao', priority: 'medium',
+        id: 'sug-2', title: 'Job Shadow com GA disponível', description: 'A Cooperativa Caminhos abriu vaga para job shadow com GA por uma semana. Acelera muito a leitura prática de liderança.',
+        type: 'projeto', priority: 'high',
       },
       {
-        id: 'sug-3', title: 'Vivência prática de liderança', description: 'Há uma experiência de acompanhamento de Gerente de Agência na Cooperativa Caminhos. Seria ideal para seu perfil.',
-        type: 'projeto', priority: 'medium',
+        id: 'sug-3', title: 'Pedir mentoria com Paulo (GA)', description: 'O Paulo Ferreira (GA III) está disponível para 1 mentoria nova. Já formou 4 GAs. Vale conversar.',
+        type: 'mentoria', priority: 'medium',
       },
     ],
   },
@@ -173,7 +176,7 @@ export const pdiData: Record<string, PersonaPdi> = {
   // ── ROBERTO — GA (líder) ───────────────────────────────
   roberto: {
     id: 'pdi-roberto',
-    employeeId: 'emp-020',
+    employeeId: 'emp-002',
     goal: {
       id: 'goal-3',
       targetRoleId: 'role-gerente-regional',
