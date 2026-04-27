@@ -32,27 +32,31 @@ interface QuickAction {
 function getQuickActions(personaRole: string): QuickAction[] {
   if (personaRole === 'lider') {
     return [
-      { label: 'Preparar 1:1', description: 'Roteiro para conversa de desenvolvimento', icon: <MessageSquare className="w-4 h-4" />, prompt: 'Me ajude a preparar a 1:1 com meu time', color: '#2563EB' },
-      { label: 'Prontidão do Time', description: 'Análise de quem está pronto para avançar', icon: <TrendingUp className="w-4 h-4" />, prompt: 'Qual o status de prontidão do meu time?', color: '#3FA110' },
-      { label: 'Stay Conversation', description: 'Estratégia para reter talentos chave', icon: <Users className="w-4 h-4" />, prompt: 'Como preparar uma stay conversation para quem está em risco de turnover?', color: '#D97706' },
-      { label: 'Comitê de Carreira', description: 'Preparar discussão para o comitê', icon: <Star className="w-4 h-4" />, prompt: 'Me ajude a preparar o comitê de carreira do meu time', color: '#7C3AED' },
+      { label: 'Preparar 1:1', description: 'Roteiro para conversa com colaborador', icon: <MessageSquare className="w-4 h-4" />, prompt: 'Me ajude a preparar a 1:1 com meu time', color: '#2563EB' },
+      { label: 'Prontidão do Time', description: 'Quem está pronto para avançar', icon: <TrendingUp className="w-4 h-4" />, prompt: 'Qual o status de prontidão do meu time?', color: '#3FA110' },
+      { label: 'Conversa de Retenção', description: 'Estratégia para reter talentos', icon: <Users className="w-4 h-4" />, prompt: 'Como preparar uma conversa de retenção para quem está em risco de turnover?', color: '#D97706' },
     ];
   }
   if (personaRole === 'pc_analista') {
     return [
       { label: 'Análise de Turnover', description: 'Identificar padrões e riscos', icon: <BarChart3 className="w-4 h-4" />, prompt: 'Quais são os principais indicadores de turnover que devo monitorar?', color: '#EF4444' },
-      { label: 'Mapa de Talentos', description: 'Orientação sobre 9-box e potencial', icon: <Map className="w-4 h-4" />, prompt: 'Como usar o mapa de talentos 9-box para decisões de carreira?', color: '#7C3AED' },
-      { label: 'Ciclo de Avaliação', description: 'Preparar o ciclo 360°', icon: <Target className="w-4 h-4" />, prompt: 'Como preparar o ciclo de avaliação 360° da cooperativa?', color: '#3FA110' },
-      { label: 'Estratégia P&C', description: 'Montar apresentação para diretoria', icon: <Lightbulb className="w-4 h-4" />, prompt: 'Me ajude a montar uma apresentação de indicadores de P&C para a diretoria', color: '#0E7490' },
+      { label: 'Ciclo de Avaliação', description: 'Preparar o ciclo de avaliação', icon: <Target className="w-4 h-4" />, prompt: 'Como preparar o ciclo de avaliação da cooperativa?', color: '#3FA110' },
+      { label: 'Indicadores para Diretoria', description: 'Montar apresentação P&C', icon: <Lightbulb className="w-4 h-4" />, prompt: 'Me ajude a montar uma apresentação de indicadores de P&C para a diretoria', color: '#0E7490' },
     ];
   }
   // Colaborador
   return [
-    { label: 'Próximo Passo', description: 'O que falta para avançar na carreira', icon: <TrendingUp className="w-4 h-4" />, prompt: 'O que falta para eu avançar para o próximo cargo?', color: '#3FA110' },
-    { label: 'Preparar 1:1', description: 'Roteiro para conversa com meu líder', icon: <MessageSquare className="w-4 h-4" />, prompt: 'Me ajude a preparar a 1:1 com meu líder', color: '#2563EB' },
-    { label: 'Trilhas', description: 'Qual trilha de desenvolvimento seguir', icon: <BookOpen className="w-4 h-4" />, prompt: 'Quais trilhas de desenvolvimento são mais indicadas para mim?', color: '#7C3AED' },
-    { label: 'Movimentação', description: 'Opções de carreira lateral', icon: <Map className="w-4 h-4" />, prompt: 'Quais são minhas opções de movimentação lateral?', color: '#D97706' },
+    { label: 'Próximo Passo', description: 'O que falta para avançar', icon: <TrendingUp className="w-4 h-4" />, prompt: 'O que falta para eu avançar para o próximo cargo?', color: '#3FA110' },
+    { label: 'Preparar 1:1', description: 'Roteiro para conversa com líder', icon: <MessageSquare className="w-4 h-4" />, prompt: 'Me ajude a preparar a 1:1 com meu líder', color: '#2563EB' },
+    { label: 'Trilhas', description: 'Trilha de desenvolvimento ideal', icon: <BookOpen className="w-4 h-4" />, prompt: 'Quais trilhas de desenvolvimento são mais indicadas para mim?', color: '#7C3AED' },
   ];
+}
+
+// Sidebar topics per persona
+function getSidebarTopics(personaRole: string): string[] {
+  if (personaRole === 'lider') return ['Plano de sucessão', 'Feedback para o time', 'Indicadores de engajamento', 'Comitê de carreira', 'Conversas de desenvolvimento'];
+  if (personaRole === 'pc_analista') return ['Turnover voluntário', 'Cobertura de sucessão', 'Ciclo de avaliação', 'Clima organizacional', 'Programa de talentos'];
+  return ['Minha aspiração', 'Gaps de competência', 'Oportunidades internas', 'Certificações', 'Mentoria'];
 }
 
 // Pre-scripted conversations per persona
@@ -267,7 +271,6 @@ export default function ParceiroJornadaPage() {
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
-    setShowQuickActions(false);
 
     setTimeout(() => {
       const response = responses[text] || `Entendi sua pergunta sobre "${text}". Baseado no seu perfil como **${role?.title || currentPersona.jobTitle}**, aqui vai minha análise:\n\nEsta é uma área importante para o seu desenvolvimento. Posso te ajudar a:\n• Mapear gaps específicos\n• Sugerir trilhas de desenvolvimento\n• Identificar mentores relevantes\n• Preparar um plano de ação\n\nQual desses caminhos faz mais sentido para você?`;
@@ -283,8 +286,12 @@ export default function ParceiroJornadaPage() {
       ? 'Copiloto de Pessoas & Cultura'
       : 'Copiloto de Carreira';
 
+  const sidebarTopics = getSidebarTopics(currentPersona.role);
+
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="max-w-3xl mx-auto h-[calc(100vh-130px)] flex flex-col">
+    <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl mx-auto h-[calc(100vh-130px)] flex gap-5">
+      {/* Left Column: Chat */}
+      <div className="flex-1 flex flex-col min-w-0">
       {/* Header */}
       <motion.div variants={item} className="mb-4">
         <div className="flex items-center gap-3">
@@ -303,35 +310,26 @@ export default function ParceiroJornadaPage() {
         </div>
       </motion.div>
 
-      {/* Quick Actions. shown before first interaction */}
-      <AnimatePresence>
-        {showQuickActions && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="grid grid-cols-2 gap-2 mb-4"
+      {/* Quick Actions (always visible) */}
+      <div className="flex gap-2 mb-4">
+        {quickActions.map((qa) => (
+          <button
+            key={qa.label}
+            onClick={() => handleSend(qa.prompt)}
+            className="card card-interactive p-2.5 text-left group flex-1"
           >
-            {quickActions.map((qa) => (
-              <button
-                key={qa.label}
-                onClick={() => handleSend(qa.prompt)}
-                className="card card-interactive p-3 text-left group"
-              >
-                <div className="flex items-start gap-2.5">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${qa.color}12` }}>
-                    <span style={{ color: qa.color }}>{qa.icon}</span>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-800">{qa.label}</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-1">{qa.description}</p>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div className="flex items-start gap-2">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${qa.color}12` }}>
+                <span style={{ color: qa.color }}>{qa.icon}</span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-800">{qa.label}</p>
+                <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-1">{qa.description}</p>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
@@ -411,6 +409,52 @@ export default function ParceiroJornadaPage() {
         <p className="text-[10px] text-gray-400 mt-1.5 text-center">
           IA demonstrativa · Respostas pré-configuradas para o protótipo
         </p>
+      </div>
+      </div>
+
+      {/* Sidebar Right */}
+      <div className="hidden lg:flex flex-col w-64 shrink-0 space-y-4">
+        {/* Tópicos sugeridos */}
+        <div className="card p-4">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-3">Tópicos sugeridos</p>
+          <div className="flex flex-wrap gap-1.5">
+            {sidebarTopics.map((topic) => (
+              <button
+                key={topic}
+                onClick={() => handleSend(topic)}
+                className="text-[10px] font-semibold px-2 py-1 rounded-md bg-verde-50 text-verde-digital hover:bg-verde-100 transition-colors"
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Nudges recentes */}
+        <div className="card p-4">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-3">Nudges recentes</p>
+          <div className="space-y-2">
+            {[
+              { text: 'Atualizar autoavaliação', status: 'pendente' },
+              { text: 'Trilha de Liderança', status: 'aceito' },
+              { text: 'Mentoria com GA', status: 'pendente' },
+            ].map((nudge, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <p className="text-xs text-gray-600 truncate">{nudge.text}</p>
+                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${nudge.status === 'aceito' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
+                  {nudge.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="p-3 rounded-lg bg-gray-50">
+          <p className="text-[10px] text-gray-400 leading-relaxed">
+            Theo usa seus dados na interface (avaliação, PDI, aspiração) para gerar sugestões personalizadas.
+          </p>
+        </div>
       </div>
     </motion.div>
   );

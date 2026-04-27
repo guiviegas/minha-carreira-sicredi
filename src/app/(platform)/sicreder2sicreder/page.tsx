@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
 import { mentores, getMentoresDisponiveis } from '@/data/mentoring';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   HeartHandshake,
   Search,
@@ -14,136 +15,189 @@ import {
   Clock,
   MapPin,
   Sparkles,
-  Filter,
   Award,
+  CheckCircle2,
+  Calendar,
+  User,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
-export default function Sicreder2SicrederPage() {
+type Tab = 'encontrar' | 'minhas' | 'ser-mentor';
+
+export default function MentoriaPage() {
   const { currentPersona } = usePersona();
+  const [activeTab, setActiveTab] = useState<Tab>('encontrar');
+  const [searchQuery, setSearchQuery] = useState('');
   if (!currentPersona) return null;
 
   const employee = getEmployeeById(currentPersona.employeeId);
   const aspiracao = employee?.aspirations[0];
   const cargoAspirado = aspiracao ? getRoleById(aspiracao.targetRoleId) : null;
   const disponiveis = getMentoresDisponiveis();
+  const filteredMentores = disponiveis.filter(m =>
+    !searchQuery || m.nome.toLowerCase().includes(searchQuery.toLowerCase()) || m.especialidades.some(a => a.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const tabs = [
+    { id: 'encontrar' as Tab, label: 'Encontrar Mentor', icon: Search },
+    { id: 'minhas' as Tab, label: 'Minhas Mentorias', icon: HeartHandshake },
+    { id: 'ser-mentor' as Tab, label: 'Ser Mentor', icon: Award },
+  ];
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-5xl">
       <motion.div variants={item}>
-        <h1 className="text-2xl font-bold text-gray-900">Sicreder2Sicreder</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Mentoria</h1>
         <p className="text-sm text-gray-500 mt-1">Conecte-se com mentores e pares que já percorreram o caminho que você quer trilhar</p>
       </motion.div>
 
-      {/* AI Recommendation */}
-      <motion.div variants={item} className="card p-5 bg-gradient-to-r from-purple-50 to-white border-purple-100">
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-4 h-4 text-purple-500" />
-          <p className="text-xs font-semibold text-purple-600">Recomendação Inteligente</p>
-        </div>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          {cargoAspirado ? (
-            <>Com base na sua aspiração de se tornar <strong>{cargoAspirado.title}</strong>, encontrei <strong>{disponiveis.length} mentores</strong> que podem te ajudar a desenvolver as competências que faltam.</>
-          ) : (
-            <>Encontrei <strong>{disponiveis.length} mentores</strong> disponíveis para te ajudar no seu desenvolvimento.</>
-          )}
-        </p>
-      </motion.div>
-
-      {/* Search */}
-      <motion.div variants={item} className="card p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar mentor por cargo, competência ou cooperativa..."
-              className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-gray-200 focus:border-verde-digital focus:ring-1 focus:ring-verde-digital/20 outline-none"
-            />
-          </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-            <Filter className="w-4 h-4" /> Filtros
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Mentores Grid */}
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {mentores.map((mentor) => {
-          const disponivel = mentor.disponibilidade !== 'indisponivel' && mentor.mentoradosAtuais < mentor.maxMentorados;
-          const initials = mentor.nome.split(' ').map(n => n[0]).slice(0, 2).join('');
-          const colors = ['#16A34A', '#2563EB', '#7C3AED', '#0E7490', '#D97706'];
-          const cor = colors[mentor.id.charCodeAt(mentor.id.length - 1) % colors.length];
-
+      {/* Tabs */}
+      <motion.div variants={item} className="flex gap-1 p-1 rounded-xl bg-gray-100">
+        {tabs.map(tab => {
+          const Icon = tab.icon;
           return (
-            <div key={mentor.id} className="card card-interactive p-5 group">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0" style={{ backgroundColor: cor }}>
-                  {initials}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-gray-900">{mentor.nome}</h3>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                      <span className="text-xs font-semibold text-gray-600">{mentor.avaliacaoMedia}</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-0.5">{mentor.cargo}</p>
-                  <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
-                    <MapPin className="w-3 h-3" /> {mentor.agencia} · {mentor.cooperativa}
-                  </p>
-                  {mentor.hashtag && (
-                    <span className="inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-600 mt-1">
-                      {mentor.hashtag}
-                    </span>
-                  )}
-                  <p className="text-xs text-gray-500 mt-2 line-clamp-2">{mentor.bio}</p>
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {mentor.especialidades.slice(0, 4).map((area) => (
-                      <span key={area} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                        {area}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${disponivel ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${disponivel ? 'bg-green-500' : 'bg-gray-400'}`} />
-                        {disponivel ? 'Disponível' : 'Indisponível'}
-                      </span>
-                      <span className="text-[10px] text-gray-400 flex items-center gap-1">
-                        <Clock className="w-2.5 h-2.5" /> {mentor.experienciaAnos} anos exp.
-                      </span>
-                    </div>
-                    <button className="text-xs font-semibold text-verde-digital flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Solicitar mentoria <ArrowRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                activeTab === tab.id
+                  ? 'bg-white text-verde-digital shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </button>
           );
         })}
       </motion.div>
 
-      {/* Stats */}
-      <motion.div variants={item} className="grid grid-cols-3 gap-4">
-        <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{mentores.length * 47}</p>
-          <p className="text-[11px] text-gray-500">Mentores ativos no sistema</p>
-        </div>
-        <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{disponiveis.length * 22}</p>
-          <p className="text-[11px] text-gray-500">Mentorias realizadas</p>
-        </div>
-        <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-verde-digital">4.7</p>
-          <p className="text-[11px] text-gray-500">Avaliação média</p>
-        </div>
-      </motion.div>
+      {/* Tab: Encontrar Mentor */}
+      {activeTab === 'encontrar' && (
+        <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
+          {/* Search */}
+          <motion.div variants={item} className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar por nome, área ou habilidade..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:border-verde-digital focus:ring-1 focus:ring-verde-digital/20 outline-none text-sm"
+            />
+          </motion.div>
+
+          {/* Mentor Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredMentores.map((mentor) => (
+              <motion.div key={mentor.id} variants={item} className="card p-5 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl avatar-initials text-sm" style={{ backgroundColor: '#3FA110' }}>
+                    {mentor.nome.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">{mentor.nome}</p>
+                    <p className="text-xs text-gray-500">{mentor.cargo}</p>
+                    <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                      <MapPin className="w-3 h-3" /> {mentor.cooperativa}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {mentor.especialidades.map(area => (
+                        <span key={area} className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-verde-50 text-verde-digital">
+                          {area}
+                        </span>
+                      ))}
+                    </div>
+                    <button className="mt-3 text-xs font-semibold text-verde-digital hover:underline flex items-center gap-1">
+                      Pedir mentoria <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Tab: Minhas Mentorias */}
+      {activeTab === 'minhas' && (
+        <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
+          {/* Em curso */}
+          <motion.div variants={item} className="card p-5">
+            <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-verde-digital" /> Mentorias em Curso
+            </h2>
+            <div className="p-4 rounded-lg bg-verde-50/50 border border-verde-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-gray-900">Paulo Ferreira</p>
+                  <p className="text-xs text-gray-500">Gerente de Agência, Cooperativa Caminhos</p>
+                  <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" /> Iniciada: Jan 2026 · Próximo encontro: 15/05
+                  </p>
+                </div>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-verde-50 text-verde-digital">Ativa</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Solicitações */}
+          <motion.div variants={item} className="card p-5">
+            <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-amber-500" /> Solicitações Pendentes
+            </h2>
+            <div className="p-4 rounded-lg bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-800">Camila Ribeiro</p>
+                  <p className="text-xs text-gray-500">GA Trainee, Agência Mirante</p>
+                  <p className="text-xs text-gray-400 mt-1">Solicitada em 20/04/2026</p>
+                </div>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-600">Aguardando</span>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Tab: Ser Mentor */}
+      {activeTab === 'ser-mentor' && (
+        <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
+          <motion.div variants={item} className="card p-6 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-verde-50 flex items-center justify-center mx-auto mb-4">
+              <Award className="w-8 h-8 text-verde-digital" />
+            </div>
+            <h2 className="text-lg font-bold text-gray-900">Compartilhe sua experiência</h2>
+            <p className="text-sm text-gray-500 mt-2 max-w-md mx-auto">
+              Cadastre-se como mentor para ajudar outros colaboradores do Sicredi a crescerem profissionalmente.
+            </p>
+
+            <div className="mt-6 max-w-md mx-auto space-y-3">
+              <div>
+                <label className="text-xs font-semibold text-gray-600 block text-left mb-1">Áreas que posso mentorar</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Gestão de carteira, Liderança, Crédito PJ..."
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-verde-digital focus:ring-1 focus:ring-verde-digital/20 outline-none text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-gray-600 block text-left mb-1">Disponibilidade</label>
+                <select className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-700 outline-none">
+                  <option>1 encontro por mês</option>
+                  <option>2 encontros por mês</option>
+                  <option>Sob demanda</option>
+                </select>
+              </div>
+              <button className="w-full py-2.5 bg-verde-digital text-white rounded-lg text-sm font-semibold hover:bg-verde-600 transition-colors">
+                Cadastrar como mentor
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
