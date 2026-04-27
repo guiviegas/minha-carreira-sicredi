@@ -200,6 +200,7 @@ export interface AvaliacaoCiclo {
 }
 
 // --- Dados mock de avaliações ---
+// Competências oficiais Jeito Sicredi de Ser (7) — IDs em sync com competencias-sicredi.ts
 export const avaliacoesMock: AvaliacaoCiclo[] = [
   // Mariana — Ciclo ativo
   {
@@ -207,11 +208,13 @@ export const avaliacoesMock: AvaliacaoCiclo[] = [
     employeeId: 'emp-001',
     cicloId: 'ciclo-2026-1',
     competencias: [
-      { competenciaId: 'essencia-cooperativista', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
-      { competenciaId: 'entender-para-atender', autoAvaliacao: 4, avaliacaoLider: 3, consenso: 4 },
-      { competenciaId: 'vai-la-e-faz', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'aprender-mudar-rapido', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'inovar-para-transformar', autoAvaliacao: 3, avaliacaoLider: 2, consenso: 3, comentarioLider: 'Pode explorar mais soluções digitais no atendimento' },
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 4, avaliacaoLider: 3, consenso: 4 },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 3, avaliacaoLider: 2, consenso: 3, comentarioLider: 'Pode explorar mais soluções digitais e novas abordagens no atendimento' },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
     ],
     notaFinalPerformance: 3,
     prontidaoId: 'em-desenvolvimento',
@@ -220,8 +223,8 @@ export const avaliacoesMock: AvaliacaoCiclo[] = [
       'Excelente no relacionamento com associados, Top 3 em satisfação',
       'Precisa desenvolver mais visão estratégica para o próximo cargo',
     ],
-    pontosFortes: ['Relacionamento', 'Cooperativismo', 'Satisfação do associado'],
-    pontosDesenvolvimento: ['Liderança de pessoas', 'Planejamento estratégico', 'Análise financeira avançada'],
+    pontosFortes: ['Faz Junto', 'Faz o Certo', 'Gera Confiança'],
+    pontosDesenvolvimento: ['Evoluir digitalmente', 'Liderança de pessoas', 'Visão estratégica'],
     status: 'concluido',
   },
   // Mariana — Ciclo anterior
@@ -230,18 +233,20 @@ export const avaliacoesMock: AvaliacaoCiclo[] = [
     employeeId: 'emp-001',
     cicloId: 'ciclo-2025-2',
     competencias: [
-      { competenciaId: 'essencia-cooperativista', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'entender-para-atender', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'vai-la-e-faz', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'aprender-mudar-rapido', autoAvaliacao: 2, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'inovar-para-transformar', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 3, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 2, avaliacaoLider: 3, consenso: 3 },
     ],
     notaFinalPerformance: 3,
     prontidaoId: 'em-desenvolvimento',
     potencialId: 'crescer',
     feedbacks: ['Evolução muito boa no semestre', 'Boa referência de atendimento'],
-    pontosFortes: ['Atendimento consultivo', 'Cooperativismo'],
-    pontosDesenvolvimento: ['Inovação', 'Ferramentas digitais'],
+    pontosFortes: ['Faz o Certo', 'Faz Junto'],
+    pontosDesenvolvimento: ['Evolui (digital)', 'Disponibilidade'],
     status: 'concluido',
   },
   // Roberto — Ciclo ativo
@@ -250,11 +255,13 @@ export const avaliacoesMock: AvaliacaoCiclo[] = [
     employeeId: 'emp-002',
     cicloId: 'ciclo-2026-1',
     competencias: [
-      { competenciaId: 'essencia-cooperativista', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
-      { competenciaId: 'entender-para-atender', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'vai-la-e-faz', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
-      { competenciaId: 'aprender-mudar-rapido', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2, comentarioLider: 'Resistência a novas ferramentas digitais' },
-      { competenciaId: 'inovar-para-transformar', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2, comentarioLider: 'Resistência a novas ferramentas digitais e abordagens modernas' },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
     ],
     notaFinalPerformance: 3,
     prontidaoId: 'em-desenvolvimento',
@@ -263,8 +270,8 @@ export const avaliacoesMock: AvaliacaoCiclo[] = [
       'Veterano com forte cultura cooperativista',
       'Precisa se atualizar em ferramentas digitais e gestão moderna',
     ],
-    pontosFortes: ['Cooperativismo', 'Gestão de carteira', 'Relacionamento'],
-    pontosDesenvolvimento: ['Transformação digital', 'People analytics', 'Gestão por dados'],
+    pontosFortes: ['Faz Junto', 'Gera Confiança', 'Faz o Certo'],
+    pontosDesenvolvimento: ['Evolui (digital)', 'Gestão por dados'],
     status: 'concluido',
   },
 ];

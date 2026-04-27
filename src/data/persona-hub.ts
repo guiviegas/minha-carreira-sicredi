@@ -393,7 +393,7 @@ function buildNotificacoes(
         id: 'notif-m-3',
         tipo: 'reconhecimento',
         titulo: 'Seu líder reconheceu você',
-        descricao: 'Roberto deu #mandoubem em "Entender para Atender" na última conversa.',
+        descricao: 'Roberto deu #arrasou em #GENTE QUE ENTENDE DE GENTE na última conversa.',
         data: 'há 1 semana',
         href: '/avaliacao',
         lida: true,

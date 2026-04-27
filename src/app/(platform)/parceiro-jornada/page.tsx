@@ -65,7 +65,7 @@ const initialMessages: Record<string, Message[]> = {
     {
       id: '1',
       role: 'assistant',
-      content: 'Olá Mariana! 👋\n\nSou o **Theo**, seu parceiro de jornada de carreira no Sicredi. Eu cruzo seu perfil, sua avaliação e sua aspiração para sugerir os próximos passos certos. Tudo o que digo aqui é baseado nos seus dados reais na plataforma.\n\n📊 **Seu retrato hoje:**\n• Cargo: Gerente de Negócios PF II\n• Aspiração: Gerente de Agência (24 meses)\n• Conceito atual: #mandoubem · Prontidão: Em desenvolvimento\n\n💪 **Pontos fortes Jeito Sicredi:** #arrasou em Essência Cooperativista e Entender para Atender.\n\n⚠️ **Onde você precisa subir para virar GA:** Inovar para Transformar (#mandoubem → #arrasou) e habilidades técnicas de Liderança de Pessoas (62 → 80) e Planejamento Estratégico (55 → 70).\n\nComo posso te ajudar hoje?',
+      content: 'Olá Mariana! 👋\n\nSou o **Theo**, seu parceiro de jornada de carreira no Sicredi. Eu cruzo seu perfil, sua avaliação e sua aspiração para sugerir os próximos passos certos. Tudo o que digo aqui é baseado nos seus dados reais na plataforma.\n\n📊 **Seu retrato hoje:**\n• Cargo: Gerente de Negócios PF II\n• Aspiração: Gerente de Agência (24 meses)\n• Conceito atual: #mandoubem · Prontidão: Em desenvolvimento\n\n💪 **Pontos fortes Jeito Sicredi:** #arrasou em #GENTE QUE FAZ JUNTO, #GENTE QUE FAZ O CERTO e #GENTE QUE GERA CONFIANÇA.\n\n⚠️ **Onde você precisa subir para virar GA:** #GENTE QUE EVOLUI (hoje #quaselá, esperado #arrasou) e habilidades técnicas de Liderança de Pessoas (62 → 80) e Planejamento Estratégico (55 → 70).\n\nComo posso te ajudar hoje?',
     },
   ],
   roberto: [
@@ -88,19 +88,20 @@ const responses: Record<string, string> = {
   'O que falta para eu avançar para o próximo cargo?': `Cruzei sua avaliação atual com o que **Gerente de Agência** exige.
 
 ✅ **Você já atende (mantém o nível):**
-• #arrasou em Essência Cooperativista e Entender para Atender (consenso da avaliação Q1/2026)
+• #arrasou em #GENTE QUE FAZ JUNTO, #GENTE QUE ENTENDE DE GENTE, #GENTE QUE FAZ O CERTO e #GENTE QUE GERA CONFIANÇA (consenso da avaliação Q1/2026)
 • Relacionamento com Associados: 92 (esperado 80)
 • Cooperativismo técnico: 88 (esperado 80)
 
 ⚠️ **Onde precisa subir para virar GA:**
-• **Inovar para Transformar:** #mandoubem → precisa #arrasou (Roberto comentou na avaliação: "Pode explorar mais soluções digitais")
+• **#GENTE QUE EVOLUI:** hoje #quaselá, precisa chegar a #arrasou (Roberto comentou: "pode explorar mais soluções digitais e novas abordagens")
+• **#GENTE COM QUEM CONTAR:** hoje #mandoubem, esperado #arrasou para o nível de liderança
 • **Liderança de Pessoas:** 62 → precisa 80 (+18 pontos)
 • **Planejamento Estratégico:** 55 → precisa 70 (+15 pontos)
 
 📋 **Plano sugerido para 90 dias:**
 1. **Mês 1:** Job Shadow com GA da Cooperativa Caminhos (1 semana) + módulo "Liderança Fundamentals"
 2. **Mês 2:** Mentoria mensal com Paulo Ferreira (GA III), foco em planejamento e gestão de pessoas
-3. **Mês 3:** Liderar mini-projeto de inovação na Praça Central (vivência prática para subir Inovar para Transformar)
+3. **Mês 3:** Liderar mini-projeto de inovação na Praça Central (vivência prática para subir #GENTE QUE EVOLUI)
 
 Quer que eu adicione tudo isso ao seu PDI?`,
 

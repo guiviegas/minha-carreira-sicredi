@@ -3,7 +3,7 @@ import { CareerPath } from '@/types';
 export const careerPaths: CareerPath[] = [
   // ===== VERTICAL — Trilha PF (I → IV) =====
   { id: 'cp-01', fromRoleId: 'role-assistente-atendimento', toRoleId: 'role-assistente-negocios', type: 'vertical', requirements: ['Onboarding completo', 'Avaliação de competências favorável'], difficulty: 'facil' },
-  { id: 'cp-02', fromRoleId: 'role-assistente-negocios', toRoleId: 'role-gn-pf1', type: 'vertical', requirements: ['Certificação CPA-10', 'Avaliação 270° favorável', 'Demonstrar Entender para Atender'], difficulty: 'moderado' },
+  { id: 'cp-02', fromRoleId: 'role-assistente-negocios', toRoleId: 'role-gn-pf1', type: 'vertical', requirements: ['Certificação CPA-10', 'Avaliação 270° favorável', 'Demonstrar #GENTE QUE ENTENDE DE GENTE'], difficulty: 'moderado' },
   { id: 'cp-03', fromRoleId: 'role-gn-pf1', toRoleId: 'role-gn-pf2', type: 'vertical', requirements: ['Resultados consistentes', 'CPA-20 desejável', 'Trilha de desenvolvimento concluída'], difficulty: 'moderado' },
   { id: 'cp-04', fromRoleId: 'role-gn-pf2', toRoleId: 'role-gn-pf3', type: 'vertical', requirements: ['CPA-20 obrigatória', 'Track record de carteira qualificada', 'Mentoria ativa'], difficulty: 'desafiador' },
   { id: 'cp-05', fromRoleId: 'role-gn-pf3', toRoleId: 'role-gn-pf4', type: 'vertical', requirements: ['CEA obrigatória', 'Carteira alta renda consolidada', 'Referência técnica regional'], difficulty: 'expert' },

@@ -21,11 +21,11 @@ const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transiti
 
 // Mock evaluations for team members
 const avaliacoesMockTime: Record<string, { status: string; nota: number; competencias: Record<string, number> }> = {
-  'emp-001': { status: 'concluido', nota: 3, competencias: { 'essencia-cooperativista': 4, 'entender-para-atender': 4, 'vai-la-e-faz': 3, 'aprender-mudar-rapido': 3, 'inovar-para-transformar': 3 } },
+  'emp-001': { status: 'concluido', nota: 3, competencias: { 'gente-que-faz-junto': 4, 'gente-que-entende-de-gente': 4, 'gente-que-gera-prosperidade': 3, 'gente-que-evolui': 3, 'gente-que-faz-o-certo': 4, 'gente-que-gera-confianca': 4, 'gente-com-quem-contar': 3 } },
   'emp-101': { status: 'pendente', nota: 0, competencias: {} },
   'emp-102': { status: 'autoavaliacao', nota: 0, competencias: {} },
-  'emp-103': { status: 'concluido', nota: 4, competencias: { 'essencia-cooperativista': 4, 'entender-para-atender': 4, 'vai-la-e-faz': 4, 'aprender-mudar-rapido': 3, 'inovar-para-transformar': 3 } },
-  'emp-104': { status: 'concluido', nota: 3, competencias: { 'essencia-cooperativista': 3, 'entender-para-atender': 3, 'vai-la-e-faz': 3, 'aprender-mudar-rapido': 3, 'inovar-para-transformar': 2 } },
+  'emp-103': { status: 'concluido', nota: 4, competencias: { 'gente-que-faz-junto': 4, 'gente-que-entende-de-gente': 4, 'gente-que-gera-prosperidade': 4, 'gente-que-evolui': 3, 'gente-que-faz-o-certo': 4, 'gente-que-gera-confianca': 4, 'gente-com-quem-contar': 4 } },
+  'emp-104': { status: 'concluido', nota: 3, competencias: { 'gente-que-faz-junto': 3, 'gente-que-entende-de-gente': 3, 'gente-que-gera-prosperidade': 3, 'gente-que-evolui': 3, 'gente-que-faz-o-certo': 3, 'gente-que-gera-confianca': 3, 'gente-com-quem-contar': 2 } },
   'emp-106': { status: 'avaliacao_lider', nota: 0, competencias: {} },
 };
 

@@ -66,14 +66,16 @@ export const pdiData: Record<string, PersonaPdi> = {
       deadline: 'Abr/2028',
       progress: 35,
     },
-    // Competências oficiais Jeito Sicredi de Ser (consenso vindo da avaliação Q1/2026)
-    // Mesma fonte: competencias-sicredi.ts + elofy-config.ts:209-215
+    // 7 competências oficiais Jeito Sicredi de Ser (consenso vindo da avaliação Q1/2026)
+    // Mesma fonte: competencias-sicredi.ts + elofy-config.ts (avaliacoesMock)
     competencies: [
-      { name: 'Essência Cooperativista', current: 4, target: 4 },
-      { name: 'Entender para Atender', current: 4, target: 4 },
-      { name: 'Vai lá e Faz', current: 3, target: 4 },
-      { name: 'Aprender e Mudar Rápido', current: 3, target: 4 },
-      { name: 'Inovar para Transformar', current: 3, target: 4 },
+      { name: '#GENTE QUE FAZ JUNTO', current: 4, target: 4 },
+      { name: '#GENTE QUE ENTENDE DE GENTE', current: 4, target: 4 },
+      { name: '#GENTE QUE GERA PROSPERIDADE', current: 3, target: 4 },
+      { name: '#GENTE QUE EVOLUI', current: 3, target: 4 },
+      { name: '#GENTE QUE FAZ O CERTO', current: 4, target: 4 },
+      { name: '#GENTE QUE GERA CONFIANÇA', current: 4, target: 4 },
+      { name: '#GENTE COM QUEM CONTAR', current: 3, target: 4 },
     ],
     actions: [
       {
@@ -107,7 +109,7 @@ export const pdiData: Record<string, PersonaPdi> = {
     ],
     theoSuggestions: [
       {
-        id: 'sug-1', title: 'Próximo passo: aprofundar Inovar para Transformar', description: 'Sua avaliação ficou em #mandoubem nessa competência, mas para virar GA o esperado é #arrasou. Tem um curso de Pensamento Estratégico em Inovação no Sicredi Aprende.',
+        id: 'sug-1', title: 'Próximo passo: aprofundar #GENTE QUE EVOLUI', description: 'Sua avaliação nessa competência foi #quaselá. Para virar GA o esperado é #arrasou. Tem um curso de Pensamento Estratégico e Inovação no Sicredi Aprende.',
         type: 'trilha', priority: 'high', linkedTrackId: 'track-pf2-pf3',
       },
       {
@@ -145,7 +147,7 @@ export const pdiData: Record<string, PersonaPdi> = {
         type: 'trilha', status: 'in_progress',
       },
       {
-        id: 'act-2', title: 'Essência Cooperativista', description: 'Módulo sobre valores cooperativos no dia a dia',
+        id: 'act-2', title: 'Cultura cooperativista', description: 'Módulo sobre valores cooperativos no dia a dia (#GENTE QUE FAZ JUNTO)',
         type: 'trilha', status: 'in_progress', linkedTrackId: 'track-assist-pf1',
       },
       {
@@ -163,7 +165,7 @@ export const pdiData: Record<string, PersonaPdi> = {
     ],
     theoSuggestions: [
       {
-        id: 'sug-1', title: 'Conheça o cooperativismo', description: 'Vi que você veio de banco — o módulo "Essência Cooperativista" vai te ajudar a entender a diferença. É curtinho: 2h!',
+        id: 'sug-1', title: 'Conheça o cooperativismo', description: 'Vi que você veio de banco. O módulo "Cultura Cooperativista", ligado a #GENTE QUE FAZ JUNTO, vai te ajudar a entender a diferença. É curtinho: 2h!',
         type: 'trilha', priority: 'high', linkedTrackId: 'track-assist-pf1',
       },
       {

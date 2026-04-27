@@ -85,8 +85,8 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p4', name: 'Cooperativismo Aplicado', description: 'Valores cooperativos aplicados ao negócio',
         progress: 0,
         courses: [
-          { id: 'tc-4a', title: 'Essência Cooperativista na Prática', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-4b', title: 'Entender para Atender: Escuta Ativa', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-4a', title: 'Cultura Cooperativista na Prática (#GENTE QUE FAZ JUNTO)', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-4b', title: 'Escuta Ativa para Atendimento (#GENTE QUE ENTENDE DE GENTE)', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
     ],
