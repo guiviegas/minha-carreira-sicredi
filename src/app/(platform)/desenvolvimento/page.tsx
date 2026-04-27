@@ -8,7 +8,7 @@ import { getAvailableTracks, getTracksForRole } from '@/data/development-tracks'
 import { getRoleById } from '@/data/roles';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { BookOpen, Play, Clock, Star, Filter, ArrowRight, CheckCircle2, Sparkles, Target, Handshake, BarChart3, Lightbulb, Building2, MapIcon, Coins, Brain, TrendingUp, Video, MonitorPlay, FileText, Users, Crosshair, ExternalLink } from 'lucide-react';
+import { BookOpen, Clock, Star, Filter, ArrowRight, CheckCircle2, Sparkles, Target, Handshake, BarChart3, Lightbulb, Building2, MapIcon, Coins, Brain, TrendingUp, Video, MonitorPlay, FileText, Users, Crosshair, ExternalLink } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
@@ -140,20 +140,6 @@ export default function DesenvolvimentoPage() {
       <AnimatePresence mode="wait">
         {mode === 'netflix' ? (
           <motion.div key="netflix" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-            {/* Continue Watching */}
-            {inProgress.length > 0 && (
-              <div>
-                <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                  <Play className="w-4 h-4 text-verde-digital" /> Continue de onde parou
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {inProgress.map((course) => (
-                    <CourseCard key={course.id} course={course} />
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Para sua aspiração (vindo do hub) */}
             {hub?.cargoAlvo && trilhasParaAspiracao.length > 0 && (
               <div className="card p-5 bg-gradient-to-r from-purple-50/40 to-white border-l-4 border-l-purple-400">

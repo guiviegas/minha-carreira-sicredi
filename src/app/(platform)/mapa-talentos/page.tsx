@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
-import { employees } from '@/data/employees';
+import { employees, getTeamForLeader } from '@/data/employees';
 import { avaliacoesMock, reguaPotencial } from '@/data/elofy-config';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -25,9 +25,10 @@ const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transiti
  * Para colaboradores sem avaliação, usa heurística (engagementScore + performanceRating).
  */
 function buildNineBoxData() {
-  return employees
-    .filter((e) => e.id !== 'emp-005' && e.id !== 'emp-006') // exclui personas sem time relevante para mapa
-    .map((emp) => {
+  // Carla (P&C) vê o pool de colaboradores do Roberto (emp-002).
+  // Mantém escopo focado e coerente com o que o líder visualiza.
+  const pool = getTeamForLeader('emp-002');
+  return pool.map((emp) => {
       const aval = avaliacoesMock.find(
         (a) => a.employeeId === emp.id && a.cicloId === 'ciclo-2026-1',
       );

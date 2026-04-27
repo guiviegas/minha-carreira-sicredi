@@ -3,7 +3,8 @@
 import { usePersona } from '@/contexts/PersonaContext';
 import { getPersonaHub, PersonaHub } from '@/data/persona-hub';
 import { employees as allEmployees } from '@/data/employees';
-import { avaliacoesMock as allAvaliacoes } from '@/data/elofy-config';
+import { avaliacoesMock as allAvaliacoes, reguaPerformance } from '@/data/elofy-config';
+import { getRoleById } from '@/data/roles';
 import { motion } from 'framer-motion';
 import TheoCard from '@/components/theo/TheoCard';
 import Link from 'next/link';
@@ -341,6 +342,11 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {team.slice(0, 6).map((member) => {
               const status = getStatusColor(member);
+              const memberRole = getRoleById(member.roleId);
+              const memberAval = allAvaliacoes.find(
+                (a) => a.employeeId === member.id && a.cicloId === 'ciclo-2026-1',
+              );
+              const memberConceito = memberAval ? reguaPerformance[memberAval.notaFinalPerformance - 1] : null;
               return (
                 <a
                   key={member.id}
@@ -349,7 +355,7 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
                 >
                   <div className="flex items-center gap-2.5">
                     <div
-                      className="w-8 h-8 rounded-lg avatar-initials text-[10px]"
+                      className="w-9 h-9 rounded-lg avatar-initials text-[10px] shrink-0"
                       style={{
                         backgroundColor:
                           status.color === 'green'
@@ -369,13 +375,23 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-gray-800 truncate">
-                        {member.name.split(' ')[0]}
+                        {member.name.split(' ')[0]} {member.name.split(' ').slice(-1)[0]}
                       </p>
-                      <p className="text-[10px] text-gray-500">
-                        {member.roleId.replace('role-', '').toUpperCase()}
+                      <p className="text-[10px] text-gray-500 truncate">
+                        {memberRole?.shortTitle || memberRole?.title || '—'}
                       </p>
                     </div>
-                    <div className={`status-dot ${status.dotClass}`} />
+                    <div className="flex flex-col items-end gap-0.5 shrink-0">
+                      <div className={`status-dot ${status.dotClass}`} />
+                      {memberConceito && (
+                        <span
+                          className="text-[8px] font-bold px-1 py-0 rounded"
+                          style={{ backgroundColor: memberConceito.bgCor, color: memberConceito.cor }}
+                        >
+                          {memberConceito.hashtag.replace('#', '')}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </a>
               );
