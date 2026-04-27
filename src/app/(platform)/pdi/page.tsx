@@ -78,8 +78,13 @@ export default function PdiPage() {
           </div>
           <div className="flex items-center gap-3">
             <div className="text-right">
-              <p className="text-3xl font-extrabold text-verde-digital metric-value">{pdi.goal.progress}%</p>
-              <p className="text-xs text-gray-400">Progresso</p>
+              {/* Status simbólico em vez de % de progresso */}
+              <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-verde-50 text-verde-digital">
+                Em andamento
+              </span>
+              <p className="text-[10px] text-gray-400 mt-1">
+                {pdi.actions.filter(a => a.status === 'completed').length} de {pdi.actions.length} ações concluídas
+              </p>
             </div>
             <a
               href="/mapa-carreira"
@@ -90,14 +95,6 @@ export default function PdiPage() {
               Ver no GPS
             </a>
           </div>
-        </div>
-        <div className="mt-3 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-verde-digital to-green-400"
-            initial={{ width: 0 }}
-            animate={{ width: `${pdi.goal.progress}%` }}
-            transition={{ duration: 1, delay: 0.3 }}
-          />
         </div>
       </motion.div>
 

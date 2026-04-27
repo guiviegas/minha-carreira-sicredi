@@ -6,9 +6,6 @@ import { PersonaHub } from '@/data/persona-hub';
 import { Role } from '@/types';
 import { roles, getRoleById } from '@/data/roles';
 import { reguaPerformance } from '@/data/elofy-config';
-import { developmentTracks } from '@/data/development-tracks';
-import { mentores } from '@/data/mentoring';
-import { experiencias } from '@/data/experiencias';
 import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import {
   Target,
@@ -253,7 +250,7 @@ export default function PlanoRotaView({
             </div>
           </motion.div>
 
-          {/* Gap nas habilidades técnicas (vindo da Matriz) */}
+          {/* Gap nas habilidades técnicas */}
           {(() => {
             const atribAlvo = getAtribuicoesByRoleId(cargoAlvo.id);
             if (!atribAlvo || atribAlvo.preparoTecnico.length === 0) return null;
@@ -262,7 +259,7 @@ export default function PlanoRotaView({
               <motion.div variants={item} className="card p-5">
                 <h3 className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
                   <Wrench className="w-4 h-4 text-blue-600" />
-                  Preparo Técnico exigido (Matriz oficial)
+                  Preparo Técnico exigido
                 </h3>
                 <p className="text-xs text-gray-500 mb-3">
                   Habilidades técnicas que <strong>{cargoAlvo.title}</strong> exige.
@@ -400,7 +397,13 @@ function PlanoOndas({
       .slice(0, 3);
   }, [hub.competenciasSicredi, cargoAlvo.level]);
 
-  // Onda 30 dias: 1 quick-win (curso curto) + autoavaliação
+  // Usa as recomendações do hub (com fallbacks inteligentes) em vez de filtros locais
+  // que retornavam vazio para muitos cargos
+  const trilhasHub = hub.trilhasRecomendadas;
+  const mentoresHub = hub.mentoresSugeridos;
+  const experienciasHub = hub.experienciasRecomendadas;
+
+  // Distribui as recomendações em 3 ondas (30 / 90 / 6-12 meses)
   const ondas: Array<{
     titulo: string;
     horizonte: string;
@@ -426,17 +429,14 @@ function PlanoOndas({
           descricao: 'Garantir que sua avaliação reflita a realidade. Base para tudo no plano.',
           esforco: '~30min',
         },
-        // Curso mais curto que cobre competência mais fraca
-        ...developmentTracks
-          .slice(0, 1)
-          .map((t) => ({
-            id: `track-${t.id}`,
-            tipo: 'curso' as const,
-            titulo: t.title,
-            descricao: `${t.totalDuration} · ${t.subtitle}`,
-            esforco: t.totalDuration,
-            competencia: compsFracas[0]?.competencia.nome,
-          })),
+        ...trilhasHub.slice(0, 1).map((t) => ({
+          id: `track-${t.id}`,
+          tipo: 'curso' as const,
+          titulo: t.title,
+          descricao: `${t.totalDuration} · ${t.subtitle}`,
+          esforco: t.totalDuration,
+          competencia: compsFracas[0]?.competencia.nome,
+        })),
       ],
     },
     {
@@ -444,32 +444,22 @@ function PlanoOndas({
       horizonte: 'Consolidação',
       cor: '#2563EB',
       items: [
-        // Mentor que casa com cargo-alvo
-        ...mentores
-          .filter((m) =>
-            m.cargo.toLowerCase().includes(cargoAlvo.title.toLowerCase().split(' ')[0]),
-          )
-          .slice(0, 1)
-          .map((m) => ({
-            id: `mentor-${m.id}`,
-            tipo: 'mentoria' as const,
-            titulo: `Mentoria com ${m.nome}`,
-            descricao: `${m.cargo} · ${m.experienciaAnos} anos`,
-            esforco: '1h/mês',
-            competencia: compsFracas[1]?.competencia.nome,
-          })),
-        // Experiência alinhada
-        ...experiencias
-          .filter((e) => e.familiaAlvo?.includes(cargoAlvo.family))
-          .slice(0, 1)
-          .map((e) => ({
-            id: `exp-${e.id}`,
-            tipo: 'experiencia' as const,
-            titulo: e.titulo,
-            descricao: `${e.tipo.replace('_', ' ')} · ${e.duracao}`,
-            esforco: e.duracao,
-            competencia: compsFracas[1]?.competencia.nome,
-          })),
+        ...mentoresHub.slice(0, 1).map((m) => ({
+          id: `mentor-${m.id}`,
+          tipo: 'mentoria' as const,
+          titulo: `Mentoria com ${m.nome}`,
+          descricao: `${m.cargo} · ${m.experienciaAnos} anos · ${m.especialidades.slice(0, 2).join(', ')}`,
+          esforco: '1h/mês',
+          competencia: compsFracas[1]?.competencia.nome,
+        })),
+        ...experienciasHub.slice(0, 1).map((e) => ({
+          id: `exp-${e.id}`,
+          tipo: 'experiencia' as const,
+          titulo: e.titulo,
+          descricao: `${e.tipo.replace('_', ' ')} · ${e.duracao}`,
+          esforco: e.duracao,
+          competencia: compsFracas[1]?.competencia.nome,
+        })),
       ],
     },
     {
@@ -477,29 +467,22 @@ function PlanoOndas({
       horizonte: 'Transformação',
       cor: '#7C3AED',
       items: [
-        // Trilhas mais longas
-        ...developmentTracks
-          .slice(1, 3)
-          .map((t) => ({
-            id: `track-long-${t.id}`,
-            tipo: 'curso' as const,
-            titulo: t.title,
-            descricao: `${t.totalDuration} · ${t.subtitle}`,
-            esforco: t.totalDuration,
-            competencia: compsFracas[2]?.competencia.nome,
-          })),
-        // Experiência de alto impacto
-        ...experiencias
-          .filter((e) => e.familiaAlvo?.includes(cargoAlvo.family))
-          .slice(1, 2)
-          .map((e) => ({
-            id: `exp-long-${e.id}`,
-            tipo: 'experiencia' as const,
-            titulo: e.titulo,
-            descricao: `${e.tipo.replace('_', ' ')} · ${e.duracao}`,
-            esforco: e.duracao,
-            competencia: compsFracas[2]?.competencia.nome,
-          })),
+        ...trilhasHub.slice(1, 3).map((t) => ({
+          id: `track-long-${t.id}`,
+          tipo: 'curso' as const,
+          titulo: t.title,
+          descricao: `${t.totalDuration} · ${t.subtitle}`,
+          esforco: t.totalDuration,
+          competencia: compsFracas[2]?.competencia.nome,
+        })),
+        ...experienciasHub.slice(1, 2).map((e) => ({
+          id: `exp-long-${e.id}`,
+          tipo: 'experiencia' as const,
+          titulo: e.titulo,
+          descricao: `${e.tipo.replace('_', ' ')} · ${e.duracao}`,
+          esforco: e.duracao,
+          competencia: compsFracas[2]?.competencia.nome,
+        })),
       ],
     },
   ];

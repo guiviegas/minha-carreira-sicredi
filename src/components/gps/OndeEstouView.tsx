@@ -174,7 +174,7 @@ export default function OndeEstouView({
                 Preparo Técnico esperado
               </h3>
               <span className="text-[10px] text-gray-400">
-                {atrib.fonte === 'planilha' ? 'Matriz oficial Sicredi' : 'Inferido (mercado)'}
+                Conhecimentos esperados pelo cargo
               </span>
             </div>
             <p className="text-[11px] text-gray-500 mb-3">

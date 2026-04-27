@@ -281,39 +281,102 @@ function buildGapAlvo(
 function buildTrilhasRecomendadas(
   cargoAtualId: string,
   cargoAlvoId: string | undefined,
+  cargoAtual?: Role,
+  cargoAlvo?: Role,
 ): DevelopmentTrack[] {
-  if (!cargoAlvoId) return [];
-  // Trilhas que partem do cargo atual ou que terminam no cargo-alvo
-  return developmentTracks.filter(
-    (t) => t.fromRoleId === cargoAtualId || t.toRoleId === cargoAlvoId,
+  // 1. Match exato: trilhas que partem do cargo atual OU terminam no cargo-alvo
+  let recs = developmentTracks.filter(
+    (t) => t.fromRoleId === cargoAtualId || (cargoAlvoId && t.toRoleId === cargoAlvoId),
   );
+  if (recs.length >= 2) return recs.slice(0, 4);
+
+  // 2. Mesma família (cargo atual ou cargo alvo)
+  const familias = new Set<string>();
+  if (cargoAtual?.family) familias.add(mapToTrackFamilia(cargoAtual.family));
+  if (cargoAlvo?.family) familias.add(mapToTrackFamilia(cargoAlvo.family));
+  const byFamily = developmentTracks.filter((t) => familias.has(t.familia));
+  recs = [...recs, ...byFamily.filter((t) => !recs.includes(t))];
+  if (recs.length >= 2) return recs.slice(0, 4);
+
+  // 3. Trilhas de liderança são quase sempre relevantes (Mariana → GA, Roberto → Regional, etc.)
+  const lideranca = developmentTracks.filter((t) => t.familia === 'lideranca');
+  recs = [...recs, ...lideranca.filter((t) => !recs.includes(t))];
+  if (recs.length >= 2) return recs.slice(0, 4);
+
+  // 4. Fallback final: top 3 trilhas mais populares (todas)
+  return [...recs, ...developmentTracks].slice(0, 4);
+}
+
+/** Heurística para mapear role.family → development-track familia */
+function mapToTrackFamilia(roleFamily: string): 'negocios_pf' | 'negocios_pj' | 'negocios_agro' | 'lideranca' | 'geral' {
+  if (roleFamily === 'negocios_pf') return 'negocios_pf';
+  if (roleFamily === 'negocios_pj') return 'negocios_pj';
+  if (roleFamily === 'negocios_agro') return 'negocios_agro';
+  if (roleFamily === 'lideranca' || roleFamily === 'diretoria') return 'lideranca';
+  return 'geral';
 }
 
 function buildExperienciasRecomendadas(
   cargoAlvo: Role | undefined,
-  gapAlvo: GapAlvoHub | undefined,
 ): Experiencia[] {
-  if (!cargoAlvo) return experiencias.slice(0, 3);
-  // Filtra experiências cuja familiaAlvo inclui a família do cargo-alvo
-  const familyMatch = experiencias.filter((e) =>
-    e.familiaAlvo?.includes(cargoAlvo.family),
-  );
-  if (familyMatch.length > 0) return familyMatch.slice(0, 4);
-  return experiencias.slice(0, 4);
+  if (!cargoAlvo) return experiencias.slice(0, 4);
+  // 1. Match por familiaAlvo
+  const familyMatch = experiencias.filter((e) => e.familiaAlvo?.includes(cargoAlvo.family));
+  if (familyMatch.length >= 3) return familyMatch.slice(0, 4);
+
+  // 2. Para cargos de liderança, prioriza experiências de liderança (job shadow GA, mentoria reversa, etc.)
+  if (cargoAlvo.family === 'lideranca' || cargoAlvo.family === 'diretoria') {
+    const lider = experiencias.filter(
+      (e) =>
+        e.familiaAlvo?.includes('lideranca') ||
+        e.tipo === 'job_shadow' ||
+        e.tipo === 'comite' ||
+        e.skills.some((s) => /lider|gest|estrat/i.test(s)),
+    );
+    if (lider.length > 0) {
+      return [...new Set([...familyMatch, ...lider])].slice(0, 4);
+    }
+  }
+
+  // 3. Fallback: completa com experiências sistêmicas (intercâmbio + projetos amplos)
+  const fallback = experiencias.filter((e) => e.tipo === 'intercambio' || e.tipo === 'projeto');
+  return [...new Set([...familyMatch, ...fallback])].slice(0, 4);
 }
 
-function buildMentoresSugeridos(
-  cargoAlvo: Role | undefined,
-): MentorProfile[] {
-  if (!cargoAlvo) return mentores.slice(0, 2);
-  // Filtra mentores cujo cargo bate com cargoAlvo.title (heurística simples)
-  const matches = mentores.filter((m) =>
-    m.cargo.toLowerCase().includes(cargoAlvo.title.toLowerCase().split(' ')[0]),
+function buildMentoresSugeridos(cargoAlvo: Role | undefined): MentorProfile[] {
+  const disponiveis = mentores.filter((m) => m.disponibilidade !== 'indisponivel');
+  if (!cargoAlvo) return disponiveis.slice(0, 3);
+
+  // 1. Match por keyword no cargo do mentor (ex.: cargo-alvo "Gerente de Agência" → mentores com "Gerente de Agência")
+  const palavrasAlvo = cargoAlvo.title.toLowerCase().split(/\s+/).filter((w) => w.length > 3);
+  const matches = disponiveis.filter((m) =>
+    palavrasAlvo.some((w) => m.cargo.toLowerCase().includes(w)),
   );
-  if (matches.length > 0) return matches.slice(0, 3);
-  return mentores
-    .filter((m) => m.disponibilidade !== 'indisponivel')
-    .slice(0, 3);
+  if (matches.length >= 2) return matches.slice(0, 3);
+
+  // 2. Match por especialidade (ex.: aspira liderança → mentor com especialidade em liderança/gestão)
+  let keywords: string[] = [];
+  if (cargoAlvo.family === 'lideranca' || cargoAlvo.family === 'diretoria') {
+    keywords = ['lideran', 'gest', 'desenvolv'];
+  } else if (cargoAlvo.family === 'negocios_pf') {
+    keywords = ['carteira', 'pf', 'investiment'];
+  } else if (cargoAlvo.family === 'negocios_pj') {
+    keywords = ['pj', 'crédit', 'empresarial'];
+  } else if (cargoAlvo.family === 'negocios_agro') {
+    keywords = ['agro', 'rural'];
+  } else if (cargoAlvo.family === 'pc') {
+    keywords = ['pessoa', 'cultura', 'analytics'];
+  }
+
+  const bySpec = disponiveis.filter((m) =>
+    m.especialidades.some((esp) => keywords.some((k) => esp.toLowerCase().includes(k))),
+  );
+  if (bySpec.length > 0) {
+    return [...new Set([...matches, ...bySpec])].slice(0, 3);
+  }
+
+  // 3. Fallback: 3 mentores com melhor avaliação
+  return [...disponiveis].sort((a, b) => b.avaliacaoMedia - a.avaliacaoMedia).slice(0, 3);
 }
 
 function buildNudges(
@@ -539,11 +602,10 @@ export function getPersonaHub(personaId: string): PersonaHub | null {
   const trilhasRecomendadas = buildTrilhasRecomendadas(
     cargoAtual.id,
     cargoAlvo?.id,
-  );
-  const experienciasRecomendadas = buildExperienciasRecomendadas(
+    cargoAtual,
     cargoAlvo,
-    gapAlvo,
   );
+  const experienciasRecomendadas = buildExperienciasRecomendadas(cargoAlvo);
   const mentoresSugeridos = buildMentoresSugeridos(cargoAlvo);
   const nudges = buildNudges(
     personaId,

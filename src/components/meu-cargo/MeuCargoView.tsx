@@ -16,11 +16,9 @@ import {
   Layers,
   ArrowLeft,
   ListChecks,
-  Sparkles,
   Wrench,
   Heart,
   Languages,
-  FileBadge,
   Info,
 } from 'lucide-react';
 
@@ -81,9 +79,6 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
                 {atrib ? 'Diretoria de Negócios' : (role.diretoria || '-')}
               </span>
               <span className="text-xs text-gray-400">📍 {role.estrutura || 'Agência'}</span>
-              {atrib && (
-                <FonteBadge fonte={atrib.fonte} />
-              )}
             </div>
           </div>
           <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${role.color}15` }}>
@@ -246,23 +241,6 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
         </motion.div>
       )}
     </motion.div>
-  );
-}
-
-function FonteBadge({ fonte }: { fonte: 'planilha' | 'inferido' }) {
-  if (fonte === 'planilha') {
-    return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
-        <FileBadge className="w-2.5 h-2.5" />
-        Fonte oficial · Matriz
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-      <Sparkles className="w-2.5 h-2.5" />
-      Inferido · baseado em mercado
-    </span>
   );
 }
 

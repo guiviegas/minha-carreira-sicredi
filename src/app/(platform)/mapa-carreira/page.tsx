@@ -25,8 +25,6 @@ import {
   ExternalLink,
   ListChecks,
   Wrench,
-  FileBadge,
-  Sparkles,
 } from 'lucide-react';
 
 type GpsTab = 'onde_estou' | 'possibilidades' | 'mapa_visual' | 'plano_rota';
@@ -494,22 +492,7 @@ function RoleDetailPanel({
 
           return (
             <>
-              {/* Fonte */}
-              <div className="px-5 pt-4 pb-2">
-                {atrib.fonte === 'planilha' ? (
-                  <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
-                    <FileBadge className="w-2.5 h-2.5" />
-                    Matriz oficial
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                    <Sparkles className="w-2.5 h-2.5" />
-                    Inferido
-                  </span>
-                )}
-              </div>
-
-              {/* Responsabilidades essenciais (top 3) */}
+              {/* Responsabilidades essenciais (top 4) */}
               <div className="px-5 py-3 border-t border-gray-50">
                 <div className="flex items-center gap-1.5 mb-2">
                   <ListChecks className="w-3 h-3 text-gray-400" />
