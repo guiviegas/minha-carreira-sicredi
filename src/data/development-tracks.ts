@@ -31,6 +31,7 @@ export interface DevelopmentTrack {
   phases: TrackPhase[];
   progress: number; // overall 0-100
   type: 'vertical' | 'lateral' | 'leadership';
+  familia: 'negocios_pf' | 'negocios_pj' | 'negocios_agro' | 'lideranca' | 'geral';
 }
 
 // ============================================================
@@ -49,6 +50,7 @@ export const developmentTracks: DevelopmentTrack[] = [
     certification: 'CPA-10',
     certificationRequired: true,
     type: 'vertical',
+    familia: 'negocios_pf',
     progress: 0,
     phases: [
       {
@@ -101,6 +103,7 @@ export const developmentTracks: DevelopmentTrack[] = [
     certification: 'CPA-20',
     certificationRequired: true,
     type: 'vertical',
+    familia: 'negocios_pf',
     progress: 0,
     phases: [
       {
@@ -153,6 +156,7 @@ export const developmentTracks: DevelopmentTrack[] = [
     certification: 'CEA',
     certificationRequired: false,
     type: 'vertical',
+    familia: 'negocios_pf',
     progress: 35,
     phases: [
       {
@@ -201,6 +205,7 @@ export const developmentTracks: DevelopmentTrack[] = [
     subtitle: 'Liderança, gestão e governança cooperativa',
     totalDuration: '196h',
     type: 'leadership',
+    familia: 'lideranca',
     progress: 15,
     phases: [
       {
@@ -258,6 +263,7 @@ export const developmentTracks: DevelopmentTrack[] = [
     subtitle: 'Mundo PJ, crédito empresarial e prospecção B2B',
     totalDuration: '28h',
     type: 'lateral',
+    familia: 'negocios_pj',
     progress: 0,
     phases: [
       {
@@ -299,6 +305,7 @@ export const developmentTracks: DevelopmentTrack[] = [
     subtitle: 'Agronegócio, crédito rural e cadeias produtivas',
     totalDuration: '30h',
     type: 'lateral',
+    familia: 'negocios_agro',
     progress: 0,
     phases: [
       {
@@ -348,4 +355,9 @@ export function getAvailableTracks(currentRoleId: string): DevelopmentTrack[] {
 /** Get a specific track by ID */
 export function getTrackById(trackId: string): DevelopmentTrack | undefined {
   return developmentTracks.find(t => t.id === trackId);
+}
+
+/** Get tracks by family (PF, PJ, AGRO, Liderança) */
+export function getTracksByFamily(familia: string): DevelopmentTrack[] {
+  return developmentTracks.filter(t => t.familia === familia);
 }

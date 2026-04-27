@@ -24,7 +24,7 @@ const exo2 = Exo_2({
 });
 
 export const metadata: Metadata = {
-  title: "GPS de Carreira | Sicredi",
+  title: "Minha Carreira | Sicredi",
   description:
     "Plataforma inteligente de gestão de carreira do Sicredi. Encontre seu caminho, desenvolva suas habilidades e alcance seus objetivos profissionais.",
   keywords: ["Sicredi", "carreira", "GPS", "desenvolvimento", "cooperativismo"],

@@ -12,37 +12,19 @@ const personaDetails: Record<PersonaId, { gradient: string; photo: string; chall
     gradient: 'from-[#1B5E20] via-[#2E7D32] to-[#4CAF50]',
     photo: '/personas/mariana.png',
     challenge: 'Quer crescer para Gerente de Agência. Busca clareza sobre o que desenvolver e oportunidades práticas de liderança.',
-    modules: 'Início · GPS de Carreira · Perfil · Expectativas · PDI · Theo',
+    modules: 'Início · Meu Cargo · Mapa de Carreira · PDI · Theo Carreiras',
   },
   roberto: {
     gradient: 'from-[#0D47A1] via-[#1565C0] to-[#42A5F5]',
     photo: '/personas/roberto.png',
     challenge: 'Lidera 12 pessoas e perdeu um GN para o Itaú. Precisa de ferramentas para desenvolver e reter talentos.',
-    modules: 'Minha Equipe · 1:1s · Avaliação · Sucessão · Theo',
+    modules: 'Minha Carreira · Minha Equipe · Prontidão do Time · Comitê de Carreira',
   },
   carla: {
     gradient: 'from-[#4A148C] via-[#6A1B9A] to-[#AB47BC]',
     photo: '/personas/carla.png',
     challenge: 'Gerencia 400 pessoas com Excel e e-mail. Precisa de dados integrados e conexão com resultados do negócio.',
-    modules: 'Dashboard P&C · Conexão Negócio · Comitê de Carreira · Analytics',
-  },
-  marcos: {
-    gradient: 'from-[#BF360C] via-[#D84315] to-[#FF7043]',
-    photo: '/personas/marcos.png',
-    challenge: 'Quer respostas em 30 segundos. Precisa saber se tem pipeline para 3 novas agências.',
-    modules: 'Dashboard Executivo · 4 KPIs · Cenários',
-  },
-  lucas: {
-    gradient: 'from-[#006064] via-[#00838F] to-[#26C6DA]',
-    photo: '/personas/lucas.png',
-    challenge: 'Novo no Sicredi, vindo de banco. Precisa entender cooperativismo e descobrir seus caminhos de desenvolvimento.',
-    modules: 'Onboarding · GPS de Carreira · Desenvolvimento · Theo',
-  },
-  daniela: {
-    gradient: 'from-[#37474F] via-[#546E7A] to-[#90A4AE]',
-    photo: '/personas/daniela.png',
-    challenge: 'Define políticas para 50 mil pessoas. Precisa equilibrar padronização sistêmica com autonomia cooperativa.',
-    modules: 'Governança · Parametrização · Maturidade · Analytics Sistêmico',
+    modules: 'Dashboard P&C · Mapa de Talentos · Comitê de Carreira · Analytics',
   },
 };
 
@@ -85,7 +67,7 @@ export default function HomePage() {
                 <Compass className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">GPS de Carreira</h1>
+                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Minha Carreira</h1>
                 <p className="text-green-200/80 text-sm font-semibold mt-0.5">Sicredi · Plataforma de Gestão de Carreira</p>
               </div>
             </div>
@@ -168,7 +150,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-neutral-200 py-6 px-6 bg-white">
         <div className="max-w-6xl mx-auto flex items-center justify-between text-xs text-neutral-400">
-          <p>GPS de Carreira · Protótipo MVP · Pulsar Consultoria × Sicredi</p>
+          <p>Minha Carreira · Protótipo MVP · Pulsar Consultoria × Sicredi</p>
           <p>Dados fictícios para demonstração</p>
         </div>
       </footer>

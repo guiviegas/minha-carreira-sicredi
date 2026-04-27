@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
+import { competenciasSicredi } from '@/data/competencias-sicredi';
+import { reguaPerformance, avaliacoesMock, ELOFY_URL } from '@/data/elofy-config';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ClipboardCheck, Target, TrendingUp, MessageSquare, Calendar,
   CheckCircle2, AlertCircle, X, ChevronDown, ChevronUp, Sparkles,
-  ArrowRight, Edit3, Send, Plus, ThumbsUp, Clock
+  ArrowRight, Edit3, Send, Plus, ThumbsUp, Clock, ExternalLink, Heart
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -110,6 +112,9 @@ export default function AvaliacaoPage() {
     }, 1500);
   };
 
+  // Get evaluation data for current employee
+  const avaliacaoAtual = avaliacoesMock.find(a => a.employeeId === employee.id && a.cicloId === 'ciclo-2026-1');
+
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-4xl space-y-6">
       <motion.div variants={item} className="flex items-center justify-between">
@@ -175,6 +180,84 @@ export default function AvaliacaoPage() {
               })}
             </div>
           </div>
+        </div>
+      </motion.div>
+
+      {/* Competências Sicredi — Avaliação 360° */}
+      <motion.div variants={item} className="card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+            <Heart className="w-4 h-4 text-verde-digital" /> Competências — Jeito Sicredi de Ser
+          </h2>
+          <a href={ELOFY_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-semibold text-verde-digital hover:underline">
+            Abrir no Elofy <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+
+        {/* 360° Model Weights */}
+        <div className="bg-gray-50 rounded-lg p-3 mb-4">
+          <p className="text-[10px] font-semibold text-gray-500 uppercase mb-2">Modelo 360° — Pesos da Avaliação</p>
+          <div className="flex items-center gap-1.5">
+            <div className="flex-1 rounded-md py-1.5 text-center bg-blue-50">
+              <p className="text-[10px] font-bold text-blue-700">Líder 50%</p>
+            </div>
+            <div className="flex-1 rounded-md py-1.5 text-center bg-purple-50">
+              <p className="text-[10px] font-bold text-purple-700">Auto 25%</p>
+            </div>
+            <div className="flex-1 rounded-md py-1.5 text-center bg-amber-50">
+              <p className="text-[10px] font-bold text-amber-700">Pares 25%</p>
+            </div>
+          </div>
+          <p className="text-[9px] text-gray-400 mt-1.5">*Pesos para pessoas colaboradoras. Lideranças: Líder 40%, Auto 20%, Time 20%, Pares 20%.</p>
+        </div>
+
+        {/* Régua de referência */}
+        <div className="grid grid-cols-4 gap-1.5 mb-5">
+          {reguaPerformance.map(nivel => (
+            <div key={nivel.nivel} className="py-1.5 px-2 rounded text-center" style={{ backgroundColor: nivel.bgCor }}>
+              <p className="text-xs font-bold" style={{ color: nivel.cor }}>{nivel.hashtag}</p>
+              <p className="text-[9px] font-medium mt-0.5" style={{ color: nivel.cor }}>{nivel.descricao.split('.')[0]}</p>
+            </div>
+          ))}
+        </div>
+        {/* Competencies list */}
+        <div className="space-y-3">
+          {competenciasSicredi.map((comp) => {
+            const avalComp = avaliacaoAtual?.competencias.find(c => c.competenciaId === comp.id);
+            const autoNota = avalComp?.autoAvaliacao || 0;
+            const liderNota = avalComp?.avaliacaoLider || 0;
+            const consensoNota = avalComp?.consenso || 0;
+            // Simulated pares note based on consensus for demo
+            const paresNota = consensoNota > 0 ? Math.min(4, Math.max(1, consensoNota + (Math.random() > 0.5 ? 0 : -1))) : 0;
+            return (
+              <div key={comp.id} className="p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: comp.cor }} />
+                    <p className="text-sm font-medium text-gray-800">{comp.nome}</p>
+                  </div>
+                  {consensoNota > 0 && (
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
+                      backgroundColor: reguaPerformance[consensoNota - 1]?.bgCor,
+                      color: reguaPerformance[consensoNota - 1]?.cor,
+                    }}>
+                      {reguaPerformance[consensoNota - 1]?.hashtag}
+                    </span>
+                  )}
+                </div>
+                {avalComp && (
+                  <div className="flex items-center gap-4 text-[11px] text-gray-500">
+                    <span>Auto <span className="text-[10px] text-gray-400">(25%)</span>: <strong className="text-gray-700">{reguaPerformance[autoNota - 1]?.hashtag || autoNota}</strong></span>
+                    <span>Líder <span className="text-[10px] text-gray-400">(50%)</span>: <strong className="text-gray-700">{reguaPerformance[liderNota - 1]?.hashtag || liderNota}</strong></span>
+                    <span>Pares <span className="text-[10px] text-gray-400">(25%)</span>: <strong className="text-gray-700">{reguaPerformance[Math.floor(paresNota) - 1]?.hashtag || '—'}</strong></span>
+                    {avalComp.comentarioLider && (
+                      <span className="text-purple-500 italic">&ldquo;{avalComp.comentarioLider}&rdquo;</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </motion.div>
 

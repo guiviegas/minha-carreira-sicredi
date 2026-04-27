@@ -3,6 +3,7 @@
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById, getTeamForLeader } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
+import { avaliacoesMock, reguaPerformance, reguaProntidao } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
 import {
   TrendingUp,
@@ -44,20 +45,41 @@ export default function MeuGPSPage() {
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-5xl">
       {/* Page Header */}
       <motion.div variants={item}>
-        <h1 className="text-2xl font-bold text-gray-900">Início</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          {role?.title} · {currentPersona.cooperative}
-          {currentPersona.branch && ` · ${currentPersona.branch}`}
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Início</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {role?.title} · {currentPersona.cooperative}
+              {currentPersona.branch && ` · ${currentPersona.branch}`}
+            </p>
+          </div>
+          {(() => {
+            const avaliacao = avaliacoesMock.find(a => a.employeeId === employee.id && a.cicloId === 'ciclo-2026-1');
+            if (!avaliacao) return null;
+            const perfConfig = reguaPerformance[avaliacao.notaFinalPerformance - 1];
+            const prontConfig = avaliacao.prontidaoId ? reguaProntidao.find(r => r.id === avaliacao.prontidaoId) : null;
+            return (
+              <div className="flex items-center gap-2">
+                {perfConfig && (
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: perfConfig.bgCor, color: perfConfig.cor }}>
+                    {perfConfig.hashtag}
+                  </span>
+                )}
+                {prontConfig && (
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: prontConfig.bgCor, color: prontConfig.cor }}>
+                    {prontConfig.nome}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
+        </div>
       </motion.div>
 
       {/* Adaptive Widgets based on persona */}
       {currentPersona.role === 'colaborador' && <ColaboradorDashboard employee={employee} />}
       {currentPersona.role === 'lider' && <LiderDashboard employee={employee} />}
       {currentPersona.role === 'pc_analista' && <PCAnalistaDashboard employee={employee} />}
-      {currentPersona.role === 'diretor' && <DiretorDashboard />}
-      {currentPersona.role === 'novo_colaborador' && <NovoColaboradorDashboard employee={employee} />}
-      {currentPersona.role === 'pc_diretor_cas' && <CASDirectorDashboard />}
     </motion.div>
   );
 }
@@ -417,140 +439,4 @@ function PCAnalistaDashboard({ employee }: { employee: ReturnType<typeof getEmpl
   );
 }
 
-// ===== MARCOS — Diretor =====
-function DiretorDashboard() {
-  return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
-      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Retenção Top Performers', value: '88%', target: '90%', status: 'yellow' as const, icon: Users },
-          { label: 'Economia vs. Turnover', value: 'R$ 1,2M', target: 'R$ 1,5M', status: 'green' as const, icon: TrendingUp },
-          { label: 'Tempo Produtividade', value: '5,2 m', target: '4 m', status: 'green' as const, icon: Clock },
-          { label: 'Prontidão Sucessória', value: '75%', target: '85%', status: 'yellow' as const, icon: Target },
-        ].map((kpi) => (
-          <div key={kpi.label} className="card card-interactive p-5">
-            <div className="flex items-center justify-between mb-2">
-              <kpi.icon className="w-5 h-5 text-gray-400" />
-              <div className={`w-3 h-3 rounded-full ${kpi.status === 'green' ? 'bg-green-400' : 'bg-amber-400'}`} />
-            </div>
-            <p className="text-2xl font-bold text-gray-900 metric-value">{kpi.value}</p>
-            <p className="text-[11px] text-gray-500 mt-0.5">{kpi.label}</p>
-            <p className="text-[11px] text-gray-400 mt-1">Meta: {kpi.target}</p>
-          </div>
-        ))}
-      </motion.div>
-      <motion.div variants={item} className="card p-5">
-        <p className="text-sm font-semibold text-gray-500">Acesse o Dashboard Executivo para drill-down completo →</p>
-      </motion.div>
-    </motion.div>
-  );
-}
 
-// ===== LUCAS — Novo Colaborador =====
-function NovoColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmployeeById> }) {
-  if (!employee || !employee.onboarding) return null;
-  const onb = employee.onboarding;
-
-  return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
-      {/* Welcome + Progress */}
-      <motion.div variants={item} className="card p-6 bg-gradient-to-br from-cyan-50 to-white border-cyan-100">
-        <div className="flex items-start gap-4">
-          <div className="icon-box" style={{ background: '#0E7490' }}>
-            <Compass className="!text-white" />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-neutral-900">Bem-vindo ao Sicredi, {employee.name.split(' ')[0]}!</h2>
-            <p className="text-sm text-gray-600 mt-1">Semana {onb.currentWeek} de {onb.totalWeeks} do seu onboarding</p>
-            <div className="mt-3 flex items-center gap-3">
-              <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-cyan-600"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${onb.percentage}%` }}
-                  transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
-                />
-              </div>
-              <span className="text-sm font-bold text-cyan-600 metric-value">{onb.percentage}%</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Onboarding Modules */}
-      <motion.div variants={item} className="card p-5">
-        <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-cyan-500" />
-          Trilha de Integração
-        </h3>
-        <div className="space-y-2">
-          {onb.modules.map((mod) => (
-            <div key={mod.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-gray-50">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                mod.completed
-                  ? 'bg-cyan-500 text-white'
-                  : mod.progress > 0
-                  ? 'bg-cyan-100 text-cyan-600'
-                  : 'bg-gray-200 text-gray-400'
-              }`}>
-                {mod.completed ? <CheckCircle2 className="w-3 h-3" /> : mod.week}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className={`text-sm ${mod.completed ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{mod.title}</p>
-                <p className="text-[11px] text-gray-400">{mod.description}</p>
-              </div>
-              {mod.progress > 0 && !mod.completed && (
-                <span className="text-xs font-semibold text-cyan-600 metric-value">{mod.progress}%</span>
-              )}
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* AI Welcome nudge */}
-      <motion.div variants={item} className="card p-5 bg-gradient-to-br from-purple-50 to-white border-purple-100">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-7 h-7 rounded-lg gradient-ai flex items-center justify-center">
-            <Sparkles className="w-3.5 h-3.5 text-white" />
-          </div>
-          <p className="text-xs font-semibold text-purple-600">Parceiro de Jornada</p>
-        </div>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          &ldquo;Ei {employee.name.split(' ')[0]}! Como estão os seus primeiros 2 meses? 
-          Posso te ajudar a entender melhor o cooperativismo ou explorar caminhos de carreira. 
-          Nenhuma pergunta é boba!&rdquo;
-        </p>
-        <button className="text-sm font-semibold text-purple-600 mt-3 flex items-center gap-1 hover:gap-2 transition-all">
-          Conversar com IA <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// ===== DANIELA — CAS Director =====
-function CASDirectorDashboard() {
-  return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
-      <motion.div variants={item} className="card p-5">
-        <h2 className="text-lg font-bold text-gray-900 mb-3">Visão Sistêmica</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Cooperativas Ativas', value: '104' },
-            { label: 'Módulos Adotados (média)', value: '8,2' },
-            { label: 'Tier Avançado', value: '23%' },
-            { label: 'Adoção GPS', value: '67%' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center p-3 rounded-lg bg-gray-50">
-              <p className="text-xl font-bold text-gray-900 metric-value">{stat.value}</p>
-              <p className="text-[11px] text-gray-500 mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-      <motion.div variants={item} className="card p-5">
-        <p className="text-sm font-semibold text-gray-500">Acesse Governança & Parametrização para gestão sistêmica →</p>
-      </motion.div>
-    </motion.div>
-  );
-}

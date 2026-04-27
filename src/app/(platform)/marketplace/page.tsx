@@ -88,6 +88,29 @@ export default function MarketplacePage() {
         <p className="text-sm text-gray-500 mt-1">Vagas, projetos, mentorias e experiências para sua carreira</p>
       </motion.div>
 
+      {/* Gupy Banner */}
+      <motion.div variants={item}>
+        <a
+          href="https://sicredi.gupy.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block card p-4 bg-gradient-to-r from-[#00593E] to-[#3FA110] text-white hover:shadow-lg transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
+                <Briefcase className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-bold">Vagas Sicredi na Gupy</p>
+                <p className="text-xs text-white/80">Acesse todas as vagas abertas no portal oficial de recrutamento</p>
+              </div>
+            </div>
+            <ArrowUpRight className="w-5 h-5 text-white/70 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+          </div>
+        </a>
+      </motion.div>
+
       {/* Recommended */}
       {recommended.length > 0 && (
         <motion.div variants={item}>

@@ -4,11 +4,14 @@ import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
+import { competenciasSicredi } from '@/data/competencias-sicredi';
+import { avaliacoesMock, reguaPerformance, reguaProntidao } from '@/data/elofy-config';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Award, BookOpen, Calendar, Edit3, Eye, EyeOff, MapPin, Share2, Star,
   Target, TrendingUp, Zap, X, CheckCircle2, Download, Copy, ChevronDown,
   ChevronUp, ExternalLink, Shield, Clock, Handshake, Lightbulb, Trophy,
+  Heart, Compass,
   type LucideIcon,
 } from 'lucide-react';
 import Image from 'next/image';
@@ -120,6 +123,62 @@ export default function PerfilPage() {
             <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> {employee.achievements.reduce((acc, a) => acc + a.xp, 0)} XP</span>
           </div>
         </div>
+      </motion.div>
+
+      {/* Career Passport */}
+      <motion.div variants={item} className="card p-5 border-l-4 border-l-verde-digital">
+        <div className="flex items-center gap-2 mb-4">
+          <Compass className="w-4 h-4 text-verde-digital" />
+          <h2 className="text-sm font-semibold text-gray-800">Passaporte de Carreira</h2>
+        </div>
+        {(() => {
+          const avaliacao = avaliacoesMock.find(a => a.employeeId === employee.id && a.cicloId === 'ciclo-2026-1');
+          const aspiracao = employee.aspirations[0];
+          const cargoAspirado = aspiracao ? getRoleById(aspiracao.targetRoleId) : null;
+          const prontConfig = avaliacao?.prontidaoId ? reguaProntidao.find(r => r.id === avaliacao.prontidaoId) : null;
+          const perfNota = avaliacao?.notaFinalPerformance || 0;
+          const perfConfig = perfNota > 0 ? reguaPerformance[perfNota - 1] : null;
+
+          return (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {/* Aspiração */}
+              <div className="p-3 rounded-lg bg-purple-50 text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-purple-500">Aspiração</p>
+                <p className="text-sm font-bold text-purple-700 mt-1">{cargoAspirado?.shortTitle || '—'}</p>
+                {aspiracao && <p className="text-[10px] text-purple-400 mt-0.5">{aspiracao.timeframe}</p>}
+              </div>
+              {/* Performance */}
+              {perfConfig && (
+                <div className="p-3 rounded-lg text-center" style={{ backgroundColor: perfConfig.bgCor }}>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: perfConfig.cor }}>Performance</p>
+                  <p className="text-xs font-bold mt-1" style={{ color: perfConfig.cor }}>{perfConfig.hashtag}</p>
+                </div>
+              )}
+              {/* Prontidão */}
+              {prontConfig && (
+                <div className="p-3 rounded-lg text-center" style={{ backgroundColor: prontConfig.bgCor }}>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: prontConfig.cor }}>Prontidão</p>
+                  <p className="text-xs font-bold mt-1" style={{ color: prontConfig.cor }}>{prontConfig.nome}</p>
+                </div>
+              )}
+              {/* Competências */}
+              {avaliacao && (
+                <div className="p-3 rounded-lg bg-verde-50 text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-verde-digital">Competências</p>
+                  <div className="flex items-center justify-center gap-0.5 mt-1.5">
+                    {avaliacao.competencias.slice(0, 5).map((c, i) => {
+                      const comp = competenciasSicredi[i];
+                      return (
+                        <div key={i} className="w-3 h-3 rounded-full" style={{ backgroundColor: comp?.cor || '#ccc', opacity: (c.consenso || 0) >= 3 ? 1 : 0.3 }} title={`${comp?.nome}: ${c.consenso}/4`} />
+                      );
+                    })}
+                  </div>
+                  <p className="text-[10px] text-verde-digital mt-1">Jeito Sicredi de Ser</p>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

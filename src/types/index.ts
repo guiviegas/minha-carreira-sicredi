@@ -3,8 +3,8 @@
 // ==========================================
 
 // --- Persona & Auth ---
-export type PersonaId = 'mariana' | 'roberto' | 'carla' | 'marcos' | 'lucas' | 'daniela';
-export type PersonaRole = 'colaborador' | 'lider' | 'pc_analista' | 'diretor' | 'novo_colaborador' | 'pc_diretor_cas';
+export type PersonaId = 'mariana' | 'roberto' | 'carla';
+export type PersonaRole = 'colaborador' | 'lider' | 'pc_analista';
 
 export interface Persona {
   id: PersonaId;
@@ -91,6 +91,39 @@ export interface Role {
   currentOccupants: number;
   videoUrl?: string;
   color: string;
+  // CAS Matrix fields (from Matriz de Atribuições)
+  formacao?: string;
+  experiencia?: string;
+  areasFormacao?: string;
+  certificacoes?: string;
+  habilidades?: string[];
+  objetivoFamilia?: string;
+  nivelMaturidade?: string;
+  funcaoDetalhada?: string;
+  diretoria?: string;
+  estrutura?: string;
+}
+
+// Competências Jeito Sicredi de Ser
+export interface CompetenciaSicredi {
+  id: string;
+  nome: string;
+  hashtag: string;
+  descricao: string;
+  cor: string;
+  bgCor: string;
+  indicadores: string[];
+}
+
+// Avaliação Elofy
+export interface AvaliacaoElofy {
+  id: string;
+  employeeId: string;
+  cicloId: string;
+  notaFinalPerformance: number; // 1-4 (index into reguaPerformance)
+  prontidaoId?: string;
+  potencialId?: string;
+  competencias: Record<string, { auto: number; lider: number; consenso: number }>;
 }
 
 export type RoleFamily =
@@ -379,6 +412,15 @@ export type WidgetType =
   | 'succession_map';
 
 // --- Navigation ---
+export type NavSectionId = 'carreira' | 'lideranca' | 'pc' | 'possibilidades';
+
+export interface NavSection {
+  id: NavSectionId;
+  label: string;
+  roles: PersonaRole[];
+  items: NavItem[];
+}
+
 export interface NavItem {
   id: string;
   label: string;
