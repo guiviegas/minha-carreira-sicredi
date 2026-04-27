@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { PersonaHub } from '@/data/persona-hub';
 import { Role } from '@/types';
@@ -22,6 +23,7 @@ import {
   Zap,
   Award,
   Star,
+  ExternalLink,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
@@ -92,6 +94,13 @@ export default function PlanoRotaView({
             <p className="text-xs text-gray-500 mt-2">
               Partindo de <strong>{hub.cargoAtual.title}</strong> (N{hub.cargoAtual.level})
             </p>
+            <Link
+              href={`/meu-cargo/${cargoAlvo.id}`}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-600 hover:underline mt-2"
+            >
+              Ver descrição completa de {cargoAlvo.title}
+              <ExternalLink className="w-3 h-3 opacity-60" />
+            </Link>
           </div>
           <button
             onClick={() => setPlanoSalvo(true)}

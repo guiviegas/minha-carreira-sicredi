@@ -25,6 +25,7 @@ import {
   Award,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
@@ -154,7 +155,13 @@ export default function PerfilPage() {
           </div>
           {cargoAlvo && aspiracao ? (
             <>
-              <p className="text-sm font-bold text-gray-900">{cargoAlvo.title}</p>
+              <Link
+                href={`/meu-cargo/${cargoAlvo.id}`}
+                className="text-sm font-bold text-gray-900 hover:text-purple-700 hover:underline inline-flex items-center gap-1"
+              >
+                {cargoAlvo.title}
+                <ExternalLink className="w-3 h-3 opacity-60" />
+              </Link>
               <p className="text-[11px] text-gray-500 mt-1">Horizonte: {aspiracao.timeframe}</p>
               <span
                 className={`inline-block mt-2 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
@@ -239,7 +246,13 @@ export default function PerfilPage() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-purple-600 mb-1">Para onde quero ir</p>
-                  <h2 className="text-base font-bold text-gray-900">{cargoAlvo.title}</h2>
+                  <Link
+                    href={`/meu-cargo/${cargoAlvo.id}`}
+                    className="text-base font-bold text-gray-900 hover:text-purple-700 hover:underline inline-flex items-center gap-1.5"
+                  >
+                    <h2 className="inline">{cargoAlvo.title}</h2>
+                    <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                  </Link>
                   <p className="text-xs text-gray-500 mt-0.5">Nível {cargoAlvo.level} · Horizonte {aspiracao.timeframe}</p>
                 </div>
                 <button

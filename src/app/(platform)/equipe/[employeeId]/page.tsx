@@ -190,7 +190,13 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ emplo
         {aspiration && aspirationRole ? (
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-lg font-bold text-gray-900">{aspirationRole.title}</p>
+              <Link
+                href={`/meu-cargo/${aspirationRole.id}`}
+                className="text-lg font-bold text-gray-900 hover:text-purple-700 hover:underline inline-flex items-center gap-1.5"
+              >
+                {aspirationRole.title}
+                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+              </Link>
               <p className="text-xs text-gray-500 mt-1">Horizonte: {aspiration.timeframe}</p>
             </div>
             <span
@@ -297,9 +303,23 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ emplo
               Abrir PDI <ExternalLink className="w-3 h-3" />
             </a>
           </div>
-          <p className="text-sm font-semibold text-gray-700">{pdi.goal.targetRoleTitle}</p>
+          {(() => {
+            const pdiRole = getRoleById(pdi.goal.targetRoleId);
+            return pdiRole ? (
+              <Link
+                href={`/meu-cargo/${pdiRole.id}`}
+                className="text-sm font-semibold text-gray-700 hover:text-verde-digital hover:underline inline-flex items-center gap-1"
+              >
+                {pdi.goal.targetRoleTitle}
+                <ExternalLink className="w-3 h-3 opacity-60" />
+              </Link>
+            ) : (
+              <p className="text-sm font-semibold text-gray-700">{pdi.goal.targetRoleTitle}</p>
+            );
+          })()}
           <p className="text-xs text-gray-500 mt-0.5">
-            Prazo: {pdi.goal.deadline} · Progresso: {pdi.goal.progress}%
+            Prazo: {pdi.goal.deadline} · {pdi.actions.filter((a) => a.status === 'completed').length} de{' '}
+            {pdi.actions.length} ações concluídas
           </p>
           <div className="mt-3 space-y-1">
             {pdi.actions.slice(0, 3).map((a) => (

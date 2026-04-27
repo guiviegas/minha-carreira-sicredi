@@ -7,6 +7,7 @@ import { getRoleById } from '@/data/roles';
 import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import { avaliacoesMock, reguaProntidao, reguaPotencial, reguaPerformance } from '@/data/elofy-config';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { Employee } from '@/types';
 import {
   ShieldCheck,
@@ -390,7 +391,13 @@ function OnepageCRMTalento({ caso, onClose }: { caso: CasoComite; onClose: () =>
           <p className="text-[10px] font-semibold uppercase text-gray-400 mb-1">Aspiração</p>
           {aspRole ? (
             <p className="text-gray-700">
-              {aspRole.title} · {aspiracao?.timeframe}
+              <Link
+                href={`/meu-cargo/${aspRole.id}`}
+                className="font-semibold text-purple-700 hover:underline"
+              >
+                {aspRole.title}
+              </Link>{' '}
+              · {aspiracao?.timeframe}
               {aspiracao?.sharedWithLeader && <span className="text-green-600 ml-1">✓ compartilhada</span>}
             </p>
           ) : (

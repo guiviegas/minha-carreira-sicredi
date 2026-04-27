@@ -308,11 +308,12 @@ function buildTrilhasRecomendadas(
 }
 
 /** Heurística para mapear role.family → development-track familia */
-function mapToTrackFamilia(roleFamily: string): 'negocios_pf' | 'negocios_pj' | 'negocios_agro' | 'lideranca' | 'geral' {
+function mapToTrackFamilia(roleFamily: string): 'negocios_pf' | 'negocios_pj' | 'negocios_agro' | 'lideranca' | 'pc' | 'geral' {
   if (roleFamily === 'negocios_pf') return 'negocios_pf';
   if (roleFamily === 'negocios_pj') return 'negocios_pj';
   if (roleFamily === 'negocios_agro') return 'negocios_agro';
   if (roleFamily === 'lideranca' || roleFamily === 'diretoria') return 'lideranca';
+  if (roleFamily === 'pc') return 'pc';
   return 'geral';
 }
 

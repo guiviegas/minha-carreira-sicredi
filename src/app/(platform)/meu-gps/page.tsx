@@ -6,6 +6,7 @@ import { employees as allEmployees } from '@/data/employees';
 import { avaliacoesMock as allAvaliacoes } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
 import TheoCard from '@/components/theo/TheoCard';
+import Link from 'next/link';
 import {
   CheckCircle2,
   Users,
@@ -15,6 +16,7 @@ import {
   Compass,
   Calendar,
   MessageCircle,
+  ExternalLink,
 } from 'lucide-react';
 
 const container = {
@@ -107,7 +109,18 @@ function ColaboradorDashboard({ hub }: { hub: PersonaHub }) {
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Meu PDI</p>
           </div>
           <p className="text-sm font-semibold text-gray-700 mb-2">
-            Foco: {pdi?.goal.targetRoleTitle ?? hub.cargoAlvo?.title ?? '-'}
+            Foco:{' '}
+            {hub.cargoAlvo ? (
+              <Link
+                href={`/meu-cargo/${hub.cargoAlvo.id}`}
+                className="text-purple-700 hover:underline inline-flex items-center gap-1"
+              >
+                {pdi?.goal.targetRoleTitle ?? hub.cargoAlvo.title}
+                <ExternalLink className="w-3 h-3 opacity-60" />
+              </Link>
+            ) : (
+              <span>{pdi?.goal.targetRoleTitle ?? '-'}</span>
+            )}
           </p>
           <div className="space-y-2.5">
             {acoesPdi.map((ac) => (

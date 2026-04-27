@@ -7,7 +7,8 @@ import { getPersonaHub } from '@/data/persona-hub';
 import { getAvailableTracks, getTracksForRole } from '@/data/development-tracks';
 import { getRoleById } from '@/data/roles';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Play, Clock, Star, Filter, ArrowRight, CheckCircle2, Sparkles, Target, Handshake, BarChart3, Lightbulb, Building2, MapIcon, Coins, Brain, TrendingUp, Video, MonitorPlay, FileText, Users, Crosshair } from 'lucide-react';
+import Link from 'next/link';
+import { BookOpen, Play, Clock, Star, Filter, ArrowRight, CheckCircle2, Sparkles, Target, Handshake, BarChart3, Lightbulb, Building2, MapIcon, Coins, Brain, TrendingUp, Video, MonitorPlay, FileText, Users, Crosshair, ExternalLink } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
@@ -159,7 +160,14 @@ export default function DesenvolvimentoPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Target className="w-4 h-4 text-purple-600" />
                   <h2 className="text-sm font-semibold text-gray-800">
-                    Trilhas para sua aspiração: <span className="text-purple-700">{hub.cargoAlvo.title}</span>
+                    Trilhas para sua aspiração:{' '}
+                    <Link
+                      href={`/meu-cargo/${hub.cargoAlvo.id}`}
+                      className="text-purple-700 hover:underline inline-flex items-center gap-1"
+                    >
+                      {hub.cargoAlvo.title}
+                      <ExternalLink className="w-3 h-3 opacity-60" />
+                    </Link>
                   </h2>
                 </div>
                 <p className="text-xs text-gray-500 mb-3">

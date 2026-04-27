@@ -5,6 +5,7 @@ import { getEmployeeById, getTeamForLeader } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
 import { reguaProntidao } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   Gauge,
   ArrowRight,
@@ -83,7 +84,12 @@ export default function ProntidaoTimePage() {
                   <p className="text-sm font-semibold text-gray-900">{member.name}</p>
                   <p className="text-xs text-gray-500">{memberRole?.shortTitle}</p>
                   {cargoAspirado && (
-                    <p className="text-[11px] text-purple-500 mt-0.5">→ {cargoAspirado.shortTitle}</p>
+                    <Link
+                      href={`/meu-cargo/${cargoAspirado.id}`}
+                      className="text-[11px] text-purple-500 mt-0.5 hover:underline inline-block"
+                    >
+                      → {cargoAspirado.shortTitle}
+                    </Link>
                   )}
                 </div>
                 <div className="flex items-center gap-3">

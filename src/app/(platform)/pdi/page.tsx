@@ -5,10 +5,12 @@ import { getPdiForPersona } from '@/data/pdi';
 import { getRoleById } from '@/data/roles';
 import { reguaPerformance } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   Target, CheckCircle2, Circle, Clock, ArrowRight,
   BookOpen, Users, Briefcase, Award, Lightbulb,
   Bot, Calendar, TrendingUp, ChevronRight, Sparkles,
+  ExternalLink,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
@@ -70,7 +72,17 @@ export default function PdiPage() {
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Meta de Carreira</p>
             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <Target className="w-5 h-5 text-verde-digital" />
-              {pdi.goal.targetRoleTitle}
+              {targetRole ? (
+                <Link
+                  href={`/meu-cargo/${targetRole.id}`}
+                  className="hover:text-verde-digital hover:underline inline-flex items-center gap-1.5"
+                >
+                  {pdi.goal.targetRoleTitle}
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                </Link>
+              ) : (
+                pdi.goal.targetRoleTitle
+              )}
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
               Nível {targetRole?.level} · Prazo: {pdi.goal.deadline}
