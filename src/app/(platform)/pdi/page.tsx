@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
-import { getPdiForPersona } from '@/data/pdi';
+import { getPdiForPersona, PdiAction } from '@/data/pdi';
 import { getRoleById } from '@/data/roles';
 import { reguaPerformance } from '@/data/elofy-config';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import {
   Target, CheckCircle2, Circle, Clock, ArrowRight,
@@ -32,6 +33,7 @@ const statusConfig: Record<string, { label: string; color: string; Icon: typeof 
 
 export default function PdiPage() {
   const { currentPersona } = usePersona();
+  const [selectedAction, setSelectedAction] = useState<PdiAction | null>(null);
   if (!currentPersona) return null;
 
   const pdi = getPdiForPersona(currentPersona.id);
@@ -127,7 +129,12 @@ export default function PdiPage() {
                 const cfg = typeConfig[action.type];
                 const sts = statusConfig[action.status];
                 return (
-                  <div key={action.id} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors group cursor-pointer">
+                  <button
+                    type="button"
+                    key={action.id}
+                    onClick={() => setSelectedAction(action)}
+                    className="w-full text-left flex items-start gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors group cursor-pointer"
+                  >
                     <sts.Icon className={`w-4 h-4 mt-0.5 shrink-0 ${sts.color}`} />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-800 group-hover:text-verde-digital transition-colors">{action.title}</p>
@@ -144,7 +151,7 @@ export default function PdiPage() {
                       </div>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-verde-digital transition-colors mt-0.5" />
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -291,6 +298,83 @@ export default function PdiPage() {
 
         </div>
       </div>
+
+      {/* Modal Detalhes da Ação */}
+      <AnimatePresence>
+        {selectedAction && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedAction(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {(() => {
+                const cfg = typeConfig[selectedAction.type];
+                const sts = statusConfig[selectedAction.status];
+                return (
+                  <>
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3">
+                        <div className={`w-10 h-10 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}>
+                          <cfg.Icon className={`w-5 h-5 ${cfg.color}`} />
+                        </div>
+                        <div>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${cfg.color}`}>
+                            {cfg.label}
+                          </span>
+                          <h3 className="text-base font-bold text-gray-900">{selectedAction.title}</h3>
+                        </div>
+                      </div>
+                      <button onClick={() => setSelectedAction(null)} className="text-gray-400 hover:text-gray-600">
+                        <ChevronRight className="w-5 h-5 rotate-180" />
+                      </button>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{selectedAction.description}</p>
+                    <div className="grid grid-cols-2 gap-3 py-3 border-t border-b border-gray-100">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Status</p>
+                        <p className={`text-sm font-semibold ${sts.color} mt-1 flex items-center gap-1`}>
+                          <sts.Icon className="w-3.5 h-3.5" /> {sts.label}
+                        </p>
+                      </div>
+                      {selectedAction.dueDate && (
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Prazo</p>
+                          <p className="text-sm font-semibold text-gray-700 mt-1 flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" /> {selectedAction.dueDate}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                      <Link
+                        href="/desenvolvimento"
+                        className="flex-1 py-2.5 rounded-lg bg-verde-digital text-white text-sm font-semibold hover:bg-verde-600 transition-colors text-center"
+                      >
+                        Abrir trilha relacionada
+                      </Link>
+                      <button
+                        onClick={() => setSelectedAction(null)}
+                        className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
