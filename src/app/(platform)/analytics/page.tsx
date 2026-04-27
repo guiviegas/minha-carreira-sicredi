@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { motion } from 'framer-motion';
 import {
@@ -12,7 +13,7 @@ import {
   ArrowRight,
   BarChart3,
   Download,
-  Filter,
+  CheckCircle2,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -38,21 +39,46 @@ const insights = [
 
 export default function AnalyticsPage() {
   const { currentPersona } = usePersona();
+  const [periodo, setPeriodo] = useState<'mes' | 'tri' | 'semestre' | 'ano'>('tri');
+  const [exported, setExported] = useState(false);
   if (!currentPersona || currentPersona.role !== 'pc_analista') return null;
+
+  const periodoLabel = { mes: 'Último mês', tri: 'Último trimestre', semestre: 'Último semestre', ano: 'Último ano' }[periodo];
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-5xl">
       <motion.div variants={item} className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-sm text-gray-500 mt-1">People Analytics avançado · Cooperativa Caminhos</p>
+          <p className="text-sm text-gray-500 mt-1">People Analytics avançado · Cooperativa Caminhos · {periodoLabel}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">
-            <Filter className="w-3.5 h-3.5" /> Período
-          </button>
-          <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">
-            <Download className="w-3.5 h-3.5" /> Exportar
+          <select
+            value={periodo}
+            onChange={(e) => setPeriodo(e.target.value as 'mes' | 'tri' | 'semestre' | 'ano')}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer focus:outline-none"
+          >
+            <option value="mes">Último mês</option>
+            <option value="tri">Último trimestre</option>
+            <option value="semestre">Último semestre</option>
+            <option value="ano">Último ano</option>
+          </select>
+          <button
+            onClick={() => {
+              setExported(true);
+              setTimeout(() => setExported(false), 2200);
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+          >
+            {exported ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Exportado
+              </>
+            ) : (
+              <>
+                <Download className="w-3.5 h-3.5" /> Exportar
+              </>
+            )}
           </button>
         </div>
       </motion.div>

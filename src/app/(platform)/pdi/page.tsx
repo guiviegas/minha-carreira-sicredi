@@ -245,13 +245,17 @@ export default function PdiPage() {
               {pdi.theoSuggestions.map((sug) => {
                 const priorityColor = sug.priority === 'high' ? 'border-l-orange-400' : sug.priority === 'medium' ? 'border-l-blue-300' : 'border-l-gray-300';
                 return (
-                  <div key={sug.id} className={`p-3 rounded-lg bg-white border border-gray-100 border-l-[3px] ${priorityColor} cursor-pointer hover:shadow-sm transition-shadow`}>
+                  <Link
+                    key={sug.id}
+                    href="/parceiro-jornada"
+                    className={`block p-3 rounded-lg bg-white border border-gray-100 border-l-[3px] ${priorityColor} hover:shadow-sm transition-shadow`}
+                  >
                     <p className="text-xs font-semibold text-gray-800">{sug.title}</p>
                     <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">{sug.description}</p>
-                    <button className="text-[10px] text-verde-digital font-semibold mt-1.5 flex items-center gap-0.5 hover:underline">
-                      Ver mais <ArrowRight className="w-2.5 h-2.5" />
-                    </button>
-                  </div>
+                    <span className="text-[10px] text-verde-digital font-semibold mt-1.5 inline-flex items-center gap-0.5 hover:underline">
+                      Conversar com Theo <ArrowRight className="w-2.5 h-2.5" />
+                    </span>
+                  </Link>
                 );
               })}
             </div>

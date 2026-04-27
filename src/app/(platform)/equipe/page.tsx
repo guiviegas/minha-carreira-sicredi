@@ -6,6 +6,7 @@ import { getRoleById } from '@/data/roles';
 import { getPdiForPersona } from '@/data/pdi';
 import { avaliacoesMock, reguaPerformance, reguaProntidao, reguaPotencial } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   AlertTriangle,
   ArrowRight,
@@ -224,7 +225,17 @@ function TeamRow({ member }: { member: Employee }) {
         </a>
       </td>
       <td className="py-3 px-3 text-[12px]">
-        <p className="font-semibold text-gray-700">{role?.shortTitle || role?.title}</p>
+        {role ? (
+          <Link
+            href={`/meu-cargo/${role.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="font-semibold text-gray-700 hover:text-verde-digital hover:underline"
+          >
+            {role.shortTitle || role.title}
+          </Link>
+        ) : (
+          <p className="font-semibold text-gray-400">—</p>
+        )}
         <p className="text-[10px] text-gray-500">
           N{role?.level}
           {member.currentZone ? ` · Zona ${member.currentZone}` : ''}
@@ -261,7 +272,13 @@ function TeamRow({ member }: { member: Employee }) {
       <td className="py-3 px-3">
         {aspRole ? (
           <div className="text-[11px]">
-            <p className="text-gray-700 truncate max-w-[150px]">{aspRole.shortTitle}</p>
+            <Link
+              href={`/meu-cargo/${aspRole.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-gray-700 truncate max-w-[150px] block hover:text-purple-700 hover:underline"
+            >
+              {aspRole.shortTitle}
+            </Link>
             <p className="text-[10px] text-gray-500">
               {member.aspirations[0].sharedWithLeader ? 'Compartilhada' : 'Privada'}
             </p>

@@ -34,6 +34,7 @@ export default function PerfilPage() {
   const { currentPersona } = usePersona();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAspirationModal, setShowAspirationModal] = useState(false);
+  const [showVisibilityModal, setShowVisibilityModal] = useState(false);
   const [aspirationShared, setAspirationShared] = useState(false);
 
   if (!currentPersona) return null;
@@ -411,7 +412,10 @@ export default function PerfilPage() {
             <p className="text-[11px] text-gray-500 mb-3">
               Tornar o perfil visível ajuda lideranças a identificar oportunidades certas para você.
             </p>
-            <button className="w-full text-[11px] font-bold text-blue-600 hover:bg-blue-50 py-2 rounded-lg border border-blue-200">
+            <button
+              onClick={() => setShowVisibilityModal(true)}
+              className="w-full text-[11px] font-bold text-blue-600 hover:bg-blue-50 py-2 rounded-lg border border-blue-200 transition-colors"
+            >
               Configurar visibilidade
             </button>
           </motion.div>
@@ -534,6 +538,69 @@ export default function PerfilPage() {
                   </button>
                 </>
               )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal Visibilidade do Perfil */}
+      <AnimatePresence>
+        {showVisibilityModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowVisibilityModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-gray-900">Configurar visibilidade</h3>
+                <button onClick={() => setShowVisibilityModal(false)} className="text-gray-400 hover:text-gray-600">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mb-4">
+                Quem pode ver suas aspirações e disponibilidade para movimentações.
+              </p>
+              <div className="space-y-2.5">
+                {[
+                  { id: 'lider', label: 'Minha liderança direta', desc: 'Sempre visível', locked: true },
+                  { id: 'comite', label: 'Comitê de Carreira da cooperativa', desc: 'Recomendado', defaultChecked: true },
+                  { id: 'pc', label: 'Time de P&C', desc: 'Para indicar oportunidades', defaultChecked: true },
+                  { id: 'lideres', label: 'Outras lideranças do Sicredi', desc: 'Maior alcance', defaultChecked: false },
+                ].map((opt) => (
+                  <label
+                    key={opt.id}
+                    className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 ${
+                      opt.locked ? 'border-gray-100 bg-gray-50/50 cursor-not-allowed' : 'border-gray-200'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      defaultChecked={opt.locked || opt.defaultChecked}
+                      disabled={opt.locked}
+                      className="mt-1 accent-blue-600"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-gray-800">{opt.label}</p>
+                      <p className="text-[10px] text-gray-500">{opt.desc}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowVisibilityModal(false)}
+                className="w-full mt-5 px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Salvar configurações
+              </button>
             </motion.div>
           </motion.div>
         )}
