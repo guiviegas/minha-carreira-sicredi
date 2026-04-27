@@ -24,12 +24,7 @@ const achievementIcons: Record<string, LucideIcon> = {
   trophy: Trophy, award: Award, zap: Zap, shield: Shield,
 };
 
-function getCompatibilityLabel(score: number): { label: string; color: string; bg: string } {
-  if (score >= 80) return { label: 'Supera', color: 'text-green-600', bg: 'bg-green-50' };
-  if (score >= 65) return { label: 'Atende', color: 'text-verde-digital', bg: 'bg-verde-50' };
-  if (score >= 50) return { label: 'Próximo', color: 'text-amber-600', bg: 'bg-amber-50' };
-  return { label: 'Em desenvolvimento', color: 'text-orange-600', bg: 'bg-orange-50' };
-}
+// (getCompatibilityLabel removido — agora usamos régua oficial Sicredi de Prontidão)
 
 export default function PerfilPage() {
   const { currentPersona } = usePersona();
@@ -373,40 +368,51 @@ export default function PerfilPage() {
             </div>
           </motion.div>
 
-          {/* Readiness Scores */}
+          {/* Prontidão para cargos aspirados (régua oficial Sicredi) */}
           {employee.readinessScores.length > 0 && (
             <motion.div variants={item} className="card p-5">
               <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-verde-digital" /> Compatibilidade
+                <TrendingUp className="w-4 h-4 text-verde-digital" /> Prontidão para próximos passos
               </h2>
+              <p className="text-[11px] text-gray-500 mb-3">
+                Régua oficial Sicredi: avalia o quanto você está pronto para cada cargo aspirado.
+              </p>
               <div className="space-y-3">
                 {employee.readinessScores.map((rs) => {
                   const target = getRoleById(rs.targetRoleId);
-                  const compat = getCompatibilityLabel(rs.score);
+                  // Mapeia score 0-100 → régua oficial Sicredi (4 níveis simbólicos)
+                  let nivel: { nome: string; cor: string; bg: string; descricao: string };
+                  if (rs.score >= 90) nivel = { nome: 'Pronto agora', cor: '#16A34A', bg: '#F0FDF4', descricao: 'Atende todos os requisitos.' };
+                  else if (rs.score >= 70) nivel = { nome: 'Pronto em 1 ano', cor: '#2563EB', bg: '#EFF6FF', descricao: 'Gaps pequenos e bem mapeados.' };
+                  else if (rs.score >= 40) nivel = { nome: 'Em desenvolvimento', cor: '#D97706', bg: '#FFFBEB', descricao: 'Gaps significativos, mas em trilha.' };
+                  else nivel = { nome: 'Início da jornada', cor: '#6B7280', bg: '#F3F4F6', descricao: 'Fase exploratória.' };
+
                   return (
-                    <div key={rs.targetRoleId} className="p-3 rounded-lg border border-gray-100 hover:border-verde-digital/30 transition-colors cursor-pointer">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-gray-700">{target?.shortTitle}</p>
-                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${compat.bg} ${compat.color}`}>
-                          {compat.label}
+                    <a
+                      key={rs.targetRoleId}
+                      href={`/meu-cargo/${rs.targetRoleId}`}
+                      className="block p-3 rounded-lg border border-gray-100 hover:border-verde-digital/30 transition-colors"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-medium text-gray-700">{target?.title}</p>
+                        <span
+                          className="text-xs font-bold px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: nivel.bg, color: nivel.cor }}
+                        >
+                          {nivel.nome}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 mt-2">
-                        {Object.entries(rs.components).map(([key, val]) => {
-                          const compLabels: Record<string, string> = { skills: 'Competências', experience: 'Experiência', performance: 'Performance', development: 'Desenvolvimento', leadership: 'Liderança' };
-                          const compCompat = getCompatibilityLabel(val);
-                          return (
-                            <div key={key} className="flex items-center gap-1">
-                              <div className={`w-2 h-2 rounded-full ${val >= 80 ? 'bg-green-500' : val >= 65 ? 'bg-verde-digital' : val >= 50 ? 'bg-amber-400' : 'bg-orange-400'}`} />
-                              <span className="text-[10px] text-gray-400">{compLabels[key] || key}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
+                      <p className="text-[11px] text-gray-500">{nivel.descricao}</p>
+                    </a>
                   );
                 })}
               </div>
+              <a
+                href="/mapa-carreira"
+                className="block mt-3 text-[11px] font-semibold text-verde-digital hover:underline text-center"
+              >
+                Abrir Plano de Rota completo no GPS →
+              </a>
             </motion.div>
           )}
 

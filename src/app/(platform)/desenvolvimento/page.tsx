@@ -55,18 +55,21 @@ export default function DesenvolvimentoPage() {
 
   if (!currentPersona) return null;
 
-  const categories = ['todos', 'lideranca', 'financeira', 'estrategica', 'comercial', 'cooperativismo', 'soft'];
-  const categoryLabels: Record<string, string> = {
-    todos: 'Todos',
-    lideranca: 'Liderança',
-    financeira: 'Financeira',
-    estrategica: 'Estratégica',
-    comercial: 'Comercial',
-    cooperativismo: 'Cooperativismo',
-    soft: 'Soft Skills',
-  };
+  // Filtros agora pelas 7 competências oficiais Jeito Sicredi
+  const competenciasFiltro = [
+    { id: 'todos', label: 'Todas' },
+    { id: '#GENTE QUE FAZ JUNTO', label: 'Faz Junto' },
+    { id: '#GENTE QUE ENTENDE DE GENTE', label: 'Entende de Gente' },
+    { id: '#GENTE QUE GERA PROSPERIDADE', label: 'Gera Prosperidade' },
+    { id: '#GENTE QUE EVOLUI', label: 'Evolui' },
+    { id: '#GENTE QUE FAZ O CERTO', label: 'Faz o Certo' },
+    { id: '#GENTE QUE GERA CONFIANÇA', label: 'Gera Confiança' },
+    { id: '#GENTE COM QUEM CONTAR', label: 'Com Quem Contar' },
+  ];
 
-  const filteredCourses = categoryFilter === 'todos' ? courses : courses.filter(c => c.category === categoryFilter);
+  const filteredCourses = categoryFilter === 'todos'
+    ? courses
+    : courses.filter((c) => c.skills.some((s) => s === categoryFilter || s.includes(categoryFilter)));
   const inProgress = courses.filter(c => c.progress > 0 && c.progress < 100);
   const completed = courses.filter(c => c.progress === 100);
   const recommended = courses.filter(c => c.progress === 0).slice(0, 4);
@@ -147,21 +150,22 @@ export default function DesenvolvimentoPage() {
               </div>
             </div>
 
-            {/* Category Filter + All */}
+            {/* Filtro por competência Jeito Sicredi */}
             <div>
               <div className="flex items-center gap-2 mb-3 overflow-x-auto pb-2">
                 <Filter className="w-4 h-4 text-gray-400 shrink-0" />
-                {categories.map((cat) => (
+                {competenciasFiltro.map((c) => (
                   <button
-                    key={cat}
-                    onClick={() => setCategoryFilter(cat)}
+                    key={c.id}
+                    onClick={() => setCategoryFilter(c.id)}
                     className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                      categoryFilter === cat
+                      categoryFilter === c.id
                         ? 'bg-verde-digital text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
+                    title={c.id !== 'todos' ? c.id : 'Todas as competências'}
                   >
-                    {categoryLabels[cat]}
+                    {c.label}
                   </button>
                 ))}
               </div>

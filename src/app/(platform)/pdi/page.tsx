@@ -3,6 +3,7 @@
 import { usePersona } from '@/contexts/PersonaContext';
 import { getPdiForPersona } from '@/data/pdi';
 import { getRoleById } from '@/data/roles';
+import { reguaPerformance } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
 import {
   Target, CheckCircle2, Circle, Clock, ArrowRight,
@@ -140,12 +141,12 @@ export default function PdiPage() {
             </div>
           </motion.div>
 
-          {/* Competencies — vinculadas à avaliação Jeito Sicredi */}
+          {/* Competências Jeito Sicredi: chips com hashtag oficial (atual → alvo) */}
           <motion.div variants={item} className="card p-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                 <Award className="w-4 h-4 text-purple-500" />
-                Competências (Jeito Sicredi)
+                Competências Jeito Sicredi
               </h3>
               <a
                 href="/avaliacao"
@@ -154,26 +155,38 @@ export default function PdiPage() {
                 Ver na Avaliação <ArrowRight className="w-3 h-3" />
               </a>
             </div>
-            <div className="space-y-3">
+            <p className="text-[11px] text-gray-500 mb-3">
+              Conceito atual (consenso da avaliação) e o esperado para sua aspiração.
+            </p>
+            <div className="space-y-2">
               {pdi.competencies.map((comp) => {
-                const progress = Math.round((comp.current / comp.target) * 100);
-                const isComplete = comp.current >= comp.target;
+                // Mapeia 1-4 → régua oficial (mesma fonte da Avaliação)
+                const atualConfig = reguaPerformance[comp.current - 1] || reguaPerformance[0];
+                const alvoConfig = reguaPerformance[comp.target - 1] || reguaPerformance[3];
+                const atende = comp.current >= comp.target;
                 return (
-                  <div key={comp.name}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-gray-700">{comp.name}</span>
-                      <span className={`text-xs font-semibold metric-value ${isComplete ? 'text-green-500' : 'text-gray-500'}`}>
-                        {comp.current}/{comp.target}
+                  <div
+                    key={comp.name}
+                    className={`flex items-center justify-between gap-2 p-2.5 rounded-lg border ${
+                      atende ? 'bg-green-50/50 border-green-100' : 'bg-amber-50/50 border-amber-100'
+                    }`}
+                  >
+                    <span className="text-xs font-medium text-gray-700 truncate">{comp.name}</span>
+                    <div className="flex items-center gap-1.5 shrink-0 text-[10px]">
+                      <span
+                        className="font-bold px-1.5 py-0.5 rounded-md"
+                        style={{ backgroundColor: atualConfig.bgCor, color: atualConfig.cor }}
+                      >
+                        {atualConfig.hashtag}
                       </span>
-                    </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: isComplete ? '#22C55E' : '#3FA110' }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(progress, 100)}%` }}
-                        transition={{ duration: 0.8, delay: 0.1 }}
-                      />
+                      <ArrowRight className="w-3 h-3 text-gray-400" />
+                      <span
+                        className="font-bold px-1.5 py-0.5 rounded-md"
+                        style={{ backgroundColor: alvoConfig.bgCor, color: alvoConfig.cor }}
+                      >
+                        {alvoConfig.hashtag}
+                      </span>
+                      {atende && <CheckCircle2 className="w-3 h-3 text-green-500 ml-1" />}
                     </div>
                   </div>
                 );
