@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { opportunities } from '@/data/opportunities';
+import { getPersonaHub } from '@/data/persona-hub';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Briefcase, MapPin, Clock, Users, Star, ArrowRight, Sparkles, Zap,
@@ -64,8 +65,61 @@ export default function MarketplacePage() {
 
   if (!currentPersona) return null;
 
-  const filtered = activeTab === 'todos' ? opportunities : opportunities.filter(o => o.type === activeTab);
-  const recommended = opportunities.filter(o => (o.matchScore || 0) >= 80).slice(0, 2);
+  const hub = getPersonaHub(currentPersona.id);
+
+  // Aderência personalizada por persona — usa cargo atual + cargo alvo + skills do gap
+  const computeMatch = (opp: Opportunity): { score: number; reason: string } => {
+    if (!hub) return { score: opp.matchScore || 0, reason: '' };
+    const cargoAtualId = hub.cargoAtual.id;
+    const cargoAlvoId = hub.cargoAlvo?.id;
+    let score = opp.matchScore || 50;
+    let reason = '';
+
+    if (opp.roleId && opp.roleId === cargoAlvoId) {
+      score = 95;
+      reason = `Conecta diretamente à sua aspiração: ${hub.cargoAlvo!.shortTitle}.`;
+    } else if (opp.roleId && opp.roleId === cargoAtualId) {
+      score = 88;
+      reason = `Adequada ao seu cargo atual: ${hub.cargoAtual.shortTitle}.`;
+    } else {
+      // Match por skills
+      const requiredSkillsAlvo = hub.cargoAlvo?.requiredSkills?.map((rs) => rs.skillId.toLowerCase()) || [];
+      const requiredSkillsAtual = hub.cargoAtual.requiredSkills?.map((rs) => rs.skillId.toLowerCase()) || [];
+      const oppSkillsLower = opp.skills.map((s) => s.toLowerCase());
+      const overlapAlvo = oppSkillsLower.filter((s) =>
+        requiredSkillsAlvo.some((rs) => rs.includes(s) || s.includes(rs.replace('sk-', ''))),
+      ).length;
+      const overlapAtual = oppSkillsLower.filter((s) =>
+        requiredSkillsAtual.some((rs) => rs.includes(s) || s.includes(rs.replace('sk-', ''))),
+      ).length;
+      if (overlapAlvo >= 2) {
+        score = Math.min(85, score + 15);
+        reason = `Desenvolve ${overlapAlvo} habilidades exigidas pela sua aspiração.`;
+      } else if (overlapAtual >= 2) {
+        score = Math.min(78, score + 8);
+        reason = `Fortalece habilidades do seu cargo atual.`;
+      } else {
+        reason = '';
+      }
+    }
+    return { score, reason };
+  };
+
+  const enriched = useMemo(
+    () =>
+      opportunities.map((opp) => {
+        const { score, reason } = computeMatch(opp);
+        return { ...opp, personaScore: score, personaReason: reason };
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hub?.persona.id],
+  );
+
+  const filtered = activeTab === 'todos' ? enriched : enriched.filter((o) => o.type === activeTab);
+  const recommended = [...enriched]
+    .filter((o) => o.personaScore >= 80)
+    .sort((a, b) => b.personaScore - a.personaScore)
+    .slice(0, 3);
 
   const toggleSave = (id: string) => {
     setSavedOpps(prev => {
@@ -107,12 +161,14 @@ export default function MarketplacePage() {
         </a>
       </motion.div>
 
-      {/* Recommended */}
+      {/* Recommended para a persona */}
       {recommended.length > 0 && (
         <motion.div variants={item}>
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-4 h-4 text-purple-500" />
-            <p className="text-xs font-semibold uppercase tracking-wider text-purple-500">Recomendados para você</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-purple-500">
+              Para você {hub?.cargoAlvo ? `· alinhado a ${hub.cargoAlvo.shortTitle}` : ''}
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {recommended.map((opp) => (
@@ -126,12 +182,17 @@ export default function MarketplacePage() {
                   <div className="icon-box-sm" style={{ backgroundColor: `${typeColors[opp.type]}15` }}>
                     <TypeIcon type={opp.type} />
                   </div>
-                  <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${getAderencia(opp.matchScore || 0).bg} ${getAderencia(opp.matchScore || 0).color}`}>
-                    <Zap className="w-3 h-3" /> {getAderencia(opp.matchScore || 0).label}
+                  <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${getAderencia(opp.personaScore).bg} ${getAderencia(opp.personaScore).color}`}>
+                    <Zap className="w-3 h-3" /> {getAderencia(opp.personaScore).label}
                   </span>
                 </div>
                 <h3 className="text-sm font-semibold text-gray-800 mt-2">{opp.title}</h3>
                 <p className="text-xs text-gray-500 mt-1 line-clamp-2">{opp.description}</p>
+                {opp.personaReason && (
+                  <p className="text-[11px] font-semibold text-purple-600 mt-2 flex items-start gap-1">
+                    <Sparkles className="w-3 h-3 shrink-0 mt-0.5" /> {opp.personaReason}
+                  </p>
+                )}
                 <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400">
                   {opp.duration && <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {opp.duration}</span>}
                   <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {opp.applicants} candidatos</span>
@@ -200,9 +261,9 @@ export default function MarketplacePage() {
                     }}>
                       {tabLabels[opp.type as OpportunityTab]}
                     </span>
-                    {(opp.matchScore || 0) >= 50 && (
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${getAderencia(opp.matchScore || 0).bg} ${getAderencia(opp.matchScore || 0).color}`}>
-                        {getAderencia(opp.matchScore || 0).label}
+                    {opp.personaScore >= 50 && (
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${getAderencia(opp.personaScore).bg} ${getAderencia(opp.personaScore).color}`}>
+                        {getAderencia(opp.personaScore).label}
                       </span>
                     )}
                     {isApplied && (

@@ -23,7 +23,7 @@ export const navigationSections: NavSection[] = [
         label: 'Meu Cargo',
         icon: 'briefcase',
         href: '/meu-cargo',
-        roles: ['colaborador', 'lider'],
+        roles: ['colaborador', 'lider', 'pc_analista'],
       },
       {
         id: 'perfil',
@@ -37,7 +37,7 @@ export const navigationSections: NavSection[] = [
         label: 'GPS de Carreira',
         icon: 'map',
         href: '/mapa-carreira',
-        roles: ['colaborador', 'lider'],
+        roles: ['colaborador', 'lider', 'pc_analista'],
       },
       {
         id: 'avaliacao',
@@ -58,14 +58,14 @@ export const navigationSections: NavSection[] = [
         label: 'Desenvolvimento',
         icon: 'book-open',
         href: '/desenvolvimento',
-        roles: ['colaborador', 'lider'],
+        roles: ['colaborador', 'lider', 'pc_analista'],
       },
       {
         id: 'marketplace',
         label: 'Oportunidades Internas',
         icon: 'search',
         href: '/marketplace',
-        roles: ['colaborador', 'lider'],
+        roles: ['colaborador', 'lider', 'pc_analista'],
       },
       {
         id: 'parceiro-jornada',

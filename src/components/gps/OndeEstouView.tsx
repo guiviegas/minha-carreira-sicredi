@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { PersonaHub } from '@/data/persona-hub';
 import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import {
@@ -16,6 +17,7 @@ import {
   CheckCircle2,
   Calendar,
   Clock,
+  ExternalLink,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
@@ -174,7 +176,7 @@ export default function OndeEstouView({
                 Preparo Técnico esperado
               </h3>
               <span className="text-[10px] text-gray-400">
-                {atrib.fonte === 'planilha' ? 'Matriz oficial Sicredi' : 'Inferido (mercado)'}
+                Conhecimentos esperados pelo cargo
               </span>
             </div>
             <p className="text-[11px] text-gray-500 mb-3">
@@ -241,7 +243,14 @@ export default function OndeEstouView({
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">Para onde quero ir</p>
-              <h3 className="text-lg font-bold text-gray-900">{cargoAlvo.title}</h3>
+              <Link
+                href={`/meu-cargo/${cargoAlvo.id}`}
+                className="text-lg font-bold text-gray-900 hover:underline inline-flex items-center gap-1.5"
+                style={{ color: cargoAlvo.color }}
+              >
+                <h3 className="inline">{cargoAlvo.title}</h3>
+                <ExternalLink className="w-4 h-4 opacity-70" />
+              </Link>
               <p className="text-xs text-gray-500 mt-1">
                 Horizonte declarado: {employee.aspirations[0]?.timeframe || 'a definir'}
               </p>

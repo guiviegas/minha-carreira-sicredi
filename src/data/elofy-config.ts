@@ -295,6 +295,113 @@ export const avaliacoesMock: AvaliacaoCiclo[] = [
     pontosDesenvolvimento: ['Evolui (digital)', 'Gestão por dados'],
     status: 'concluido',
   },
+
+  // ===== Equipe Roberto — preenchimento dos colaboradores =====
+  // Juliana Pereira (emp-101) — risco de turnover, sinal de #precisa evoluir
+  {
+    id: 'aval-101',
+    employeeId: 'emp-101',
+    cicloId: 'ciclo-2026-1',
+    competencias: [
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 2, avaliacaoLider: 1, consenso: 2, comentarioLider: 'Carteira tem caído no semestre. Precisamos retomar a régua de captação.' },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 3, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 2, avaliacaoLider: 2, consenso: 2 },
+    ],
+    notaFinalPerformance: 2,
+    prontidaoId: 'inicio-jornada',
+    potencialId: 'fortelecer',
+    feedbacks: [
+      'Sinais de desengajamento — agendar conversa de retenção esta semana.',
+      'Pode estar no segmento errado — explorar transição para PJ.',
+    ],
+    pontosFortes: ['Faz o Certo'],
+    pontosDesenvolvimento: ['Engajamento', 'Captação', 'Visão de carteira'],
+    status: 'concluido',
+  },
+
+  // André Moreira (emp-111) — GN Agro, sólido
+  {
+    id: 'aval-111',
+    employeeId: 'emp-111',
+    cicloId: 'ciclo-2026-1',
+    competencias: [
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4, comentarioLider: 'Excelente leitura do produtor rural — referência da agência.' },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+    ],
+    notaFinalPerformance: 3,
+    prontidaoId: 'pronto-1ano',
+    potencialId: 'crescer',
+    feedbacks: [
+      'Resultados consistentes em crédito rural — Top 1 da agência em volume.',
+      'Pronto para assumir carteiras maiores no próximo ciclo.',
+    ],
+    pontosFortes: ['Entende de Gente', 'Gera Prosperidade', 'Faz o Certo', 'Gera Confiança'],
+    pontosDesenvolvimento: ['Visão sistêmica', 'Liderança informal'],
+    status: 'concluido',
+  },
+
+  // Pedro Almeida (emp-106) — GN PJ, alto desempenho
+  {
+    id: 'aval-106',
+    employeeId: 'emp-106',
+    cicloId: 'ciclo-2026-1',
+    competencias: [
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 3, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4, comentarioLider: 'Estourou meta de PJ no trimestre. Excelente capacidade de prospecção.' },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 4, avaliacaoLider: 3, consenso: 4 },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 3, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+    ],
+    notaFinalPerformance: 4,
+    prontidaoId: 'pronto-agora',
+    potencialId: 'acelerar',
+    feedbacks: [
+      'Performance #arrasou — pronto para movimentação imediata.',
+      'Avaliar promoção para GN PJ Senior ou trilha de liderança.',
+    ],
+    pontosFortes: ['Faz Junto', 'Entende de Gente', 'Gera Prosperidade', 'Gera Confiança'],
+    pontosDesenvolvimento: ['Visão de longo prazo'],
+    status: 'concluido',
+  },
+
+  // Fernanda Rocha (emp-109) — Backoffice, evoluindo bem
+  {
+    id: 'aval-109',
+    employeeId: 'emp-109',
+    cicloId: 'ciclo-2026-1',
+    competencias: [
+      { competenciaId: 'gente-que-faz-junto', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-entende-de-gente', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-gera-prosperidade', autoAvaliacao: 2, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-que-evolui', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4, comentarioLider: 'Sempre propondo automatizações. Brilha em melhoria de processos.' },
+      { competenciaId: 'gente-que-faz-o-certo', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+      { competenciaId: 'gente-que-gera-confianca', autoAvaliacao: 3, avaliacaoLider: 3, consenso: 3 },
+      { competenciaId: 'gente-com-quem-contar', autoAvaliacao: 4, avaliacaoLider: 4, consenso: 4 },
+    ],
+    notaFinalPerformance: 3,
+    prontidaoId: 'em-desenvolvimento',
+    potencialId: 'crescer',
+    feedbacks: [
+      'Talento de operações com perfil para transição para negócios.',
+      'Recomendar trilha Operações → Assistente de Negócios.',
+    ],
+    pontosFortes: ['Faz Junto', 'Evolui', 'Faz o Certo', 'Com Quem Contar'],
+    pontosDesenvolvimento: ['Conhecimento de produtos', 'Visão comercial'],
+    status: 'concluido',
+  },
+
+  // Carlos Eduardo (emp-104) — JOVEM/JUNIOR, deixar SEM avaliação intencionalmente
 ];
 
 // --- Links externos ---

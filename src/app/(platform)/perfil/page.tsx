@@ -2,88 +2,80 @@
 
 import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
-import { getEmployeeById } from '@/data/employees';
-import { getRoleById } from '@/data/roles';
-import { avaliacoesMock, reguaPerformance, reguaProntidao } from '@/data/elofy-config';
 import { getPersonaHub } from '@/data/persona-hub';
+import { getRoleById } from '@/data/roles';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Award, BookOpen, Calendar, Edit3, Eye, EyeOff, MapPin, Share2, Star,
-  Target, TrendingUp, Zap, X, CheckCircle2, Copy, Download,
-  ExternalLink, Shield, Handshake, Lightbulb, Trophy,
-  Compass, Heart,
-  type LucideIcon,
+  Edit3,
+  Eye,
+  EyeOff,
+  Share2,
+  Star,
+  Target,
+  TrendingUp,
+  X,
+  CheckCircle2,
+  ExternalLink,
+  Heart,
+  Briefcase,
+  MapPin,
+  Calendar,
+  Mail,
+  Compass,
+  Award,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
-
-const achievementIcons: Record<string, LucideIcon> = {
-  star: Star, target: Target, handshake: Handshake, lightbulb: Lightbulb,
-  trophy: Trophy, award: Award, zap: Zap, shield: Shield,
-};
-
-// (getCompatibilityLabel removido — agora usamos régua oficial Sicredi de Prontidão)
 
 export default function PerfilPage() {
   const { currentPersona } = usePersona();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAspirationModal, setShowAspirationModal] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [expandedSkill, setExpandedSkill] = useState<string | null>(null);
-  const [editSaved, setEditSaved] = useState(false);
+  const [showVisibilityModal, setShowVisibilityModal] = useState(false);
   const [aspirationShared, setAspirationShared] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
 
   if (!currentPersona) return null;
-  const employee = getEmployeeById(currentPersona.employeeId);
-  if (!employee) return null;
-  const role = getRoleById(employee.roleId);
   const hub = getPersonaHub(currentPersona.id);
+  if (!hub) return null;
 
-  const categoryAverages = employee.skills.reduce<Record<string, { total: number; count: number }>>((acc, s) => {
-    if (!acc[s.category]) acc[s.category] = { total: 0, count: 0 };
-    acc[s.category].total += s.level;
-    acc[s.category].count += 1;
-    return acc;
-  }, {});
-
-  const categoryLabels: Record<string, string> = {
-    relacional: 'Relacional', tecnica: 'Técnica', lideranca: 'Liderança',
-    estrategica: 'Estratégica', cooperativismo: 'Cooperativismo',
-    financeira: 'Financeira', digital: 'Digital',
-  };
-
-  const handleSaveEdit = () => {
-    setEditSaved(true);
-    setTimeout(() => { setShowEditModal(false); setEditSaved(false); }, 1500);
-  };
+  const { employee, cargoAtual, cargoAlvo, competenciasSicredi, notaFinalPerformance, prontidao } = hub;
+  const aspiracao = employee.aspirations[0];
 
   const handleShareAspiration = () => {
     setAspirationShared(true);
-    setTimeout(() => { setShowAspirationModal(false); setAspirationShared(false); }, 1500);
-  };
-
-  const handleCopyLink = () => {
-    setLinkCopied(true);
-    setTimeout(() => setLinkCopied(false), 2000);
+    setTimeout(() => {
+      setShowAspirationModal(false);
+      setAspirationShared(false);
+    }, 1500);
   };
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="max-w-4xl space-y-6">
-      {/* Header Card */}
+    <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl space-y-5">
+      {/* Header card — redesenhado: foco em identidade + aspiração */}
       <motion.div variants={item} className="card overflow-hidden">
-        <div className="h-28 relative" style={{
-          background: `linear-gradient(135deg, ${currentPersona.color}CC, ${currentPersona.color}88)`,
-        }}>
+        <div
+          className="h-24 relative"
+          style={{
+            background: `linear-gradient(135deg, ${currentPersona.color}DD 0%, ${currentPersona.color}88 100%)`,
+          }}
+        >
           <div className="absolute inset-0 opacity-20">
-            <svg width="100%" height="100%"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#dots)"/></svg>
+            <svg width="100%" height="100%">
+              <defs>
+                <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="10" cy="10" r="1.5" fill="white" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#dots)" />
+            </svg>
           </div>
         </div>
         <div className="px-6 pb-5 relative">
-          <div className="flex items-end gap-4 -mt-8">
-            <div className="w-20 h-20 rounded-2xl bg-white shadow-lg overflow-hidden border-4 border-white relative">
+          <div className="flex items-end gap-4 -mt-10">
+            <div className="w-20 h-20 rounded-2xl bg-white shadow-lg overflow-hidden border-4 border-white relative shrink-0">
               <Image
                 src={`/personas/${currentPersona.id}.png`}
                 alt={employee.name}
@@ -91,17 +83,11 @@ export default function PerfilPage() {
                 className="object-cover object-top"
               />
             </div>
-            <div className="pb-1 flex-1">
+            <div className="pb-1 flex-1 min-w-0">
               <h1 className="text-xl font-bold text-gray-900">{employee.name}</h1>
-              <p className="text-sm text-gray-500">{role?.title} · {currentPersona.cooperative}</p>
+              <p className="text-sm text-gray-500">{cargoAtual.title}</p>
             </div>
-            <div className="flex gap-2 pb-1">
-              <button
-                onClick={() => setShowShareModal(true)}
-                className="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-              >
-                <Share2 className="w-3.5 h-3.5" /> Compartilhar
-              </button>
+            <div className="flex gap-2 pb-1 shrink-0">
               <button
                 onClick={() => setShowEditModal(true)}
                 className="flex items-center gap-1.5 text-sm font-medium text-white bg-verde-digital hover:bg-verde-600 px-3 py-1.5 rounded-lg transition-colors"
@@ -113,177 +99,259 @@ export default function PerfilPage() {
           {employee.bio && (
             <p className="text-sm text-gray-600 mt-3 leading-relaxed">{employee.bio}</p>
           )}
-          <div className="flex items-center gap-4 mt-3 text-xs text-gray-400">
-            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {employee.tenure > 0 ? `${employee.tenure} anos` : `${employee.tenureMonths} meses`} de Sicredi</span>
-            <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {currentPersona.branch || currentPersona.cooperative}</span>
+          <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-gray-400">
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> {currentPersona.cooperative}
+              {currentPersona.branch && ` · ${currentPersona.branch}`}
+            </span>
+            <span className="flex items-center gap-1">
+              <Briefcase className="w-3 h-3" /> {employee.tenure} ano(s) de Sicredi
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" /> Desde {employee.hireDate}
+            </span>
+            <span className="flex items-center gap-1">
+              <Mail className="w-3 h-3" /> {employee.email}
+            </span>
           </div>
         </div>
       </motion.div>
 
-      {/* Career Passport */}
-      <motion.div variants={item} className="card p-5 border-l-4 border-l-verde-digital">
-        <div className="flex items-center gap-2 mb-4">
-          <Compass className="w-4 h-4 text-verde-digital" />
-          <h2 className="text-sm font-semibold text-gray-800">Passaporte de Carreira</h2>
+      {/* Status oficial: 3 selos da régua Sicredi */}
+      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Conceito atual</p>
+            <Heart className="w-3.5 h-3.5 text-gray-300" />
+          </div>
+          <span
+            className="inline-block text-base font-extrabold px-3 py-1 rounded-lg"
+            style={{ backgroundColor: notaFinalPerformance.bgCor, color: notaFinalPerformance.cor }}
+          >
+            {notaFinalPerformance.hashtag}
+          </span>
+          <p className="text-[11px] text-gray-500 mt-2 leading-tight">{notaFinalPerformance.descricao.split('.')[0]}.</p>
         </div>
-        {(() => {
-          const avaliacao = avaliacoesMock.find(a => a.employeeId === employee.id && a.cicloId === 'ciclo-2026-1');
-          const aspiracao = employee.aspirations[0];
-          const cargoAspirado = aspiracao ? getRoleById(aspiracao.targetRoleId) : null;
-          const prontConfig = avaliacao?.prontidaoId ? reguaProntidao.find(r => r.id === avaliacao.prontidaoId) : null;
-          const perfNota = avaliacao?.notaFinalPerformance || 0;
-          const perfConfig = perfNota > 0 ? reguaPerformance[perfNota - 1] : null;
 
-          return (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {/* Aspiração */}
-              <div className="p-3 rounded-lg bg-purple-50 text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-purple-500">Aspiração</p>
-                <p className="text-sm font-bold text-purple-700 mt-1">{cargoAspirado?.shortTitle || '-'}</p>
-                {aspiracao && <p className="text-[10px] text-purple-400 mt-0.5">{aspiracao.timeframe}</p>}
+        {prontidao && (
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Prontidão para o alvo</p>
+              <TrendingUp className="w-3.5 h-3.5 text-gray-300" />
+            </div>
+            <span
+              className="inline-block text-base font-extrabold px-3 py-1 rounded-lg"
+              style={{ backgroundColor: prontidao.bgCor, color: prontidao.cor }}
+            >
+              {prontidao.nome}
+            </span>
+            <p className="text-[11px] text-gray-500 mt-2 leading-tight">{prontidao.descricao}</p>
+          </div>
+        )}
+
+        <div className="card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Aspiração declarada</p>
+            <Compass className="w-3.5 h-3.5 text-gray-300" />
+          </div>
+          {cargoAlvo && aspiracao ? (
+            <>
+              <Link
+                href={`/meu-cargo/${cargoAlvo.id}`}
+                className="text-sm font-bold text-gray-900 hover:text-purple-700 hover:underline inline-flex items-center gap-1"
+              >
+                {cargoAlvo.title}
+                <ExternalLink className="w-3 h-3 opacity-60" />
+              </Link>
+              <p className="text-[11px] text-gray-500 mt-1">Horizonte: {aspiracao.timeframe}</p>
+              <span
+                className={`inline-block mt-2 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
+                  aspiracao.sharedWithLeader
+                    ? 'bg-green-50 text-green-700'
+                    : aspiracao.declared
+                    ? 'bg-amber-50 text-amber-700'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {aspiracao.sharedWithLeader
+                  ? '✓ Compartilhada com líder'
+                  : aspiracao.declared
+                  ? 'Decidida'
+                  : 'Explorando'}
+              </span>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-gray-400 italic">Não declarada</p>
+              <button
+                onClick={() => setShowAspirationModal(true)}
+                className="text-[11px] font-semibold text-verde-digital mt-2 hover:underline"
+              >
+                Declarar aspiração →
+              </button>
+            </>
+          )}
+        </div>
+      </motion.div>
+
+      {/* Competências Jeito Sicredi (vindas do hub) */}
+      <motion.div variants={item} className="card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+            <Heart className="w-4 h-4 text-verde-digital" /> Competências Jeito Sicredi de Ser
+          </h2>
+          <a
+            href="/avaliacao"
+            className="text-[11px] text-verde-digital font-semibold hover:underline flex items-center gap-1"
+          >
+            Ver Avaliação <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+          {competenciasSicredi.map((c) => (
+            <div
+              key={c.competencia.id}
+              className="p-3 rounded-lg bg-gray-50 border border-gray-100"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
+                    style={{ backgroundColor: c.competencia.cor }}
+                  />
+                  <p className="text-xs font-semibold text-gray-800 truncate">{c.competencia.nome}</p>
+                </div>
+                <span
+                  className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
+                  style={{ backgroundColor: c.conceito.bgCor, color: c.conceito.cor }}
+                >
+                  {c.conceito.hashtag}
+                </span>
               </div>
-              {/* Performance */}
-              {perfConfig && (
-                <div className="p-3 rounded-lg text-center" style={{ backgroundColor: perfConfig.bgCor }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: perfConfig.cor }}>Performance</p>
-                  <p className="text-xs font-bold mt-1" style={{ color: perfConfig.cor }}>{perfConfig.hashtag}</p>
-                </div>
-              )}
-              {/* Prontidão */}
-              {prontConfig && (
-                <div className="p-3 rounded-lg text-center" style={{ backgroundColor: prontConfig.bgCor }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: prontConfig.cor }}>Prontidão</p>
-                  <p className="text-xs font-bold mt-1" style={{ color: prontConfig.cor }}>{prontConfig.nome}</p>
-                </div>
-              )}
-              {/* Competências */}
-              {avaliacao && (
-                <div className="p-3 rounded-lg bg-verde-50 text-center">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-verde-digital">Competências</p>
-                  <p className="text-xs font-bold text-verde-digital mt-1">Jeito Sicredi de Ser</p>
-                  <p className="text-[10px] text-verde-digital mt-0.5">{avaliacao.competencias.length} avaliadas</p>
-                </div>
+              {c.comentarioLider && (
+                <p className="text-[11px] text-purple-600 italic mt-1">
+                  &ldquo;{c.comentarioLider}&rdquo;
+                </p>
               )}
             </div>
-          );
-        })()}
+          ))}
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Left Column (2/3) */}
+        {/* Coluna principal */}
         <div className="lg:col-span-2 space-y-5">
-          {/* Competências Jeito Sicredi de Ser (vindas do hub — mesma fonte da Avaliação) */}
-          {hub && (
-            <motion.div variants={item} className="card p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-verde-digital" /> Competências Jeito Sicredi de Ser
-                </h2>
-                <a
-                  href="/avaliacao"
-                  className="text-[11px] text-verde-digital font-semibold hover:underline flex items-center gap-1"
-                >
-                  Ver na Avaliação <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                {hub.competenciasSicredi.map((c) => (
-                  <div
-                    key={c.competencia.id}
-                    className="p-3 rounded-lg bg-gray-50 border border-gray-100"
+          {/* Aspiração com narrativa */}
+          {cargoAlvo && aspiracao && (
+            <motion.div variants={item} className="card p-5 border-l-4 border-l-purple-400 bg-gradient-to-r from-purple-50/40 to-white">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-purple-600 mb-1">Para onde quero ir</p>
+                  <Link
+                    href={`/meu-cargo/${cargoAlvo.id}`}
+                    className="text-base font-bold text-gray-900 hover:text-purple-700 hover:underline inline-flex items-center gap-1.5"
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: c.competencia.cor }}
-                        />
-                        <p className="text-sm font-semibold text-gray-800">{c.competencia.nome}</p>
-                      </div>
-                      <span
-                        className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: c.conceito.bgCor, color: c.conceito.cor }}
-                      >
-                        {c.conceito.hashtag}
-                      </span>
-                    </div>
-                    {c.comentarioLider && (
-                      <p className="text-[11px] text-purple-600 italic mt-1">
-                        &ldquo;{c.comentarioLider}&rdquo;
-                      </p>
-                    )}
+                    <h2 className="inline">{cargoAlvo.title}</h2>
+                    <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                  </Link>
+                  <p className="text-xs text-gray-500 mt-0.5">Nível {cargoAlvo.level} · Horizonte {aspiracao.timeframe}</p>
+                </div>
+                <button
+                  onClick={() => setShowAspirationModal(true)}
+                  className="text-[11px] font-semibold text-purple-600 hover:underline flex items-center gap-0.5"
+                >
+                  <Edit3 className="w-3 h-3" /> Editar
+                </button>
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] text-gray-600 mb-3">
+                {aspiracao.sharedWithLeader ? (
+                  <>
+                    <Eye className="w-3 h-3 text-green-500" />
+                    <span className="text-green-700">Visível para sua liderança</span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff className="w-3 h-3 text-amber-500" />
+                    <span className="text-amber-700">Privada — clique em editar para compartilhar</span>
+                  </>
+                )}
+              </div>
+
+              {hub.gapAlvo && (
+                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-purple-100">
+                  <div className="text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Prontidão</p>
+                    <p className="text-xs font-bold mt-0.5" style={{ color: hub.gapAlvo.prontidaoEstimada.cor }}>
+                      {hub.gapAlvo.prontidaoEstimada.nome}
+                    </p>
                   </div>
-                ))}
-              </div>
+                  <div className="text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Tempo estimado</p>
+                    <p className="text-xs font-bold text-gray-800 mt-0.5">{hub.gapAlvo.tempoEstimado}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Trilhas</p>
+                    <p className="text-xs font-bold text-gray-800 mt-0.5">{hub.trilhasRecomendadas.length} sugeridas</p>
+                  </div>
+                </div>
+              )}
+
+              <a
+                href="/mapa-carreira"
+                className="block mt-4 text-center text-xs font-bold text-purple-600 hover:bg-purple-50 py-2 rounded-lg border border-purple-200"
+              >
+                Abrir Plano de Rota completo no GPS →
+              </a>
             </motion.div>
           )}
 
-          {/* Habilidades técnicas do cargo atual (filtradas: só as que o cargo exige) */}
-          {hub && hub.habilidadesTecnicas.filter((h) => h.nivelEsperadoCargoAtual > 0).length > 0 && (
-            <motion.div variants={item} className="card p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                  <Star className="w-4 h-4 text-amber-500" /> Habilidades técnicas do cargo
-                </h2>
-                <span className="text-[11px] text-gray-400">Nível atual vs esperado</span>
-              </div>
-              <div className="space-y-3">
-                {hub.habilidadesTecnicas
-                  .filter((h) => h.nivelEsperadoCargoAtual > 0)
-                  .sort((a, b) => b.skill.level - a.skill.level)
-                  .map(({ skill, nivelEsperadoCargoAtual }) => {
-                    const atende = skill.level >= nivelEsperadoCargoAtual;
-                    return (
-                      <div key={skill.id}>
-                        <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="text-gray-700 flex items-center gap-1.5">
-                            {skill.name}
-                            {atende && <CheckCircle2 className="w-3 h-3 text-green-500" />}
-                          </span>
-                          <span className="text-xs font-semibold" style={{ color: atende ? '#16A34A' : '#D97706' }}>
-                            {skill.level} / {nivelEsperadoCargoAtual}
-                          </span>
-                        </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden relative">
-                          <motion.div
-                            className="h-full rounded-full"
-                            style={{ backgroundColor: atende ? '#16A34A' : '#D97706' }}
-                            initial={{ width: 0 }}
-                            animate={{ width: `${Math.min(100, skill.level)}%` }}
-                            transition={{ duration: 0.6 }}
-                          />
-                          <div
-                            className="absolute top-0 bottom-0 w-0.5 bg-gray-700"
-                            style={{ left: `${nivelEsperadoCargoAtual}%` }}
-                            title={`Esperado: ${nivelEsperadoCargoAtual}`}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Career Timeline */}
+          {/* Marcos de carreira (linha do tempo) */}
           <motion.div variants={item} className="card p-5">
             <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-verde-digital" /> Jornada no Sicredi
+              <TrendingUp className="w-4 h-4 text-verde-digital" /> Marcos da minha jornada no Sicredi
             </h2>
             <div className="relative pl-6 space-y-4">
-              <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-gray-200" />
+              <div className="absolute left-2 top-2 bottom-2 w-px bg-gray-200" />
               {[
-                { date: '2023-04', title: 'Ingresso como GN PF1', desc: 'Agência Ipê · Cooperativa Caminhos', highlight: false },
-                { date: '2024-06', title: 'Promoção para GN PF2', desc: 'Carteira de média/alta renda', highlight: true },
-                { date: '2025-11', title: 'Certificação CPA-20', desc: 'Habilitação para investimentos', highlight: true },
-                { date: '2026-03', title: 'Top 3 Satisfação da Agência', desc: 'Reconhecimento do trimestre', highlight: false },
+                {
+                  date: employee.hireDate.slice(0, 7),
+                  title: 'Início no Sicredi',
+                  desc: `Como ${cargoAtual.title} · ${currentPersona.cooperative}`,
+                  highlight: false,
+                },
+                {
+                  date: '2024-06',
+                  title: 'Conclusão de trilha de desenvolvimento',
+                  desc: 'Trilha Especialista da família, com foco em atendimento consultivo',
+                  highlight: true,
+                },
+                {
+                  date: '2025-11',
+                  title: 'Reconhecimento de desempenho',
+                  desc: `Conceito ${notaFinalPerformance.hashtag} sustentado em 2 ciclos consecutivos`,
+                  highlight: true,
+                },
+                {
+                  date: '2026-03',
+                  title: 'Aspiração compartilhada com líder',
+                  desc: cargoAlvo
+                    ? `Plano formal de evolução para ${cargoAlvo.shortTitle}`
+                    : 'Conversa de carreira concluída',
+                  highlight: aspiracao?.sharedWithLeader || false,
+                },
               ].map((event, i) => (
                 <div key={i} className="relative flex gap-3 group">
-                  <div className={`absolute -left-[17px] top-1 w-3 h-3 rounded-full border-2 border-white shadow-sm ${
-                    event.highlight ? 'bg-verde-digital' : 'bg-gray-300'
-                  }`} />
-                  <div className={`flex-1 p-2 rounded-lg -ml-1 ${event.highlight ? 'bg-verde-50/50' : 'hover:bg-gray-50'} transition-colors`}>
-                    <p className="text-xs text-gray-400 metric-value">{event.date}</p>
+                  <div
+                    className={`absolute -left-[17px] top-1 w-3 h-3 rounded-full border-2 border-white shadow-sm ${
+                      event.highlight ? 'bg-verde-digital' : 'bg-gray-300'
+                    }`}
+                  />
+                  <div
+                    className={`flex-1 p-2 rounded-lg -ml-1 ${
+                      event.highlight ? 'bg-verde-50/50' : 'hover:bg-gray-50'
+                    } transition-colors`}
+                  >
+                    <p className="text-xs text-gray-400">{event.date}</p>
                     <p className="text-sm font-semibold text-gray-800">{event.title}</p>
                     <p className="text-xs text-gray-500">{event.desc}</p>
                   </div>
@@ -293,271 +361,180 @@ export default function PerfilPage() {
           </motion.div>
         </div>
 
-        {/* Right Column (1/3) */}
+        {/* Coluna lateral */}
         <div className="space-y-5">
-          {/* Aspirations — Interactive */}
-          {employee.aspirations.length > 0 && (
-            <motion.div variants={item} className="card p-5">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                  <Target className="w-4 h-4 text-verde-digital" /> Aspirações
-                </h2>
-                <button
-                  onClick={() => setShowAspirationModal(true)}
-                  className="text-xs text-verde-digital font-medium hover:underline flex items-center gap-0.5"
-                >
-                  <Edit3 className="w-3 h-3" /> Editar
-                </button>
-              </div>
-              {employee.aspirations.map((asp) => {
-                const targetRole = getRoleById(asp.targetRoleId);
-                return (
-                  <div key={asp.targetRoleId} className="p-3 rounded-lg bg-verde-50 border border-green-200">
-                    <p className="text-sm font-semibold text-verde-impresso">{targetRole?.title}</p>
-                    <p className="text-xs text-green-700 mt-0.5">Horizonte: {asp.timeframe}</p>
-                    <div className="mt-2">
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
-                        asp.sharedWithLeader ? 'bg-green-100 text-green-700' :
-                        asp.declared ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {asp.sharedWithLeader ? 'Compartilhada com líder' : asp.declared ? 'Decidida' : 'Explorando'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 mt-2 text-[11px] text-green-600">
-                      {asp.sharedWithLeader ? (
-                        <><Eye className="w-3 h-3" /> Visível para seu líder</>
-                      ) : (
-                        <button
-                          onClick={() => setShowAspirationModal(true)}
-                          className="flex items-center gap-1 hover:text-verde-digital transition-colors"
-                        >
-                          <EyeOff className="w-3 h-3" /> Privado, clique para compartilhar
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </motion.div>
-          )}
-
-          {/* Achievements — with hover */}
-          <motion.div variants={item} className="card p-5">
+          {/* Próximos passos sugeridos */}
+          <motion.div variants={item} className="card p-5 bg-gradient-to-br from-verde-50/50 to-white">
             <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <Award className="w-4 h-4 text-amber-500" /> Conquistas
+              <Star className="w-4 h-4 text-verde-digital" /> Próximos passos
             </h2>
             <div className="space-y-2">
-              {employee.achievements.map((ach) => {
-                const AchIcon = achievementIcons[ach.icon] || Award;
-                return (
-                  <div key={ach.id} className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 hover:bg-amber-50/50 transition-colors cursor-pointer group">
-                    <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-                      <AchIcon className="w-4 h-4 text-amber-600" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-800 truncate">{ach.title}</p>
-                      <p className="text-[11px] text-gray-400">{ach.description}</p>
-                    </div>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  </div>
-                );
-              })}
-              {employee.achievements.length === 0 && (
-                <p className="text-sm text-gray-400 text-center py-4">Nenhuma conquista ainda</p>
-              )}
+              <a href="/pdi" className="block p-2.5 rounded-lg hover:bg-white border border-transparent hover:border-gray-100">
+                <p className="text-xs font-semibold text-gray-800">Atualizar meu PDI</p>
+                <p className="text-[10px] text-gray-500">Garantir que reflete sua aspiração atual</p>
+              </a>
+              <a href="/mapa-carreira" className="block p-2.5 rounded-lg hover:bg-white border border-transparent hover:border-gray-100">
+                <p className="text-xs font-semibold text-gray-800">Explorar GPS de Carreira</p>
+                <p className="text-[10px] text-gray-500">Ver caminhos possíveis a partir do seu cargo</p>
+              </a>
+              <a href="/avaliacao" className="block p-2.5 rounded-lg hover:bg-white border border-transparent hover:border-gray-100">
+                <p className="text-xs font-semibold text-gray-800">Concluir avaliação do ciclo</p>
+                <p className="text-[10px] text-gray-500">Auto-avaliação + indicação de pares</p>
+              </a>
             </div>
           </motion.div>
 
-          {/* Prontidão para cargos aspirados (régua oficial Sicredi) */}
-          {employee.readinessScores.length > 0 && (
+          {/* Reconhecimentos (sem gamificação) */}
+          {employee.achievements && employee.achievements.length > 0 && (
             <motion.div variants={item} className="card p-5">
               <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-verde-digital" /> Prontidão para próximos passos
+                <Award className="w-4 h-4 text-amber-500" /> Reconhecimentos
               </h2>
-              <p className="text-[11px] text-gray-500 mb-3">
-                Régua oficial Sicredi: avalia o quanto você está pronto para cada cargo aspirado.
-              </p>
-              <div className="space-y-3">
-                {employee.readinessScores.map((rs) => {
-                  const target = getRoleById(rs.targetRoleId);
-                  // Mapeia score 0-100 → régua oficial Sicredi (4 níveis simbólicos)
-                  let nivel: { nome: string; cor: string; bg: string; descricao: string };
-                  if (rs.score >= 90) nivel = { nome: 'Pronto agora', cor: '#16A34A', bg: '#F0FDF4', descricao: 'Atende todos os requisitos.' };
-                  else if (rs.score >= 70) nivel = { nome: 'Pronto em 1 ano', cor: '#2563EB', bg: '#EFF6FF', descricao: 'Gaps pequenos e bem mapeados.' };
-                  else if (rs.score >= 40) nivel = { nome: 'Em desenvolvimento', cor: '#D97706', bg: '#FFFBEB', descricao: 'Gaps significativos, mas em trilha.' };
-                  else nivel = { nome: 'Início da jornada', cor: '#6B7280', bg: '#F3F4F6', descricao: 'Fase exploratória.' };
-
-                  return (
-                    <a
-                      key={rs.targetRoleId}
-                      href={`/meu-cargo/${rs.targetRoleId}`}
-                      className="block p-3 rounded-lg border border-gray-100 hover:border-verde-digital/30 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium text-gray-700">{target?.title}</p>
-                        <span
-                          className="text-xs font-bold px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: nivel.bg, color: nivel.cor }}
-                        >
-                          {nivel.nome}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-gray-500">{nivel.descricao}</p>
-                    </a>
-                  );
-                })}
+              <div className="space-y-2">
+                {employee.achievements.slice(0, 4).map((ach) => (
+                  <div key={ach.id} className="flex items-start gap-2.5 p-2 rounded-lg bg-gray-50">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-gray-800 truncate">{ach.title}</p>
+                      <p className="text-[10px] text-gray-500">{ach.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <a
-                href="/mapa-carreira"
-                className="block mt-3 text-[11px] font-semibold text-verde-digital hover:underline text-center"
-              >
-                Abrir Plano de Rota completo no GPS →
-              </a>
             </motion.div>
           )}
 
-          {/* Quick Info */}
+          {/* Compartilhar perfil */}
           <motion.div variants={item} className="card p-5">
-            <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-blue-500" /> Informações
+            <h2 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+              <Share2 className="w-4 h-4 text-blue-500" /> Compartilhe seu perfil
             </h2>
-            <div className="space-y-2 text-sm">
-              {hub && (
-                <div className="flex justify-between py-1.5 border-b border-gray-50">
-                  <span className="text-gray-500">Último conceito</span>
-                  <span
-                    className="font-bold text-xs px-2 py-0.5 rounded-full"
-                    style={{ color: hub.notaFinalPerformance.cor, backgroundColor: hub.notaFinalPerformance.bgCor }}
-                  >
-                    {hub.notaFinalPerformance.hashtag}
-                  </span>
-                </div>
-              )}
-              <div className="flex justify-between py-1.5 border-b border-gray-50">
-                <span className="text-gray-500">Admissão</span>
-                <span className="text-gray-700">{employee.hireDate}</span>
-              </div>
-              <div className="flex justify-between py-1.5">
-                <span className="text-gray-500">Email</span>
-                <span className="text-gray-700 text-xs">{employee.email}</span>
-              </div>
-            </div>
+            <p className="text-[11px] text-gray-500 mb-3">
+              Tornar o perfil visível ajuda lideranças a identificar oportunidades certas para você.
+            </p>
+            <button
+              onClick={() => setShowVisibilityModal(true)}
+              className="w-full text-[11px] font-bold text-blue-600 hover:bg-blue-50 py-2 rounded-lg border border-blue-200 transition-colors"
+            >
+              Configurar visibilidade
+            </button>
           </motion.div>
         </div>
       </div>
 
-      {/* ===== EDIT PROFILE MODAL ===== */}
+      {/* Modal Editar Perfil */}
       <AnimatePresence>
         {showEditModal && (
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
             onClick={() => setShowEditModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              {editSaved ? (
-                <div className="text-center py-8">
-                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle2 className="w-8 h-8 text-green-500" />
-                  </motion.div>
-                  <p className="text-lg font-bold text-gray-900">Perfil atualizado!</p>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-lg font-bold text-gray-900">Editar Perfil</h3>
+                <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">Bio</label>
+                  <textarea
+                    defaultValue={employee.bio || ''}
+                    rows={3}
+                    className="w-full p-3 rounded-lg border border-gray-200 text-sm resize-none focus:border-verde-digital focus:ring-1 focus:ring-verde-digital outline-none"
+                  />
                 </div>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between mb-5">
-                    <h3 className="text-lg font-bold text-gray-900">Editar Perfil</h3>
-                    <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">Interesses de carreira</label>
+                  <div className="flex flex-wrap gap-2">
+                    {['Liderança', 'Investimentos', 'Agronegócio', 'PJ/Corporate', 'Gestão de Pessoas', 'Inovação'].map(
+                      (tag) => (
+                        <label
+                          key={tag}
+                          className="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-verde-50 hover:text-verde-digital cursor-pointer transition-colors"
+                        >
+                          {tag}
+                        </label>
+                      ),
+                    )}
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Bio / Descrição</label>
-                      <textarea defaultValue={employee.bio || ''} className="w-full p-3 rounded-lg border border-gray-200 text-sm resize-none h-20 focus:border-verde-digital focus:ring-1 focus:ring-verde-digital outline-none" />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Interesses de carreira</label>
-                      <div className="flex flex-wrap gap-2">
-                        {['Liderança', 'Investimentos', 'Agronegócio', 'PJ/Corporate', 'Gestão de Pessoas', 'Inovação'].map(tag => (
-                          <label key={tag} className="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-verde-50 hover:text-verde-digital cursor-pointer transition-colors flex items-center gap-1">
-                            <input type="checkbox" className="sr-only" />
-                            {tag}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Certificações</label>
-                      <input type="text" defaultValue="CPA-20" className="w-full p-3 rounded-lg border border-gray-200 text-sm focus:border-verde-digital focus:ring-1 focus:ring-verde-digital outline-none" placeholder="CPA-20, CEA, CFP..." />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Visibilidade do perfil</label>
-                      <select className="w-full p-3 rounded-lg border border-gray-200 text-sm focus:border-verde-digital focus:ring-1 focus:ring-verde-digital outline-none">
-                        <option>Visível para todos da cooperativa</option>
-                        <option>Visível apenas para líder e P&C</option>
-                        <option>Privado</option>
-                      </select>
-                    </div>
-                  </div>
-                  <button onClick={handleSaveEdit} className="w-full mt-5 py-2.5 bg-verde-digital text-white text-sm font-semibold rounded-lg hover:bg-verde-600 transition-colors">
-                    Salvar Alterações
-                  </button>
-                </>
-              )}
+                </div>
+                <button
+                  onClick={() => setShowEditModal(false)}
+                  className="w-full px-4 py-2 rounded-lg bg-verde-digital text-white text-sm font-semibold hover:bg-verde-600 transition-colors"
+                >
+                  Salvar alterações
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ===== SHARE ASPIRATION MODAL ===== */}
+      {/* Modal Editar Aspiração */}
       <AnimatePresence>
-        {showAspirationModal && (
+        {showAspirationModal && cargoAlvo && (
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
             onClick={() => setShowAspirationModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
               {aspirationShared ? (
-                <div className="text-center py-8">
-                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <div className="text-center py-6">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4"
+                  >
                     <CheckCircle2 className="w-8 h-8 text-green-500" />
                   </motion.div>
                   <p className="text-lg font-bold text-gray-900">Aspiração compartilhada!</p>
-                  <p className="text-sm text-gray-500 mt-1">Seu líder poderá ver e apoiar seu objetivo.</p>
+                  <p className="text-sm text-gray-500 mt-1">Sua liderança foi notificada.</p>
                 </div>
               ) : (
                 <>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-gray-900">Gerenciar Aspirações</h3>
-                    <button onClick={() => setShowAspirationModal(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-lg font-bold text-gray-900">Editar aspiração</h3>
+                    <button
+                      onClick={() => setShowAspirationModal(false)}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Compartilhar suas aspirações com seu líder permite que ele te apoie melhor nas conversas de carreira.
+                  <p className="text-sm text-gray-600 mb-4">
+                    Sua aspiração atual: <strong>{cargoAlvo.title}</strong>
                   </p>
-                  {employee.aspirations.map((asp) => {
-                    const targetRole = getRoleById(asp.targetRoleId);
-                    return (
-                      <div key={asp.targetRoleId} className="p-4 rounded-lg bg-verde-50 border border-green-200 mb-3">
-                        <p className="text-sm font-semibold text-verde-impresso">{targetRole?.title}</p>
-                        <p className="text-xs text-green-700 mt-0.5">Horizonte: {asp.timeframe}</p>
-                        <div className="flex items-center gap-2 mt-3">
-                          <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
-                            <input type="checkbox" defaultChecked={asp.sharedWithLeader} className="rounded border-gray-300 text-verde-digital focus:ring-verde-digital" />
-                            Compartilhar com líder
-                          </label>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  <button onClick={handleShareAspiration} className="w-full py-2.5 bg-verde-digital text-white text-sm font-semibold rounded-lg hover:bg-verde-600 transition-colors">
-                    Salvar
+                  <button
+                    onClick={handleShareAspiration}
+                    className="w-full px-4 py-2.5 rounded-lg bg-verde-digital text-white text-sm font-semibold hover:bg-verde-600 transition-colors"
+                  >
+                    Compartilhar com minha liderança
+                  </button>
+                  <button
+                    onClick={() => setShowAspirationModal(false)}
+                    className="w-full mt-2 px-4 py-2 rounded-lg text-sm text-gray-500 hover:bg-gray-50"
+                  >
+                    Cancelar
                   </button>
                 </>
               )}
@@ -566,49 +543,64 @@ export default function PerfilPage() {
         )}
       </AnimatePresence>
 
-      {/* ===== SHARE PROFILE MODAL ===== */}
+      {/* Modal Visibilidade do Perfil */}
       <AnimatePresence>
-        {showShareModal && (
+        {showVisibilityModal && (
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
-            onClick={() => setShowShareModal(false)}
+            onClick={() => setShowVisibilityModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">Compartilhar Perfil</h3>
-                <button onClick={() => setShowShareModal(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
-              </div>
-              <div className="space-y-3">
-                <button
-                  onClick={handleCopyLink}
-                  className="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-verde-50 transition-colors text-left"
-                >
-                  <Copy className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{linkCopied ? 'Link copiado!' : 'Copiar link do perfil'}</p>
-                    <p className="text-[11px] text-gray-400">Compartilhe seu perfil profissional</p>
-                  </div>
-                </button>
-                <button className="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-blue-50 transition-colors text-left">
-                  <Download className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">Exportar como PDF</p>
-                    <p className="text-[11px] text-gray-400">Curriculum vitae completo</p>
-                  </div>
-                </button>
-                <button className="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-purple-50 transition-colors text-left">
-                  <ExternalLink className="w-5 h-5 text-gray-400" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">Enviar para recrutador</p>
-                    <p className="text-[11px] text-gray-400">Marketplace interno de talentos</p>
-                  </div>
+                <h3 className="text-lg font-bold text-gray-900">Configurar visibilidade</h3>
+                <button onClick={() => setShowVisibilityModal(false)} className="text-gray-400 hover:text-gray-600">
+                  <X className="w-5 h-5" />
                 </button>
               </div>
+              <p className="text-xs text-gray-500 mb-4">
+                Quem pode ver suas aspirações e disponibilidade para movimentações.
+              </p>
+              <div className="space-y-2.5">
+                {[
+                  { id: 'lider', label: 'Minha liderança direta', desc: 'Sempre visível', locked: true },
+                  { id: 'comite', label: 'Comitê de Carreira da cooperativa', desc: 'Recomendado', defaultChecked: true },
+                  { id: 'pc', label: 'Time de P&C', desc: 'Para indicar oportunidades', defaultChecked: true },
+                  { id: 'lideres', label: 'Outras lideranças do Sicredi', desc: 'Maior alcance', defaultChecked: false },
+                ].map((opt) => (
+                  <label
+                    key={opt.id}
+                    className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 ${
+                      opt.locked ? 'border-gray-100 bg-gray-50/50 cursor-not-allowed' : 'border-gray-200'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      defaultChecked={opt.locked || opt.defaultChecked}
+                      disabled={opt.locked}
+                      className="mt-1 accent-blue-600"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-gray-800">{opt.label}</p>
+                      <p className="text-[10px] text-gray-500">{opt.desc}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowVisibilityModal(false)}
+                className="w-full mt-5 px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Salvar configurações
+              </button>
             </motion.div>
           </motion.div>
         )}

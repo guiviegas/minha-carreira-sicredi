@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { PersonaId } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const personaPhotos: Record<string, string> = {
   mariana: '/personas/mariana.png',
@@ -19,25 +20,25 @@ const personaPhotos: Record<string, string> = {
 
 const GUPY_URL = 'https://sicredi.gupy.io/';
 
-// Notifications per persona
-const notificationsByPersona: Record<string, { id: string; text: string; time: string; type: 'info' | 'warning' | 'action' }[]> = {
+// Notifications per persona — cada notif tem href p/ tornar a interação real
+const notificationsByPersona: Record<string, { id: string; text: string; time: string; type: 'info' | 'warning' | 'action'; href: string }[]> = {
   mariana: [
-    { id: 'n1', text: 'O ciclo de avaliação de desempenho encerra em 5 dias', time: '2h', type: 'warning' },
-    { id: 'n2', text: 'Sua trilha de Liderança Essencial tem atividade pendente', time: '1d', type: 'action' },
-    { id: 'n3', text: 'Roberto registrou uma nova conversa de carreira com você', time: '3d', type: 'info' },
-    { id: 'n4', text: 'Nova experiência de vivência prática disponível na Cooperativa Caminhos', time: '5d', type: 'info' },
+    { id: 'n1', text: 'O ciclo de avaliação de desempenho encerra em 5 dias', time: '2h', type: 'warning', href: '/avaliacao' },
+    { id: 'n2', text: 'Sua trilha de Liderança Essencial tem atividade pendente', time: '1d', type: 'action', href: '/desenvolvimento' },
+    { id: 'n3', text: 'Roberto registrou uma nova conversa de carreira com você', time: '3d', type: 'info', href: '/pdi' },
+    { id: 'n4', text: 'Nova experiência de vivência prática disponível na Cooperativa Caminhos', time: '5d', type: 'info', href: '/experiencias' },
   ],
   roberto: [
-    { id: 'n1', text: 'Juliana Pereira não teve conversa de carreira nos últimos 3 meses', time: '1h', type: 'warning' },
-    { id: 'n2', text: 'Ciclo de avaliação do time encerra em 5 dias. 3 de 5 concluídos', time: '2h', type: 'action' },
-    { id: 'n3', text: 'André Moreira concluiu a trilha de Crédito Rural Avançado', time: '2d', type: 'info' },
-    { id: 'n4', text: 'Comitê de Carreira agendado para sexta-feira, 14h', time: '3d', type: 'info' },
+    { id: 'n1', text: 'Juliana Pereira não teve conversa de carreira nos últimos 3 meses', time: '1h', type: 'warning', href: '/equipe/emp-101' },
+    { id: 'n2', text: 'Ciclo de avaliação do time encerra em 5 dias. 3 de 5 concluídos', time: '2h', type: 'action', href: '/gestao-desempenho' },
+    { id: 'n3', text: 'André Moreira concluiu a trilha de Crédito Rural Avançado', time: '2d', type: 'info', href: '/equipe/emp-111' },
+    { id: 'n4', text: 'Comitê de Carreira agendado para sexta-feira, 14h', time: '3d', type: 'info', href: '/comite-carreira' },
   ],
   carla: [
-    { id: 'n1', text: 'Ciclo de avaliação com 78% de adesão. 22% dos líderes ainda não concluíram', time: '1h', type: 'warning' },
-    { id: 'n2', text: '12 colaboradores completarão 3 anos no grade este trimestre', time: '1d', type: 'action' },
-    { id: 'n3', text: 'Novo relatório de turnover trimestral disponível', time: '2d', type: 'info' },
-    { id: 'n4', text: 'Comitê de Carreira Regional agendado para próxima terça', time: '4d', type: 'info' },
+    { id: 'n1', text: 'Ciclo de avaliação com 78% de adesão. 22% dos líderes ainda não concluíram', time: '1h', type: 'warning', href: '/dashboard-pc' },
+    { id: 'n2', text: '12 colaboradores completarão 3 anos no grade este trimestre', time: '1d', type: 'action', href: '/mapa-talentos' },
+    { id: 'n3', text: 'Novo relatório de turnover trimestral disponível', time: '2d', type: 'info', href: '/analytics' },
+    { id: 'n4', text: 'Comitê de Carreira Regional agendado para próxima terça', time: '4d', type: 'info', href: '/comite-carreira' },
   ],
 };
 
@@ -109,9 +110,11 @@ export default function Topbar() {
                 </div>
                 <div className="max-h-72 overflow-y-auto">
                   {notifications.map((notif) => (
-                    <div
+                    <Link
                       key={notif.id}
-                      className="px-4 py-3 border-b border-neutral-50 hover:bg-neutral-50 transition-colors cursor-pointer"
+                      href={notif.href}
+                      onClick={() => setIsNotificationsOpen(false)}
+                      className="block px-4 py-3 border-b border-neutral-50 hover:bg-neutral-50 transition-colors cursor-pointer"
                     >
                       <div className="flex items-start gap-2">
                         <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
@@ -123,7 +126,7 @@ export default function Topbar() {
                           <p className="text-[10px] text-neutral-400 mt-1">{notif.time} atrás</p>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </motion.div>

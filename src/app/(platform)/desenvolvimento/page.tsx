@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById } from '@/data/employees';
+import { getPersonaHub } from '@/data/persona-hub';
 import { getAvailableTracks, getTracksForRole } from '@/data/development-tracks';
 import { getRoleById } from '@/data/roles';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Play, Clock, Star, Filter, ArrowRight, CheckCircle2, Sparkles, Target, Handshake, BarChart3, Lightbulb, Building2, MapIcon, Coins, Brain, TrendingUp, Video, MonitorPlay, FileText, Users, Crosshair } from 'lucide-react';
+import Link from 'next/link';
+import { BookOpen, Clock, Star, Filter, ArrowRight, CheckCircle2, Sparkles, Target, Handshake, BarChart3, Lightbulb, Building2, MapIcon, Coins, Brain, TrendingUp, Video, MonitorPlay, FileText, Users, Crosshair, ExternalLink } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
@@ -74,10 +76,24 @@ export default function DesenvolvimentoPage() {
   const completed = courses.filter(c => c.progress === 100);
   const recommended = courses.filter(c => c.progress === 0).slice(0, 4);
 
-  // Get structured tracks for persona
+  // Get structured tracks for persona + hub para recomendar pela aspiração
   const employee = getEmployeeById(currentPersona.employeeId);
+  const hub = getPersonaHub(currentPersona.id);
   const availableTracks = employee ? getAvailableTracks(employee.roleId) : [];
   const allRelevantTracks = employee ? getTracksForRole(employee.roleId) : [];
+
+  // Trilhas vindas do hub (já filtram por aspiração + cargo atual)
+  const trilhasParaAspiracao = hub?.trilhasRecomendadas || [];
+
+  // Identifica competências mais fracas para destacar cursos
+  const compsFracas = hub
+    ? [...hub.competenciasSicredi].sort((a, b) => a.consenso - b.consenso).slice(0, 3).map((c) => c.competencia.nome)
+    : [];
+
+  // Cursos cujas skills mapeiam para competências fracas (gap real)
+  const cursosFocoGap = courses.filter((c) =>
+    c.skills.some((s) => compsFracas.some((cf) => s === cf || s.includes(cf))),
+  );
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl space-y-6">
@@ -85,7 +101,7 @@ export default function DesenvolvimentoPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Trilhas de Desenvolvimento</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Cursos vinculados às 5 competências Jeito Sicredi de Ser e às habilidades técnicas do seu cargo.
+            Cursos vinculados às 7 competências Jeito Sicredi de Ser e ao seu cargo aspirado.
           </p>
         </div>
         <div className="flex gap-2">
@@ -124,14 +140,55 @@ export default function DesenvolvimentoPage() {
       <AnimatePresence mode="wait">
         {mode === 'netflix' ? (
           <motion.div key="netflix" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-            {/* Continue Watching */}
-            {inProgress.length > 0 && (
+            {/* Para sua aspiração (vindo do hub) */}
+            {hub?.cargoAlvo && trilhasParaAspiracao.length > 0 && (
+              <div className="card p-5 bg-gradient-to-r from-purple-50/40 to-white border-l-4 border-l-purple-400">
+                <div className="flex items-center gap-2 mb-3">
+                  <Target className="w-4 h-4 text-purple-600" />
+                  <h2 className="text-sm font-semibold text-gray-800">
+                    Trilhas para sua aspiração:{' '}
+                    <Link
+                      href={`/meu-cargo/${hub.cargoAlvo.id}`}
+                      className="text-purple-700 hover:underline inline-flex items-center gap-1"
+                    >
+                      {hub.cargoAlvo.title}
+                      <ExternalLink className="w-3 h-3 opacity-60" />
+                    </Link>
+                  </h2>
+                </div>
+                <p className="text-xs text-gray-500 mb-3">
+                  Selecionadas com base no seu cargo atual e na transição que você deseja fazer.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {trilhasParaAspiracao.slice(0, 4).map((trilha) => (
+                    <div key={trilha.id} className="p-3 rounded-lg bg-white border border-purple-100">
+                      <p className="text-sm font-bold text-gray-800">{trilha.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{trilha.subtitle}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-[10px] text-gray-400">{trilha.totalDuration}</span>
+                        {trilha.certification && (
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">
+                            {trilha.certification}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Foco no seu gap (cursos para competências mais fracas) */}
+            {cursosFocoGap.length > 0 && compsFracas.length > 0 && (
               <div>
                 <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                  <Play className="w-4 h-4 text-verde-digital" /> Continue de onde parou
+                  <Sparkles className="w-4 h-4 text-amber-500" /> Foco no seu gap atual
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {inProgress.map((course) => (
+                <p className="text-xs text-gray-500 mb-3">
+                  Cursos que cobrem suas competências com maior gap: {compsFracas.slice(0, 2).join(', ')}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {cursosFocoGap.slice(0, 4).map((course) => (
                     <CourseCard key={course.id} course={course} />
                   ))}
                 </div>

@@ -5,6 +5,7 @@ import { getEmployeeById, getTeamForLeader } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
 import { avaliacoesMock, reguaPerformance, reguaProntidao } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   ClipboardList,
   Users,
@@ -136,7 +137,7 @@ export default function GestaoDesempenhoPage() {
             const prontConfig = avaliacao?.prontidaoId ? reguaProntidao.find(r => r.id === avaliacao.prontidaoId) : null;
 
             return (
-              <div key={member.id} className="grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-gray-50 transition-colors cursor-pointer rounded-lg">
+              <Link key={member.id} href={`/equipe/${member.id}`} className="grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-gray-50 transition-colors cursor-pointer rounded-lg">
                 <div className="col-span-3 flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg avatar-initials text-[9px]" style={{ backgroundColor: '#3FA110' }}>
                     {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
@@ -175,34 +176,73 @@ export default function GestaoDesempenhoPage() {
                     <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-red-50 text-red-600">Risco</span>
                   )}
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
       </motion.div>
 
-      {/* Movimentações Pendentes */}
+      {/* Movimentações derivadas dos dados reais da equipe */}
       <motion.div variants={item} className="card p-5">
         <h2 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
           <Clock className="w-4 h-4 text-amber-500" /> Janelas de Movimentação
         </h2>
         <div className="space-y-2">
-          {[
-            { nome: 'Mariana Costa', tipo: 'Promoção', de: 'GN PF II', para: 'GN PF III', status: 'Elegível' },
-            { nome: 'Carlos Santos', tipo: 'Mérito', de: 'Zona 2', para: 'Zona 3', status: 'Em análise' },
-          ].map((mov, i) => (
-            <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-              <div>
-                <p className="text-sm font-medium text-gray-800">{mov.nome}</p>
-                <p className="text-xs text-gray-500">{mov.tipo}: {mov.de} → {mov.para}</p>
-              </div>
-              <span className={`text-[10px] font-bold px-2 py-1 rounded-md ${
-                mov.status === 'Elegível' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'
-              }`}>
-                {mov.status}
-              </span>
-            </div>
-          ))}
+          {(() => {
+            const movimentacoes = teamAvaliacoes
+              .filter((t) => t.avaliacao && t.avaliacao.notaFinalPerformance >= 3)
+              .map((t) => {
+                const aspirRoleId = t.member.aspirations[0]?.targetRoleId;
+                const aspirRole = aspirRoleId ? getRoleById(aspirRoleId) : null;
+                const monthsInGrade = t.member.monthsInGrade ?? 0;
+                const conceito = t.avaliacao!.notaFinalPerformance;
+                if (conceito >= 3 && monthsInGrade >= 18 && aspirRole) {
+                  return {
+                    member: t.member,
+                    tipo: 'Promoção' as const,
+                    de: t.role?.shortTitle || '—',
+                    para: aspirRole.shortTitle,
+                    status: 'Elegível',
+                  };
+                }
+                if (conceito >= 3 && (t.member.monthsInZone ?? 0) >= 12) {
+                  return {
+                    member: t.member,
+                    tipo: 'Mérito' as const,
+                    de: `Zona ${t.member.currentZone || '—'}`,
+                    para: `Zona ${(t.member.currentZone || 1) + 1}`,
+                    status: 'Em análise',
+                  };
+                }
+                return null;
+              })
+              .filter((x): x is NonNullable<typeof x> => !!x);
+
+            if (movimentacoes.length === 0) {
+              return <p className="text-xs text-gray-400 italic">Nenhuma movimentação elegível neste momento.</p>;
+            }
+            return movimentacoes.map((mov) => (
+              <Link
+                key={`${mov.member.id}-${mov.tipo}`}
+                href={`/equipe/${mov.member.id}`}
+                className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+              >
+                <div>
+                  <p className="text-sm font-medium text-gray-800">{mov.member.name}</p>
+                  <p className="text-xs text-gray-500">
+                    {mov.tipo}: {mov.de} → {mov.para}
+                  </p>
+                </div>
+                <span
+                  className={`text-[10px] font-bold px-2 py-1 rounded-md ${
+                    mov.status === 'Elegível' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'
+                  }`}
+                >
+                  {mov.status}
+                </span>
+              </Link>
+            ));
+          })()}
         </div>
       </motion.div>
     </motion.div>

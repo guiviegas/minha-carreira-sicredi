@@ -7,6 +7,7 @@ import { getRoleById } from '@/data/roles';
 import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import { avaliacoesMock, reguaProntidao, reguaPotencial, reguaPerformance } from '@/data/elofy-config';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { Employee } from '@/types';
 import {
   ShieldCheck,
@@ -26,7 +27,7 @@ import {
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
-type DecisaoTipo = 'promocao' | 'merito' | 'mentoria' | 'desenvolvimento' | 'retencao' | 'sem_acao';
+type DecisaoTipo = 'promocao' | 'merito' | 'demissao' | 'sem_acao';
 
 interface CasoComite {
   employee: Employee;
@@ -39,12 +40,10 @@ interface CasoComite {
 }
 
 const decisaoConfig: Record<DecisaoTipo, { label: string; cor: string; bg: string; icon: typeof Star }> = {
-  promocao: { label: 'Promoção sugerida', cor: '#16A34A', bg: '#F0FDF4', icon: TrendingUp },
-  merito: { label: 'Mérito (mesma faixa)', cor: '#2563EB', bg: '#EFF6FF', icon: Star },
-  mentoria: { label: 'Programa de mentoria', cor: '#7C3AED', bg: '#FAF5FF', icon: Users },
-  desenvolvimento: { label: 'PDI prioritário', cor: '#D97706', bg: '#FFFBEB', icon: ListChecks },
-  retencao: { label: 'Conversa de retenção', cor: '#DC2626', bg: '#FEF2F2', icon: AlertTriangle },
-  sem_acao: { label: 'Acompanhar', cor: '#6B7280', bg: '#F3F4F6', icon: CheckCircle2 },
+  promocao: { label: 'Promoção', cor: '#16A34A', bg: '#F0FDF4', icon: TrendingUp },
+  merito: { label: 'Mérito', cor: '#2563EB', bg: '#EFF6FF', icon: Star },
+  demissao: { label: 'Demissão', cor: '#DC2626', bg: '#FEF2F2', icon: AlertTriangle },
+  sem_acao: { label: 'Não fazer nada', cor: '#6B7280', bg: '#F3F4F6', icon: CheckCircle2 },
 };
 
 /**
@@ -77,10 +76,15 @@ function gerarCaso(employee: Employee, leaderId: string): CasoComite {
   const criteriosFaltantes: string[] = [];
   let status: CasoComite['status'] = 'pendente';
 
-  if (turnoverHigh) {
-    decisaoSugerida = 'retencao';
-    decisaoTexto = `Risco crítico de saída (${employee.turnoverRisk!.probability}%). Conversa de retenção urgente esta semana.`;
+  // Decisões reais do comitê: Promoção, Mérito, Demissão, Não fazer nada
+  if (conceito === 1 && (monthsInGrade >= 18 || turnoverHigh)) {
+    // Conceito #precisa evoluir + tempo suficiente no grade OU risco alto = caso de demissão
+    decisaoSugerida = 'demissao';
+    decisaoTexto = `Conceito #precisa evoluir mantido por ${monthsInGrade} meses${turnoverHigh ? ' + risco alto de saída voluntária' : ''}. Caso para análise de desligamento ou plano de transição.`;
     status = 'acao_urgente';
+    criteriosAtendidos.push(`Conceito #precisa evoluir`);
+    if (monthsInGrade >= 18) criteriosAtendidos.push(`${monthsInGrade} meses sem evolução no grade`);
+    if (turnoverHigh) criteriosAtendidos.push(`Risco de saída ${employee.turnoverRisk!.probability}%`);
   } else if (conceito >= 3 && monthsInGrade >= 18 && sharedAsp) {
     decisaoSugerida = 'promocao';
     decisaoTexto = `Pronto para promoção: ${aspiracao && getRoleById(aspiracao.targetRoleId)?.shortTitle}. Iniciar processo no próximo ciclo.`;
@@ -94,23 +98,19 @@ function gerarCaso(employee: Employee, leaderId: string): CasoComite {
     status = 'aprovado';
     criteriosAtendidos.push(`Conceito ${reguaPerformance[conceito - 1]?.hashtag}`);
     criteriosAtendidos.push(`${employee.monthsInZone} meses na zona (≥ 12 ok)`);
-  } else if (conceito === 2 && aspiracao) {
-    decisaoSugerida = 'mentoria';
-    decisaoTexto = `Em desenvolvimento (#quase lá) com aspiração declarada. Apoiar com mentoria estruturada.`;
-    status = 'pendente';
-    criteriosAtendidos.push('Aspiração declarada');
-    criteriosFaltantes.push('Conceito ainda em #quase lá (precisa #mandou bem para promoção)');
-  } else if (semAval || conceito === 1) {
-    decisaoSugerida = 'desenvolvimento';
-    decisaoTexto = semAval
-      ? 'Avaliação ainda não concluída. Garantir conclusão antes do próximo comitê.'
-      : 'Conceito #precisa evoluir. PDI prioritário com 2-3 ações concretas para o próximo ciclo.';
-    status = 'pendente';
   } else {
     decisaoSugerida = 'sem_acao';
-    decisaoTexto = 'Acompanhar no ciclo. Sem ação específica recomendada agora.';
+    decisaoTexto = semAval
+      ? 'Avaliação ainda não concluída. Sem ação até conclusão do ciclo.'
+      : conceito === 2
+      ? 'Conceito #quase lá. Acompanhar evolução no próximo ciclo. Sem movimentação agora.'
+      : conceito === 1
+      ? 'Conceito #precisa evoluir, mas com pouco tempo no grade. Acompanhar antes de qualquer decisão.'
+      : 'Sem critérios para promoção/mérito neste ciclo. Acompanhar.';
     status = 'pendente';
-    criteriosFaltantes.push('Tempo no grade insuficiente para movimentação');
+    if (semAval) criteriosFaltantes.push('Avaliação do ciclo não concluída');
+    else if (conceito < 3) criteriosFaltantes.push(`Conceito ${reguaPerformance[conceito - 1]?.hashtag} (precisa #mandou bem ou #arrasou)`);
+    if (monthsInGrade < 18 && conceito >= 3) criteriosFaltantes.push(`${monthsInGrade}m no grade (precisa ≥ 18m para promoção)`);
   }
 
   if (!sharedAsp && aspiracao) criteriosFaltantes.push('Aspiração não compartilhada com líder');
@@ -136,7 +136,15 @@ export default function ComiteCarreiraPage() {
   }
 
   const employee = getEmployeeById(currentPersona.employeeId);
-  const team = employee ? getTeamForLeader(employee.id) : [];
+  // Carla (P&C) vê o mesmo pool de colaboradores que Roberto (líder) tem na sua equipe.
+  // Para líder, vê própria equipe.
+  const team = useMemo(() => {
+    if (currentPersona.role === 'pc_analista') {
+      // Pool = equipe do Roberto (emp-002)
+      return getTeamForLeader('emp-002');
+    }
+    return employee ? getTeamForLeader(employee.id) : [];
+  }, [currentPersona.role, employee]);
   const casos = useMemo(() => team.map((t) => gerarCaso(t, employee?.id || '')), [team, employee]);
 
   const aprovados = casos.filter((c) => c.status === 'aprovado').length;
@@ -239,7 +247,7 @@ export default function ComiteCarreiraPage() {
           {[
             { data: 'Fev 2026', nome: 'Felipe Costa', decisao: 'Promovido a GN PF II', tipo: 'promocao' },
             { data: 'Dez 2025', nome: 'Ana Beatriz Lima', decisao: 'Mérito (Zona 3 → Zona 4)', tipo: 'merito' },
-            { data: 'Out 2025', nome: 'Marcelo Gomes', decisao: 'Iniciou PDI prioritário', tipo: 'desenvolvimento' },
+            { data: 'Out 2025', nome: 'Lucas R.', decisao: 'Desligamento por baixa performance', tipo: 'demissao' },
           ].map((h, i) => {
             const cfg = decisaoConfig[h.tipo as DecisaoTipo];
             return (
@@ -390,7 +398,13 @@ function OnepageCRMTalento({ caso, onClose }: { caso: CasoComite; onClose: () =>
           <p className="text-[10px] font-semibold uppercase text-gray-400 mb-1">Aspiração</p>
           {aspRole ? (
             <p className="text-gray-700">
-              {aspRole.title} · {aspiracao?.timeframe}
+              <Link
+                href={`/meu-cargo/${aspRole.id}`}
+                className="font-semibold text-purple-700 hover:underline"
+              >
+                {aspRole.title}
+              </Link>{' '}
+              · {aspiracao?.timeframe}
               {aspiracao?.sharedWithLeader && <span className="text-green-600 ml-1">✓ compartilhada</span>}
             </p>
           ) : (

@@ -31,7 +31,7 @@ export interface DevelopmentTrack {
   phases: TrackPhase[];
   progress: number; // overall 0-100
   type: 'vertical' | 'lateral' | 'leadership';
-  familia: 'negocios_pf' | 'negocios_pj' | 'negocios_agro' | 'lideranca' | 'geral';
+  familia: 'negocios_pf' | 'negocios_pj' | 'negocios_agro' | 'lideranca' | 'pc' | 'geral';
 }
 
 // ============================================================
@@ -332,6 +332,110 @@ export const developmentTracks: DevelopmentTrack[] = [
         courses: [
           { id: 'tc-23a', title: 'Visita Técnica: Propriedade Rural', type: 'practice', duration: '4h', provider: 'Experiência Prática', completed: false },
           { id: 'tc-23b', title: 'Case: Estruturação de Operação AGRO Completa', type: 'practice', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+        ],
+      },
+    ],
+  },
+
+  // ── GA → Gerente Regional ──────────────────────────────
+  {
+    id: 'track-ga-regional',
+    fromRoleId: 'role-gerente-agencia',
+    toRoleId: 'role-gerente-regional',
+    title: 'Trilha para Gerente Regional',
+    subtitle: 'Liderança sistêmica, governança e expansão de mercado',
+    totalDuration: '160h',
+    certification: 'Programa Líder Regional Sicredi',
+    certificationRequired: true,
+    type: 'leadership',
+    familia: 'lideranca',
+    progress: 0,
+    phases: [
+      {
+        id: 'p1', name: 'Visão Sistêmica e Governança Cooperativa', description: 'Estrutura, regulação e diferencial competitivo do Sistema Sicredi',
+        progress: 0,
+        courses: [
+          { id: 'tc-24a', title: 'Governança Cooperativa Avançada', type: 'video', duration: '6h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-24b', title: 'Regulação Bacen, BCB e BNDES para Cooperativas', type: 'video', duration: '5h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-24c', title: 'Visão Sistêmica: Cooperativas, Centrais e Confederação', type: 'interactive', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+        ],
+      },
+      {
+        id: 'p2', name: 'Liderança de Líderes', description: 'Formar GAs, sucessão e cultura de alta performance',
+        progress: 0,
+        courses: [
+          { id: 'tc-25a', title: 'Liderança de Líderes (Liderar Quem Lidera)', type: 'video', duration: '8h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-25b', title: 'Plano de Sucessão e Mapa de Talentos', type: 'interactive', duration: '5h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-25c', title: 'Conversas Difíceis: Performance e Desligamento', type: 'practice', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+        ],
+      },
+      {
+        id: 'p3', name: 'Estratégia Regional e Resultados', description: 'Expansão, P&L regional e parcerias institucionais',
+        progress: 0,
+        courses: [
+          { id: 'tc-26a', title: 'Planejamento Estratégico Regional', type: 'video', duration: '6h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-26b', title: 'P&L Regional: Drivers de Performance', type: 'interactive', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-26c', title: 'Relacionamento Institucional e Parcerias Locais', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+        ],
+      },
+      {
+        id: 'p4', name: 'Programa Líder Regional', description: 'Imersão presencial + assessment de prontidão',
+        progress: 0,
+        courses: [
+          { id: 'tc-27a', title: 'Bootcamp Líder Regional (5 dias)', type: 'practice', duration: '40h', provider: 'Universidade Sicredi', completed: false },
+          { id: 'tc-27b', title: 'Assessment de Prontidão para Liderança Regional', type: 'assessment', duration: '6h', provider: 'Universidade Sicredi', completed: false },
+        ],
+      },
+    ],
+  },
+
+  // ── Analista P&C → Coordenador P&C ──────────────────────────────
+  {
+    id: 'track-pc-analista-coord',
+    fromRoleId: 'role-analista-pc',
+    toRoleId: 'role-coordenador-pc',
+    title: 'Trilha para Coordenador de P&C',
+    subtitle: 'People Analytics, gestão estratégica e influência de negócio',
+    totalDuration: '120h',
+    certification: 'People Analytics Certified',
+    certificationRequired: false,
+    type: 'vertical',
+    familia: 'pc',
+    progress: 0,
+    phases: [
+      {
+        id: 'p1', name: 'Pessoas como Estratégia', description: 'P&C como parceiro estratégico do negócio',
+        progress: 0,
+        courses: [
+          { id: 'tc-28a', title: 'HR Business Partner: Modelos e Práticas', type: 'video', duration: '5h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-28b', title: 'Diagnóstico Organizacional Aplicado', type: 'interactive', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-28c', title: 'Cultura e Clima: Indicadores que Importam', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+        ],
+      },
+      {
+        id: 'p2', name: 'People Analytics Avançado', description: 'Dados, dashboards e storytelling com pessoas',
+        progress: 0,
+        courses: [
+          { id: 'tc-29a', title: 'People Analytics: Frameworks e Métricas-Chave', type: 'video', duration: '6h', provider: 'LinkedIn Learning', completed: false },
+          { id: 'tc-29b', title: 'Power BI e Visualização para P&C', type: 'interactive', duration: '6h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-29c', title: 'Modelos Preditivos: Turnover e Performance', type: 'video', duration: '5h', provider: 'Coursera', completed: false },
+        ],
+      },
+      {
+        id: 'p3', name: 'Liderança e Influência', description: 'Coordenar times, projetos e stakeholders',
+        progress: 0,
+        courses: [
+          { id: 'tc-30a', title: 'Liderança Indireta e Por Influência', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-30b', title: 'Gestão de Projetos de P&C de Alto Impacto', type: 'interactive', duration: '5h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-30c', title: 'Comunicação para Diretoria: Tese e Storytelling', type: 'practice', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+        ],
+      },
+      {
+        id: 'p4', name: 'Projetos de Impacto', description: 'Entregas que demonstram prontidão para coordenação',
+        progress: 0,
+        courses: [
+          { id: 'tc-31a', title: 'Projeto-Piloto: Programa de Retenção de GNs', type: 'practice', duration: '12h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-31b', title: 'Job Shadow com Coordenador de P&C', type: 'practice', duration: '8h', provider: 'Experiência Prática', completed: false },
         ],
       },
     ],

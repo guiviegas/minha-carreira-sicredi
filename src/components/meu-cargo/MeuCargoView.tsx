@@ -5,6 +5,7 @@ import { getPathsFromRole } from '@/data/career-paths';
 import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import { competenciasSicredi } from '@/data/competencias-sicredi';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   Briefcase,
   GraduationCap,
@@ -16,11 +17,9 @@ import {
   Layers,
   ArrowLeft,
   ListChecks,
-  Sparkles,
   Wrench,
   Heart,
   Languages,
-  FileBadge,
   Info,
 } from 'lucide-react';
 
@@ -81,9 +80,6 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
                 {atrib ? 'Diretoria de Negócios' : (role.diretoria || '-')}
               </span>
               <span className="text-xs text-gray-400">📍 {role.estrutura || 'Agência'}</span>
-              {atrib && (
-                <FonteBadge fonte={atrib.fonte} />
-              )}
             </div>
           </div>
           <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${role.color}15` }}>
@@ -206,18 +202,24 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
               <p className="text-xs font-semibold uppercase tracking-wider text-purple-500">
                 Próximo passo: aspiração
               </p>
-              <h3 className="text-lg font-bold text-gray-900 mt-1">{cargoAspirado.title}</h3>
+              <Link
+                href={`/meu-cargo/${cargoAspirado.id}`}
+                className="text-lg font-bold text-gray-900 mt-1 hover:text-purple-700 hover:underline inline-flex items-center gap-1.5"
+              >
+                <h3 className="inline">{cargoAspirado.title}</h3>
+                <ArrowUpRight className="w-4 h-4 opacity-70" />
+              </Link>
               <p className="text-sm text-gray-600 mt-1">
                 {cargoAspirado.family.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())} ·
                 Nível {cargoAspirado.level}
               </p>
             </div>
-            <a
+            <Link
               href={`/meu-cargo/${cargoAspirado.id}`}
-              className="text-sm font-semibold text-purple-600 flex items-center gap-1 hover:gap-2 transition-all"
+              className="text-sm font-semibold text-purple-600 flex items-center gap-1 hover:gap-2 transition-all shrink-0"
             >
               Ver descrição completa <ArrowUpRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
 
           {careerPathsFromHere.length > 0 && (
@@ -246,23 +248,6 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
         </motion.div>
       )}
     </motion.div>
-  );
-}
-
-function FonteBadge({ fonte }: { fonte: 'planilha' | 'inferido' }) {
-  if (fonte === 'planilha') {
-    return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
-        <FileBadge className="w-2.5 h-2.5" />
-        Fonte oficial · Matriz
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-      <Sparkles className="w-2.5 h-2.5" />
-      Inferido · baseado em mercado
-    </span>
   );
 }
 

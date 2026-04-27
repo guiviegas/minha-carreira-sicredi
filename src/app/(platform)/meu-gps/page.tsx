@@ -3,9 +3,11 @@
 import { usePersona } from '@/contexts/PersonaContext';
 import { getPersonaHub, PersonaHub } from '@/data/persona-hub';
 import { employees as allEmployees } from '@/data/employees';
-import { avaliacoesMock as allAvaliacoes } from '@/data/elofy-config';
+import { avaliacoesMock as allAvaliacoes, reguaPerformance } from '@/data/elofy-config';
+import { getRoleById } from '@/data/roles';
 import { motion } from 'framer-motion';
 import TheoCard from '@/components/theo/TheoCard';
+import Link from 'next/link';
 import {
   CheckCircle2,
   Users,
@@ -15,6 +17,7 @@ import {
   Compass,
   Calendar,
   MessageCircle,
+  ExternalLink,
 } from 'lucide-react';
 
 const container = {
@@ -107,7 +110,18 @@ function ColaboradorDashboard({ hub }: { hub: PersonaHub }) {
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Meu PDI</p>
           </div>
           <p className="text-sm font-semibold text-gray-700 mb-2">
-            Foco: {pdi?.goal.targetRoleTitle ?? hub.cargoAlvo?.title ?? '-'}
+            Foco:{' '}
+            {hub.cargoAlvo ? (
+              <Link
+                href={`/meu-cargo/${hub.cargoAlvo.id}`}
+                className="text-purple-700 hover:underline inline-flex items-center gap-1"
+              >
+                {pdi?.goal.targetRoleTitle ?? hub.cargoAlvo.title}
+                <ExternalLink className="w-3 h-3 opacity-60" />
+              </Link>
+            ) : (
+              <span>{pdi?.goal.targetRoleTitle ?? '-'}</span>
+            )}
           </p>
           <div className="space-y-2.5">
             {acoesPdi.map((ac) => (
@@ -195,36 +209,63 @@ function ColaboradorDashboard({ hub }: { hub: PersonaHub }) {
           ))}
         </motion.div>
 
-        {/* Checklist semanal */}
+        {/* Sua jornada agora — competências fortes + atenção */}
         <motion.div variants={item} className="card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-verde-digital" />
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Esta semana</p>
-            </div>
-            <span className="text-xs font-semibold text-verde-digital">2/4</span>
+          <div className="flex items-center gap-2 mb-3">
+            <Compass className="w-4 h-4 text-verde-digital" />
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Sua jornada agora</p>
           </div>
-          <div className="space-y-2">
-            {[
-              { text: 'Conversa de carreira com Roberto', done: true },
-              { text: 'Módulo Liderança Essencial', done: true },
-              { text: 'Atualizar autoavaliação', done: false },
-              { text: 'Reflexão: diário de carreira', done: false },
-            ].map((task, i) => (
-              <label key={i} className="flex items-center gap-2.5 cursor-pointer group">
-                <div className={`w-4 h-4 rounded flex items-center justify-center border ${
-                  task.done
-                    ? 'bg-verde-digital border-verde-digital text-white'
-                    : 'border-gray-300 group-hover:border-verde-digital'
-                }`}>
-                  {task.done && <CheckCircle2 className="w-3 h-3" />}
-                </div>
-                <span className={`text-sm ${task.done ? 'text-gray-400 line-through' : 'text-gray-700'}`}>
-                  {task.text}
-                </span>
-              </label>
-            ))}
-          </div>
+
+          {/* Competência mais forte */}
+          {(() => {
+            const fortes = hub.competenciasSicredi.filter((c) => c.consenso === 4);
+            const fracas = [...hub.competenciasSicredi].sort((a, b) => a.consenso - b.consenso);
+            const maisForte = fortes[0];
+            const maisFraca = fracas[0];
+            return (
+              <div className="space-y-3">
+                {maisForte && (
+                  <div className="p-2.5 rounded-lg bg-green-50 border border-green-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-green-700 mb-0.5">
+                      ★ Maior força hoje
+                    </p>
+                    <p className="text-xs font-semibold text-gray-800">{maisForte.competencia.nome}</p>
+                    <p className="text-[11px] text-gray-600 mt-0.5">
+                      Conceito: <strong>{maisForte.conceito.hashtag}</strong>
+                    </p>
+                  </div>
+                )}
+                {maisFraca && maisFraca.consenso < 3 && (
+                  <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-0.5">
+                      ⚡ Foco prioritário
+                    </p>
+                    <p className="text-xs font-semibold text-gray-800">{maisFraca.competencia.nome}</p>
+                    <p className="text-[11px] text-gray-600 mt-0.5">
+                      Hoje em <strong>{maisFraca.conceito.hashtag}</strong>. O Plano de Rota tem ações sugeridas.
+                    </p>
+                  </div>
+                )}
+                {hub.cargoAlvo && hub.gapAlvo && (
+                  <div className="p-2.5 rounded-lg bg-blue-50 border border-blue-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-blue-700 mb-0.5">
+                      🎯 Para chegar em {hub.cargoAlvo.shortTitle}
+                    </p>
+                    <p className="text-xs text-gray-700">
+                      Prontidão: <strong>{hub.gapAlvo.prontidaoEstimada.nome}</strong>
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          <a
+            href="/avaliacao"
+            className="block mt-3 text-[11px] font-semibold text-verde-digital text-center hover:underline"
+          >
+            Ver minha avaliação completa →
+          </a>
         </motion.div>
       </div>
     </motion.div>
@@ -301,6 +342,11 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {team.slice(0, 6).map((member) => {
               const status = getStatusColor(member);
+              const memberRole = getRoleById(member.roleId);
+              const memberAval = allAvaliacoes.find(
+                (a) => a.employeeId === member.id && a.cicloId === 'ciclo-2026-1',
+              );
+              const memberConceito = memberAval ? reguaPerformance[memberAval.notaFinalPerformance - 1] : null;
               return (
                 <a
                   key={member.id}
@@ -309,7 +355,7 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
                 >
                   <div className="flex items-center gap-2.5">
                     <div
-                      className="w-8 h-8 rounded-lg avatar-initials text-[10px]"
+                      className="w-9 h-9 rounded-lg avatar-initials text-[10px] shrink-0"
                       style={{
                         backgroundColor:
                           status.color === 'green'
@@ -329,13 +375,23 @@ function LiderDashboard({ hub }: { hub: PersonaHub }) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-gray-800 truncate">
-                        {member.name.split(' ')[0]}
+                        {member.name.split(' ')[0]} {member.name.split(' ').slice(-1)[0]}
                       </p>
-                      <p className="text-[10px] text-gray-500">
-                        {member.roleId.replace('role-', '').toUpperCase()}
+                      <p className="text-[10px] text-gray-500 truncate">
+                        {memberRole?.shortTitle || memberRole?.title || '—'}
                       </p>
                     </div>
-                    <div className={`status-dot ${status.dotClass}`} />
+                    <div className="flex flex-col items-end gap-0.5 shrink-0">
+                      <div className={`status-dot ${status.dotClass}`} />
+                      {memberConceito && (
+                        <span
+                          className="text-[8px] font-bold px-1 py-0 rounded"
+                          style={{ backgroundColor: memberConceito.bgCor, color: memberConceito.cor }}
+                        >
+                          {memberConceito.hashtag.replace('#', '')}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </a>
               );

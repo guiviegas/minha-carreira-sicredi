@@ -127,9 +127,9 @@ export default function HomePage() {
                 <div className="px-5 py-4 space-y-3">
                   <p className="text-xs text-neutral-500">{persona.description}</p>
                   <p className="text-sm text-neutral-700 leading-relaxed">{details.challenge}</p>
-                  <button className="flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-verde-digital text-white text-sm font-bold group-hover:bg-verde-600 transition-colors w-full justify-center">
+                  <span className="flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-verde-digital text-white text-sm font-bold group-hover:bg-verde-600 transition-colors w-full justify-center">
                     Acessar interface <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </span>
                 </div>
               </motion.button>
             );

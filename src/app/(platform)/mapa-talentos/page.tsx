@@ -2,15 +2,17 @@
 
 import { useMemo, useState } from 'react';
 import { usePersona } from '@/contexts/PersonaContext';
-import { employees } from '@/data/employees';
+import { employees, getTeamForLeader } from '@/data/employees';
 import { avaliacoesMock, reguaPotencial } from '@/data/elofy-config';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users,
   AlertTriangle,
   Filter,
   Download,
   ArrowRight,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -23,9 +25,10 @@ const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transiti
  * Para colaboradores sem avaliação, usa heurística (engagementScore + performanceRating).
  */
 function buildNineBoxData() {
-  return employees
-    .filter((e) => e.id !== 'emp-005' && e.id !== 'emp-006') // exclui personas sem time relevante para mapa
-    .map((emp) => {
+  // Carla (P&C) vê o pool de colaboradores do Roberto (emp-002).
+  // Mantém escopo focado e coerente com o que o líder visualiza.
+  const pool = getTeamForLeader('emp-002');
+  return pool.map((emp) => {
       const aval = avaliacoesMock.find(
         (a) => a.employeeId === emp.id && a.cicloId === 'ciclo-2026-1',
       );
@@ -75,6 +78,8 @@ const acoesPorQuadrante: Record<string, { titulo: string; acao: string }> = {
 export default function MapaTalentosPage() {
   const { currentPersona } = usePersona();
   const [selected, setSelected] = useState<string | null>(null);
+  const [showFiltros, setShowFiltros] = useState(false);
+  const [exported, setExported] = useState(false);
   const nineBoxData = useMemo(() => buildNineBoxData(), []);
 
   if (!currentPersona || currentPersona.role !== 'pc_analista') return null;
@@ -90,11 +95,28 @@ export default function MapaTalentosPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">
+          <button
+            onClick={() => setShowFiltros(true)}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+          >
             <Filter className="w-3.5 h-3.5" /> Filtrar
           </button>
-          <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">
-            <Download className="w-3.5 h-3.5" /> Exportar
+          <button
+            onClick={() => {
+              setExported(true);
+              setTimeout(() => setExported(false), 2200);
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+          >
+            {exported ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Exportado
+              </>
+            ) : (
+              <>
+                <Download className="w-3.5 h-3.5" /> Exportar
+              </>
+            )}
           </button>
         </div>
       </motion.div>
@@ -194,6 +216,78 @@ export default function MapaTalentosPage() {
           <p className="text-[10px] text-gray-400">PDI prioritário</p>
         </div>
       </motion.div>
+
+      {/* Modal Filtros */}
+      <AnimatePresence>
+        {showFiltros && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowFiltros(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-gray-900">Filtrar 9-box</h3>
+                <button onClick={() => setShowFiltros(false)} className="text-gray-400 hover:text-gray-600">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-medium text-gray-700 mb-1.5 block">Cooperativa</label>
+                  <select className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-verde-digital">
+                    <option>Todas</option>
+                    <option>Convergência</option>
+                    <option>Caminhos</option>
+                    <option>Horizonte</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-700 mb-1.5 block">Família de cargo</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Negócios PF', 'Negócios PJ', 'Agro', 'Liderança', 'Operações', 'P&C'].map((f) => (
+                      <label key={f} className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" defaultChecked className="accent-verde-digital" />
+                        {f}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-700 mb-1.5 block">Risco de turnover</label>
+                  <select className="w-full p-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-verde-digital">
+                    <option>Todos os níveis</option>
+                    <option>Apenas alto risco</option>
+                    <option>Médio + alto</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-5">
+                <button
+                  onClick={() => setShowFiltros(false)}
+                  className="flex-1 py-2.5 rounded-lg bg-verde-digital text-white text-sm font-semibold hover:bg-verde-600 transition-colors"
+                >
+                  Aplicar filtros
+                </button>
+                <button
+                  onClick={() => setShowFiltros(false)}
+                  className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
+                >
+                  Limpar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
