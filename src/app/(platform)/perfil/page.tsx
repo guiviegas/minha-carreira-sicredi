@@ -120,7 +120,6 @@ export default function PerfilPage() {
           <div className="flex items-center gap-4 mt-3 text-xs text-gray-400">
             <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {employee.tenure > 0 ? `${employee.tenure} anos` : `${employee.tenureMonths} meses`} de Sicredi</span>
             <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {currentPersona.branch || currentPersona.cooperative}</span>
-            <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> {employee.achievements.reduce((acc, a) => acc + a.xp, 0)} XP</span>
           </div>
         </div>
       </motion.div>
@@ -165,15 +164,8 @@ export default function PerfilPage() {
               {avaliacao && (
                 <div className="p-3 rounded-lg bg-verde-50 text-center">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-verde-digital">Competências</p>
-                  <div className="flex items-center justify-center gap-0.5 mt-1.5">
-                    {avaliacao.competencias.slice(0, 5).map((c, i) => {
-                      const comp = competenciasSicredi[i];
-                      return (
-                        <div key={i} className="w-3 h-3 rounded-full" style={{ backgroundColor: comp?.cor || '#ccc', opacity: (c.consenso || 0) >= 3 ? 1 : 0.3 }} title={`${comp?.nome}: ${c.consenso}/4`} />
-                      );
-                    })}
-                  </div>
-                  <p className="text-[10px] text-verde-digital mt-1">Jeito Sicredi de Ser</p>
+                  <p className="text-xs font-bold text-verde-digital mt-1">Jeito Sicredi de Ser</p>
+                  <p className="text-[10px] text-verde-digital mt-0.5">{avaliacao.competencias.length} avaliadas</p>
                 </div>
               )}
             </div>
@@ -339,27 +331,24 @@ export default function PerfilPage() {
                 return (
                   <div key={asp.targetRoleId} className="p-3 rounded-lg bg-verde-50 border border-green-200">
                     <p className="text-sm font-semibold text-verde-impresso">{targetRole?.title}</p>
-                    <p className="text-xs text-green-700 mt-0.5">Prazo: {asp.timeframe}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="flex-1 h-1.5 bg-green-200 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full bg-verde-digital"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${asp.confidence}%` }}
-                          transition={{ duration: 0.8 }}
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-verde-digital metric-value">{asp.confidence}%</span>
+                    <p className="text-xs text-green-700 mt-0.5">Horizonte: {asp.timeframe}</p>
+                    <div className="mt-2">
+                      <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
+                        asp.sharedWithLeader ? 'bg-green-100 text-green-700' :
+                        asp.declared ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {asp.sharedWithLeader ? 'Compartilhada com líder' : asp.declared ? 'Decidida' : 'Explorando'}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1 mt-2 text-[11px] text-green-600">
                       {asp.sharedWithLeader ? (
-                        <><Eye className="w-3 h-3" /> Compartilhado com líder</>
+                        <><Eye className="w-3 h-3" /> Visível para seu líder</>
                       ) : (
                         <button
                           onClick={() => setShowAspirationModal(true)}
                           className="flex items-center gap-1 hover:text-verde-digital transition-colors"
                         >
-                          <EyeOff className="w-3 h-3" /> Privado — clique para compartilhar
+                          <EyeOff className="w-3 h-3" /> Privado, clique para compartilhar
                         </button>
                       )}
                     </div>
@@ -562,7 +551,7 @@ export default function PerfilPage() {
                     return (
                       <div key={asp.targetRoleId} className="p-4 rounded-lg bg-verde-50 border border-green-200 mb-3">
                         <p className="text-sm font-semibold text-verde-impresso">{targetRole?.title}</p>
-                        <p className="text-xs text-green-700 mt-0.5">Prazo: {asp.timeframe} · Confiança: {asp.confidence}%</p>
+                        <p className="text-xs text-green-700 mt-0.5">Horizonte: {asp.timeframe}</p>
                         <div className="flex items-center gap-2 mt-3">
                           <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
                             <input type="checkbox" defaultChecked={asp.sharedWithLeader} className="rounded border-gray-300 text-verde-digital focus:ring-verde-digital" />

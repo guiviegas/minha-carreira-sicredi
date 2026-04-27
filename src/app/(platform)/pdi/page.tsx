@@ -59,7 +59,7 @@ export default function PdiPage() {
       {/* Header */}
       <motion.div variants={item}>
         <h1 className="text-2xl font-bold text-gray-900">Meu PDI</h1>
-        <p className="text-sm text-gray-500 mt-1">Plano de Desenvolvimento Individual — seu caminho, suas escolhas</p>
+        <p className="text-sm text-gray-500 mt-1">Plano de Desenvolvimento Individual: seu caminho, suas escolhas</p>
       </motion.div>
 
       {/* Goal Card */}
@@ -91,7 +91,7 @@ export default function PdiPage() {
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left column — Actions + Completed */}
+        {/* Left column: Actions + Completed */}
         <div className="lg:col-span-2 space-y-4">
           {/* Active Actions */}
           <motion.div variants={item} className="card p-5">
@@ -188,7 +188,7 @@ export default function PdiPage() {
           )}
         </div>
 
-        {/* Right column — Theo Suggestions + Check-ins */}
+        {/* Right column: Theo Suggestions + Check-ins */}
         <div className="space-y-4">
           {/* Theo Suggestions */}
           <motion.div variants={item} className="card p-5 border border-verde-digital/10 bg-verde-50/30">

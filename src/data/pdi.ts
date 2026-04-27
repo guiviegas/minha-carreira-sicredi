@@ -82,7 +82,7 @@ export const pdiData: Record<string, PersonaPdi> = {
         type: 'mentoria', status: 'in_progress', dueDate: 'Mai/2026',
       },
       {
-        id: 'act-3', title: 'Projeto de Satisfação Q3', description: 'Liderar pesquisa de satisfação na Agência Centro — experiência de liderança',
+        id: 'act-3', title: 'Observação em Comitê de Carreira', description: 'Acompanhar Roberto em comitê de carreira como observadora, vivência de liderança',
         type: 'projeto', status: 'in_progress', dueDate: 'Jun/2026',
       },
       {
@@ -112,7 +112,7 @@ export const pdiData: Record<string, PersonaPdi> = {
         type: 'certificacao', priority: 'medium',
       },
       {
-        id: 'sug-3', title: 'Projeto de cross-selling', description: 'A agência Centro tem uma campanha de cross-selling em junho. Seria ótimo para praticar gestão de carteira premium.',
+        id: 'sug-3', title: 'Vivência prática de liderança', description: 'Há uma experiência de acompanhamento de Gerente de Agência na Cooperativa Caminhos. Seria ideal para seu perfil.',
         type: 'projeto', priority: 'medium',
       },
     ],

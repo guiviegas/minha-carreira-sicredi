@@ -402,7 +402,7 @@ export default function MapaCarreiraPage() {
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1440px] space-y-6">
       <motion.div variants={item} className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mapa de Carreira</h1>
+          <h1 className="text-2xl font-bold text-gray-900">GPS de Carreira</h1>
           <p className="text-sm text-gray-500 mt-1">Explore possibilidades a partir do seu momento atual</p>
         </div>
       </motion.div>
@@ -464,14 +464,14 @@ function MetroView({ employeeRoleId }: { employeeRoleId: string }) {
   );
 
   const allLines = [
-    { name: 'Linha 1 — Azul (Liderança)', color: '#0455A1', stations: ['role-gn-pf3', 'role-gn-pf4', 'role-gerente-agencia', 'role-gerente-regional', 'role-diretor'] },
-    { name: 'Linha 2 — Verde (Negócios PF)', color: '#3FA110', stations: ['role-assistente-atendimento', 'role-assistente-negocios', 'role-gn-pf1', 'role-gn-pf2', 'role-gn-pf3', 'role-gn-pf4'] },
-    { name: 'Linha 3 — Vermelha (Negócios PJ)', color: '#E53935', stations: ['role-assistente-negocios', 'role-gn-pj1', 'role-gn-pj2', 'role-gn-pj3'] },
-    { name: 'Linha 4 — Amarela (AGRO)', color: '#D4A017', stations: ['role-assistente-negocios', 'role-agro1', 'role-agro2', 'role-agro3'] },
-    { name: 'Linha 5 — Lilás (P&C)', color: '#9B4F96', stations: ['role-analista-pc', 'role-coordenador-pc'] },
-    { name: 'Linha 9 — Esmeralda (Investimentos)', color: '#0277BD', stations: ['role-gn-pf2', 'role-assessor-investimentos'] },
-    { name: 'Linha 12 — Safira (Sistema)', color: '#37474F', stations: ['role-operacoes', 'role-analista-central', 'role-analista-cas', 'role-fundacao'] },
-    { name: 'Linha 15 — Prata (Operações)', color: '#9E9E9E', stations: ['role-assistente-atendimento', 'role-operacoes', 'role-assistente-negocios'] },
+    { name: 'Azul: Liderança', color: '#0455A1', stations: ['role-gn-pf3', 'role-gn-pf4', 'role-gerente-agencia', 'role-gerente-regional', 'role-diretor'] },
+    { name: 'Verde: Negócios PF', color: '#3FA110', stations: ['role-assistente-atendimento', 'role-assistente-negocios', 'role-gn-pf1', 'role-gn-pf2', 'role-gn-pf3', 'role-gn-pf4'] },
+    { name: 'Vermelha: Negócios PJ', color: '#E53935', stations: ['role-assistente-negocios', 'role-gn-pj1', 'role-gn-pj2', 'role-gn-pj3'] },
+    { name: 'Amarela: AGRO', color: '#D4A017', stations: ['role-assistente-negocios', 'role-agro1', 'role-agro2', 'role-agro3'] },
+    { name: 'Lilás: P&C', color: '#9B4F96', stations: ['role-analista-pc', 'role-coordenador-pc'] },
+    { name: 'Esmeralda: Investimentos', color: '#0277BD', stations: ['role-gn-pf2', 'role-assessor-investimentos'] },
+    { name: 'Safira: Sistema', color: '#37474F', stations: ['role-operacoes', 'role-analista-central', 'role-analista-cas', 'role-fundacao'] },
+    { name: 'Prata: Operações', color: '#9E9E9E', stations: ['role-assistente-atendimento', 'role-operacoes', 'role-assistente-negocios'] },
   ];
 
   // Filter lines to only show those that have at least 2 visible stations

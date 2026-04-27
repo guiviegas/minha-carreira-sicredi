@@ -20,7 +20,7 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } 
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
 const comiteMock = [
-  { id: 'emp-001', nome: 'Mariana Oliveira', cargo: 'GN PF II', aspiracao: 'Gerente de Agência', performance: 3, prontidao: 'em-desenvolvimento', potencial: 'crescer', decisao: 'Acompanhar — PDI ativo', status: 'aprovado' as const },
+  { id: 'emp-001', nome: 'Mariana Oliveira', cargo: 'GN PF II', aspiracao: 'Gerente de Agência', performance: 3, prontidao: 'em-desenvolvimento', potencial: 'crescer', decisao: 'Acompanhar: PDI ativo', status: 'aprovado' as const },
   { id: 'emp-108', nome: 'Thiago Martins', cargo: 'Assist. Negócios', aspiracao: 'GN PF I', performance: 3, prontidao: 'pronto-1-ano', potencial: 'acelerar', decisao: 'Promover no próximo ciclo', status: 'aprovado' as const },
   { id: 'emp-101', nome: 'Juliana Pereira', cargo: 'GN PF I', aspiracao: 'GN PJ', performance: 2, prontidao: 'inicio-jornada', potencial: 'fortalecer', decisao: 'Stay interview urgente', status: 'acao_urgente' as const },
   { id: 'emp-106', nome: 'Pedro Almeida', cargo: 'GN PF I', aspiracao: 'GN PF II', performance: 3, prontidao: 'pronto-1-ano', potencial: 'crescer', decisao: 'Incluir em projeto de liderança', status: 'pendente' as const },

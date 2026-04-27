@@ -60,7 +60,7 @@ export default function EquipePage() {
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl space-y-6">
       <motion.div variants={item}>
         <h1 className="text-2xl font-bold text-gray-900">Minha Equipe</h1>
-        <p className="text-sm text-gray-500 mt-1">{team.length} pessoas · Agência Sul</p>
+        <p className="text-sm text-gray-500 mt-1">{team.length} pessoas · Agência Ipê</p>
       </motion.div>
 
       {/* Team Overview Cards */}

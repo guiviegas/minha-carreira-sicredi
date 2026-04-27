@@ -14,6 +14,13 @@ import { Opportunity } from '@/types';
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
 
+function getAderencia(score: number): { label: string; color: string; bg: string } {
+  if (score >= 80) return { label: 'Alta aderência', color: 'text-green-700', bg: 'bg-green-100' };
+  if (score >= 65) return { label: 'Boa aderência', color: 'text-verde-digital', bg: 'bg-verde-50' };
+  if (score >= 50) return { label: 'Aderência parcial', color: 'text-amber-700', bg: 'bg-amber-100' };
+  return { label: 'Baixa aderência', color: 'text-gray-500', bg: 'bg-gray-100' };
+}
+
 type OpportunityTab = 'todos' | 'vaga' | 'projeto' | 'mentoria' | 'job_shadow' | 'intercambio';
 
 const tabLabels: Record<OpportunityTab, string> = {
@@ -84,30 +91,19 @@ export default function MarketplacePage() {
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl space-y-6">
       <motion.div variants={item}>
-        <h1 className="text-2xl font-bold text-gray-900">Marketplace de Oportunidades</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Oportunidades Internas</h1>
         <p className="text-sm text-gray-500 mt-1">Vagas, projetos, mentorias e experiências para sua carreira</p>
       </motion.div>
 
-      {/* Gupy Banner */}
+      {/* Gupy Link */}
       <motion.div variants={item}>
         <a
           href="https://sicredi.gupy.io"
           target="_blank"
           rel="noopener noreferrer"
-          className="block card p-4 bg-gradient-to-r from-[#00593E] to-[#3FA110] text-white hover:shadow-lg transition-all group"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-verde-digital hover:underline"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-bold">Vagas Sicredi na Gupy</p>
-                <p className="text-xs text-white/80">Acesse todas as vagas abertas no portal oficial de recrutamento</p>
-              </div>
-            </div>
-            <ArrowUpRight className="w-5 h-5 text-white/70 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-          </div>
+          Ver vagas externas no Gupy <ArrowUpRight className="w-3 h-3" />
         </a>
       </motion.div>
 
@@ -130,8 +126,8 @@ export default function MarketplacePage() {
                   <div className="icon-box-sm" style={{ backgroundColor: `${typeColors[opp.type]}15` }}>
                     <TypeIcon type={opp.type} />
                   </div>
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700">
-                    <Zap className="w-3 h-3" /> {opp.matchScore}% match
+                  <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${getAderencia(opp.matchScore || 0).bg} ${getAderencia(opp.matchScore || 0).color}`}>
+                    <Zap className="w-3 h-3" /> {getAderencia(opp.matchScore || 0).label}
                   </span>
                 </div>
                 <h3 className="text-sm font-semibold text-gray-800 mt-2">{opp.title}</h3>
@@ -204,9 +200,9 @@ export default function MarketplacePage() {
                     }}>
                       {tabLabels[opp.type as OpportunityTab]}
                     </span>
-                    {(opp.matchScore || 0) >= 70 && (
-                      <span className="text-[10px] font-semibold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                        {opp.matchScore}% match
+                    {(opp.matchScore || 0) >= 50 && (
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${getAderencia(opp.matchScore || 0).bg} ${getAderencia(opp.matchScore || 0).color}`}>
+                        {getAderencia(opp.matchScore || 0).label}
                       </span>
                     )}
                     {isApplied && (
@@ -332,9 +328,9 @@ export default function MarketplacePage() {
                           }}>
                             {tabLabels[selectedOpp.type as OpportunityTab]}
                           </span>
-                          {(selectedOpp.matchScore || 0) >= 70 && (
-                            <span className="text-[10px] font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded flex items-center gap-0.5">
-                              <Zap className="w-2.5 h-2.5" /> {selectedOpp.matchScore}% match
+                          {(selectedOpp.matchScore || 0) >= 50 && (
+                            <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${getAderencia(selectedOpp.matchScore || 0).bg} ${getAderencia(selectedOpp.matchScore || 0).color}`}>
+                              <Zap className="w-2.5 h-2.5" /> {getAderencia(selectedOpp.matchScore || 0).label}
                             </span>
                           )}
                         </div>

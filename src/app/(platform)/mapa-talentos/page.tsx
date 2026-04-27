@@ -52,7 +52,7 @@ export default function MapaTalentosPage() {
       <motion.div variants={item} className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Mapa de Talentos</h1>
-          <p className="text-sm text-gray-500 mt-1">Matriz 9-Box — Performance vs Potencial · Cooperativa Pioneira</p>
+          <p className="text-sm text-gray-500 mt-1">Matriz 9-Box: Performance vs Potencial · Cooperativa Caminhos</p>
         </div>
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">

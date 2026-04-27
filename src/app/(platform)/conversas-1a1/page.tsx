@@ -56,7 +56,7 @@ export default function Conversas1a1Page() {
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-500" />
             <p className="text-sm text-amber-800">
-              <strong>{atrasadas} conversa{atrasadas > 1 ? 's' : ''}</strong> atrasada{atrasadas > 1 ? 's' : ''}. A Juliana não tem 1:1 há 6 semanas — risco alto de turnover.
+              <strong>{atrasadas} conversa{atrasadas > 1 ? 's' : ''}</strong> atrasada{atrasadas > 1 ? 's' : ''}. A Juliana não tem 1:1 há 6 semanas: risco alto de turnover.
             </p>
           </div>
         </motion.div>

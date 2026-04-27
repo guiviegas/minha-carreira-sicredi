@@ -61,14 +61,14 @@ const initialMessages: Record<string, Message[]> = {
     {
       id: '1',
       role: 'assistant',
-      content: 'Olá Mariana! 👋\n\nSou o **Theo**, seu copiloto de carreira no Sicredi. Estou aqui para te ajudar a navegar sua jornada — desde entender o que falta para avançar até preparar conversas com seu líder.\n\n📊 **Seu status atual:**\n• Cargo: Gerente de Negócios PF II\n• Aspiração: Gerente de Agência\n• Prontidão: 68%\n• Último conceito: #mandoubem\n\nComo posso te ajudar hoje?',
+      content: 'Olá Mariana! 👋\n\nSou o **Theo**, seu copiloto de carreira no Sicredi. Estou aqui para te ajudar a navegar sua jornada. desde entender o que falta para avançar até preparar conversas com seu líder.\n\n📊 **Seu status atual:**\n• Cargo: Gerente de Negócios PF II\n• Aspiração: Gerente de Agência\n• Prontidão: 68%\n• Último conceito: #mandoubem\n\nComo posso te ajudar hoje?',
     },
   ],
   roberto: [
     {
       id: '1',
       role: 'assistant',
-      content: 'Olá Roberto! 👋\n\nSou o **Theo**, seu copiloto de liderança no Sicredi. Estou aqui para te apoiar na gestão e desenvolvimento do seu time.\n\n📊 **Visão do Time:**\n• 8 pessoas na equipe\n• 2 com alta prontidão para promoção\n• 1 em risco de turnover (Juliana — 78%)\n• Próxima 1:1: Mariana — quinta-feira\n\nComo posso te ajudar?',
+      content: 'Olá Roberto! 👋\n\nSou o **Theo**, seu copiloto de liderança no Sicredi. Estou aqui para te apoiar na gestão e desenvolvimento do seu time.\n\n📊 **Visão do Time:**\n• 5 pessoas na equipe\n• 2 com alta prontidão para promoção\n• 1 em risco de turnover (Juliana, 78%)\n• Próxima 1:1: Mariana. quinta-feira\n\nComo posso te ajudar?',
     },
   ],
   carla: [
@@ -96,7 +96,7 @@ const responses: Record<string, string> = {
 📋 **Plano sugerido (90 dias):**
 1. **Mês 1:** Completar "Liderança Fundamentals" + iniciar mentoria com Paulo (GA Centro)
 2. **Mês 2:** "Análise Financeira para GNs" + Job Shadow de 2 dias
-3. **Mês 3:** Projeto de liderança na Agência Centro + Assessment
+3. **Mês 3:** Projeto de liderança na Agência Ipê + Assessment
 
 Quer que eu monte o PDI detalhado?`,
 
@@ -104,24 +104,24 @@ Quer que eu monte o PDI detalhado?`,
 
 📌 **Seus destaques para compartilhar:**
 • Satisfação do associado: Top 3 da agência 🎉
-• Meta trimestral: 94% — quase batendo!
-• Mentoria do Lucas (Assist. Atendimento) — evolução positiva
+• Meta trimestral: 94%. quase batendo!
+• Mentoria do Lucas (Assist. Atendimento). evolução positiva
 
 ⚠️ **Ponto de atenção:**
-• Cross-selling caiu 12% este mês — vale investigar
+• Cross-selling caiu 12% este mês. vale investigar
 
 💬 **Temas sugeridos para levantar:**
-1. Seu interesse no projeto da Agência Centro (92% match)
+1. Seu interesse no projeto da Agência Ipê (92% match)
 2. Progresso no módulo de Liderança Fundamentals (30% completo)
 3. Pedir feedback sobre sua evolução para GA
 
-💡 **Dica:** Ao falar sobre GA, pergunte *"O que você recomenda como meu próximo passo?"* — mostra maturidade e abertura.`,
+💡 **Dica:** Ao falar sobre GA, pergunte *"O que você recomenda como meu próximo passo?"*. mostra maturidade e abertura.`,
 
   'Quais trilhas de desenvolvimento são mais indicadas para mim?': `Baseado no seu perfil de **GN PF II** aspirando **Gerente de Agência**, recomendo:
 
 🟢 **Trilha prioritária: Liderança de Pessoas**
-• Feedback SCII — já concluído ✅
-• 1:1 Eficaz (3h) — próximo passo
+• Feedback SCII. já concluído ✅
+• 1:1 Eficaz (3h). próximo passo
 • PDI da Equipe (3h)
 • Gestão de Conflitos (2h)
 *Progresso: 30% · Impacto na prontidão: +12pp*
@@ -144,20 +144,20 @@ Total estimado: **~48h de desenvolvimento · +25pp de prontidão**`,
 📊 **Dados reais do sistema (últimos 3 anos):**
 
 → **GN PF III** (ascensão vertical): 188 profissionais fizeram essa transição
-→ **GN PJ I** (lateral): 104 profissionais — rota muito comum
+→ **GN PJ I** (lateral): 104 profissionais. rota muito comum
 → **Assessor de Investimentos** (especialização): requer CEA
 
 🔄 **Movimentações laterais possíveis:**
-1. **Negócios PJ** — Trilha de 28h, foco em crédito empresarial
-2. **Negócios AGRO** — Trilha de 30h, foco em crédito rural
-3. **Assessor de Investimentos** — Requer CEA, perfil analítico
+1. **Negócios PJ**. Trilha de 28h, foco em crédito empresarial
+2. **Negócios AGRO**. Trilha de 30h, foco em crédito rural
+3. **Assessor de Investimentos**. Requer CEA, perfil analítico
 
 💡 Considerando sua aspiração de GA, a rota **GN PF III → GA** é a mais direta. Mas uma passagem por PJ pode enriquecer sua visão generalista.`,
 
   // Leader responses
   'Me ajude a preparar a 1:1 com meu time': `Preparei roteiros para suas **próximas 1:1s**:
 
-👩 **Mariana Oliveira (GN PF II)** — quinta-feira
+👩 **Mariana Oliveira (GN PF II)**. quinta-feira
 • Destaque: Top 3 satisfação, 94% meta comercial
 • Ponto de atenção: Cross-selling -12%
 • Sugestão: Falar sobre projeto Centro (92% match para GA)
@@ -165,28 +165,28 @@ Total estimado: **~48h de desenvolvimento · +25pp de prontidão**`,
 
 👨 **Lucas Ferreira (Assist. Atendimento)**
 • Destaque: Onboarding fluido, boa adaptação
-• Ponto de atenção: Apenas 2 meses — pode estar overwhelmed
+• Ponto de atenção: Apenas 2 meses. pode estar overwhelmed
 • Sugestão: Falar sobre cooperativismo na prática
 • Perguntar: "O que te surpreendeu positivamente até aqui?"
 
-⚠️ **Juliana Pereira (GN PJ I)** — PRIORIDADE
-• Risco de turnover: 78% — **stay conversation urgente**
+⚠️ **Juliana Pereira (GN PJ I)**. PRIORIDADE
+• Risco de turnover: 78%. **stay conversation urgente**
 • Sinais: Recusou última capacitação, NPS interno caiu
 • Sugestão: Conversa empática sobre satisfação e futuro`,
 
   'Qual o status de prontidão do meu time?': `📊 **Mapa de Prontidão do Time:**
 
 🟢 **Pronto para avançar (>80%):**
-• Ana Beatriz (GN PF III) — 85% → Pronta para GA
-• Carlos Mendes (GN PJ II) — 82% → Pronto para PJ III
+• Ana Beatriz (GN PF III). 85% → Pronta para GA
+• Carlos Mendes (GN PJ II). 82% → Pronto para PJ III
 
 🟡 **Em desenvolvimento (50-80%):**
-• Mariana Oliveira (GN PF II) — 68% → Aspirando GA
-• Pedro Santos (GN PF I) — 55% → Aspirando PF II
+• Mariana Oliveira (GN PF II). 68% → Aspirando GA
+• Pedro Santos (GN PF I). 55% → Aspirando PF II
 
 🔴 **Atenção (<50% ou em risco):**
-• Juliana Pereira (GN PJ I) — 45% + risco turnover 78%
-• Lucas Ferreira (Assist.) — 30% (recém-chegado, normal)
+• Juliana Pereira (GN PJ I). 45% + risco turnover 78%
+• Lucas Ferreira (Assist.). 30% (recém-chegado, normal)
 
 📋 **Ações recomendadas:**
 1. Indicar Ana Beatriz para comitê de carreira como candidata a GA
@@ -194,17 +194,17 @@ Total estimado: **~48h de desenvolvimento · +25pp de prontidão**`,
 3. Mentor para Lucas (Mariana poderia ser a mentora)`,
 
   // P&C responses
-  'Quais são os principais indicadores de turnover que devo monitorar?': `📊 **Dashboard de Turnover — Indicadores Chave:**
+  'Quais são os principais indicadores de turnover que devo monitorar?': `📊 **Dashboard de Turnover. Indicadores Chave:**
 
 **Turnover Voluntário:** 8.2% (meta <10%) ✅
 **Turnover nos primeiros 12 meses:** 15% ⚠️ (acima da meta de 10%)
 **Tempo médio para desligamento:** 18 meses
 
 📌 **Principais preditores de turnover no Sicredi:**
-1. **Avaliação #precisaevoluir por 2 ciclos consecutivos** — 3.2x mais chance de sair
-2. **Sem promoção em 3+ anos** — 2.8x mais chance
-3. **Recusa de capacitações** — 2.1x mais chance
-4. **NPS interno <60** — 1.8x mais chance
+1. **Avaliação #precisaevoluir por 2 ciclos consecutivos**. 3.2x mais chance de sair
+2. **Sem promoção em 3+ anos**. 2.8x mais chance
+3. **Recusa de capacitações**. 2.1x mais chance
+4. **NPS interno <60**. 1.8x mais chance
 
 ⚡ **Alertas ativos na cooperativa:**
 • 3 GNs de alta performance com >24 meses sem movimentação
@@ -217,9 +217,9 @@ Quer que eu aprofunde em algum desses alertas?`,
 
 O 9-box cruza **Desempenho** (eixo X) com **Potencial** (eixo Y):
 
-🟢 **Quadrante 9 (Alto/Alto):** Estrelas — priorizar para promoção e projetos estratégicos
-🔵 **Quadrante 6 (Alto/Médio):** Performers — investir em desenvolvimento de potencial
-🟡 **Quadrante 3 (Alto/Baixo):** Especialistas — manter e reconhecer na função atual
+🟢 **Quadrante 9 (Alto/Alto):** Estrelas. priorizar para promoção e projetos estratégicos
+🔵 **Quadrante 6 (Alto/Médio):** Performers. investir em desenvolvimento de potencial
+🟡 **Quadrante 3 (Alto/Baixo):** Especialistas. manter e reconhecer na função atual
 
 ⚠️ **Cuidados importantes:**
 • Revisar a cada 6 meses (não é estático)
@@ -303,7 +303,7 @@ export default function ParceiroJornadaPage() {
         </div>
       </motion.div>
 
-      {/* Quick Actions — shown before first interaction */}
+      {/* Quick Actions. shown before first interaction */}
       <AnimatePresence>
         {showQuickActions && (
           <motion.div
