@@ -8,9 +8,9 @@ import { competenciasSicredi } from '@/data/competencias-sicredi';
 import { reguaPerformance, avaliacoesMock, ELOFY_URL } from '@/data/elofy-config';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ClipboardCheck, Target, TrendingUp, MessageSquare, Calendar,
-  CheckCircle2, AlertCircle, X, ChevronDown, ChevronUp, Sparkles,
-  ArrowRight, Edit3, Send, Heart, ExternalLink,
+  Target, MessageSquare, Calendar,
+  CheckCircle2, AlertCircle, ChevronDown, ChevronUp,
+  Heart, ExternalLink,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -26,16 +26,13 @@ const REGUA_4_PONTOS = [
 
 interface MetaNegocio {
   titulo: string;
-  conceito: number; // 1-4
+  conceito: number;
   observacao: string;
 }
 
 export default function AvaliacaoPage() {
   const { currentPersona } = usePersona();
   const [expandedMeta, setExpandedMeta] = useState<number | null>(null);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [feedbackText, setFeedbackText] = useState('');
-  const [feedbackSent, setFeedbackSent] = useState(false);
 
   if (!currentPersona) return null;
   const employee = getEmployeeById(currentPersona.employeeId);
@@ -43,22 +40,16 @@ export default function AvaliacaoPage() {
   const role = getRoleById(employee.roleId);
   const avaliacaoAtual = avaliacoesMock.find(a => a.employeeId === employee.id && a.cicloId === 'ciclo-2026-1');
 
-  // 3 metas de negócio avaliadas na régua de 4 pontos
+  // 3 objetivos de negócio acordados
   const metasNegocio: MetaNegocio[] = [
     { titulo: 'Atingimento da meta comercial da carteira', conceito: 3, observacao: 'Atingiu 94% da meta trimestral. Resultado consistente ao longo do ciclo.' },
     { titulo: 'Satisfação do associado na carteira', conceito: 4, observacao: 'Nota 92 de satisfação, top 3 da agência. Retornos positivos dos associados.' },
     { titulo: 'Prospecção de novos associados', conceito: 2, observacao: 'Média de 3 por mês contra meta de 5. Precisa intensificar abordagem ativa.' },
   ];
 
-  // Conceito final (média das metas + competências)
   const mediaMetas = Math.round(metasNegocio.reduce((s, m) => s + m.conceito, 0) / metasNegocio.length);
   const conceitoFinal = avaliacaoAtual ? avaliacaoAtual.notaFinalPerformance : mediaMetas;
   const conceitoConfig = REGUA_4_PONTOS[conceitoFinal - 1] || REGUA_4_PONTOS[2];
-
-  const handleSendFeedback = () => {
-    setFeedbackSent(true);
-    setTimeout(() => { setShowFeedbackModal(false); setFeedbackSent(false); setFeedbackText(''); }, 2000);
-  };
 
   // Feedbacks recebidos
   const feedbacks = [
@@ -74,14 +65,9 @@ export default function AvaliacaoPage() {
           <h1 className="text-2xl font-bold text-gray-900">Avaliação de Desempenho</h1>
           <p className="text-sm text-gray-500 mt-1">Ciclo 2026.1 · {role?.title}</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowFeedbackModal(true)} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-verde-digital rounded-lg hover:bg-verde-600 transition-colors">
-            <MessageSquare className="w-3.5 h-3.5" /> Pedir Retorno
-          </button>
-          <a href={ELOFY_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">
-            Abrir no Elofy <ExternalLink className="w-3 h-3" />
-          </a>
-        </div>
+        <a href={ELOFY_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">
+          Abrir no Elofy <ExternalLink className="w-3 h-3" />
+        </a>
       </motion.div>
 
       {/* Conceito Final */}
@@ -95,7 +81,7 @@ export default function AvaliacaoPage() {
             <p className="text-sm text-gray-500 mt-0.5">{conceitoConfig.desc}</p>
             <div className="flex gap-3 mt-3 text-xs text-gray-400">
               <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Atualizado: Abr 2026</span>
-              <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" /> {feedbacks.length} retornos recebidos</span>
+              <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" /> {feedbacks.length} feedbacks recebidos</span>
             </div>
           </div>
         </div>
@@ -106,7 +92,7 @@ export default function AvaliacaoPage() {
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Régua de Avaliação Sicredi</p>
         <div className="grid grid-cols-4 gap-2">
           {REGUA_4_PONTOS.map((r) => (
-            <div key={r.id} className={`p-3 rounded-lg border-2 transition-all ${conceitoFinal === r.id ? 'border-current shadow-sm' : 'border-transparent'}`} style={{ backgroundColor: r.bgCor, borderColor: conceitoFinal === r.id ? r.cor : 'transparent' }}>
+            <div key={r.id} className={`p-3 rounded-lg border-2 transition-all ${conceitoFinal === r.id ? 'shadow-sm' : ''}`} style={{ backgroundColor: r.bgCor, borderColor: conceitoFinal === r.id ? r.cor : 'transparent' }}>
               <p className="text-sm font-bold" style={{ color: r.cor }}>{r.hashtag}</p>
               <p className="text-[10px] text-gray-500 mt-0.5">{r.faixa}</p>
               <p className="text-[10px] text-gray-600 mt-1 leading-tight">{r.desc}</p>
@@ -115,10 +101,10 @@ export default function AvaliacaoPage() {
         </div>
       </motion.div>
 
-      {/* Metas de Negócio (ANTES das competências) */}
+      {/* Objetivos de Negócio Acordados */}
       <motion.div variants={item} className="card p-5">
         <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <Target className="w-4 h-4 text-verde-digital" /> Metas de Negócio
+          <Target className="w-4 h-4 text-verde-digital" /> Objetivos de Negócio Acordados
         </h2>
         <div className="space-y-3">
           {metasNegocio.map((meta, i) => {
@@ -159,42 +145,66 @@ export default function AvaliacaoPage() {
         </div>
       </motion.div>
 
-      {/* Competências — Jeito Sicredi de Ser */}
+      {/* Competências: Jeito Sicredi de Ser — REDESIGNED */}
       <motion.div variants={item} className="card p-5">
         <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
           <Heart className="w-4 h-4 text-verde-digital" /> Competências: Jeito Sicredi de Ser
         </h2>
         {avaliacaoAtual ? (
-          <div className="space-y-3">
+          <div className="space-y-0">
+            {/* Header da tabela */}
+            <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+              <div className="col-span-5">Competência</div>
+              <div className="col-span-2 text-center">Autoavaliação</div>
+              <div className="col-span-2 text-center">Líder</div>
+              <div className="col-span-3 text-center">Consenso</div>
+            </div>
+
+            {/* Linhas */}
             {avaliacaoAtual.competencias.map((comp, i) => {
               const compInfo = competenciasSicredi.find(c => c.id === comp.competenciaId);
-              const notaIdx = (comp.consenso || comp.autoAvaliacao) - 1;
+              const autoConfig = REGUA_4_PONTOS[comp.autoAvaliacao - 1];
+              const liderConfig = REGUA_4_PONTOS[comp.avaliacaoLider - 1];
+              const consensoConfig = comp.consenso ? REGUA_4_PONTOS[comp.consenso - 1] : null;
+
               return (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800">{compInfo?.nome || comp.competenciaId}</p>
-                    <p className="text-[11px] text-gray-500 truncate">{compInfo?.descricao}</p>
+                <div key={i} className={`grid grid-cols-12 gap-2 px-4 py-3 items-center rounded-lg ${i % 2 === 0 ? 'bg-gray-50/70' : ''}`}>
+                  {/* Nome */}
+                  <div className="col-span-5">
+                    <p className="text-sm font-semibold text-gray-800">{compInfo?.nome || comp.competenciaId}</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="text-right">
-                      <p className="text-[10px] text-gray-400">Auto</p>
-                      <span className="text-xs font-bold" style={{ color: REGUA_4_PONTOS[comp.autoAvaliacao - 1]?.cor }}>
-                        {REGUA_4_PONTOS[comp.autoAvaliacao - 1]?.hashtag}
+
+                  {/* Autoavaliação */}
+                  <div className="col-span-2 flex justify-center">
+                    <span
+                      className="text-[10px] font-bold px-2 py-1 rounded-md whitespace-nowrap"
+                      style={{ backgroundColor: autoConfig?.bgCor, color: autoConfig?.cor }}
+                    >
+                      {autoConfig?.hashtag}
+                    </span>
+                  </div>
+
+                  {/* Líder */}
+                  <div className="col-span-2 flex justify-center">
+                    <span
+                      className="text-[10px] font-bold px-2 py-1 rounded-md whitespace-nowrap"
+                      style={{ backgroundColor: liderConfig?.bgCor, color: liderConfig?.cor }}
+                    >
+                      {liderConfig?.hashtag}
+                    </span>
+                  </div>
+
+                  {/* Consenso */}
+                  <div className="col-span-3 flex justify-center">
+                    {consensoConfig ? (
+                      <span
+                        className="text-[10px] font-bold px-2.5 py-1 rounded-md whitespace-nowrap"
+                        style={{ backgroundColor: consensoConfig.bgCor, color: consensoConfig.cor }}
+                      >
+                        {consensoConfig.hashtag}
                       </span>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] text-gray-400">Líder</p>
-                      <span className="text-xs font-bold" style={{ color: REGUA_4_PONTOS[comp.avaliacaoLider - 1]?.cor }}>
-                        {REGUA_4_PONTOS[comp.avaliacaoLider - 1]?.hashtag}
-                      </span>
-                    </div>
-                    {comp.consenso && (
-                      <div className="text-right">
-                        <p className="text-[10px] text-gray-400">Consenso</p>
-                        <span className="text-xs font-bold" style={{ color: REGUA_4_PONTOS[comp.consenso - 1]?.cor }}>
-                          {REGUA_4_PONTOS[comp.consenso - 1]?.hashtag}
-                        </span>
-                      </div>
+                    ) : (
+                      <span className="text-[10px] text-gray-300">Pendente</span>
                     )}
                   </div>
                 </div>
@@ -209,7 +219,7 @@ export default function AvaliacaoPage() {
       {/* Feedbacks Recebidos */}
       <motion.div variants={item} className="card p-5">
         <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-verde-digital" /> Retornos Recebidos
+          <MessageSquare className="w-4 h-4 text-verde-digital" /> Feedbacks Recebidos
         </h2>
         <div className="space-y-3">
           {feedbacks.map((fb, i) => (
@@ -226,30 +236,6 @@ export default function AvaliacaoPage() {
           ))}
         </div>
       </motion.div>
-
-      {/* Feedback Modal */}
-      <AnimatePresence>
-        {showFeedbackModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-xl w-full max-w-md p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">Pedir Retorno</h3>
-                <button onClick={() => setShowFeedbackModal(false)}><X className="w-5 h-5 text-gray-400" /></button>
-              </div>
-              {feedbackSent ? (
-                <div className="text-center py-6"><CheckCircle2 className="w-12 h-12 text-verde-digital mx-auto mb-2" /><p className="text-sm text-gray-600">Solicitação enviada</p></div>
-              ) : (
-                <>
-                  <textarea value={feedbackText} onChange={e => setFeedbackText(e.target.value)} className="w-full p-3 border rounded-lg text-sm resize-none h-28" placeholder="Descreva o contexto do retorno que gostaria de receber..." />
-                  <button onClick={handleSendFeedback} disabled={!feedbackText.trim()} className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-verde-digital text-white rounded-lg text-sm font-semibold disabled:opacity-50">
-                    <Send className="w-4 h-4" /> Enviar Solicitação
-                  </button>
-                </>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

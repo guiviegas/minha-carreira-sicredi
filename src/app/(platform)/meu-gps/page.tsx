@@ -3,22 +3,18 @@
 import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById, getTeamForLeader } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
-import { avaliacoesMock, reguaPerformance, reguaProntidao } from '@/data/elofy-config';
 import { motion } from 'framer-motion';
+import TheoCard from '@/components/theo/TheoCard';
 import {
   TrendingUp,
   Briefcase,
   BookOpen,
   CheckCircle2,
-  Sparkles,
   Users,
   AlertTriangle,
-  Zap,
   Target,
   ArrowRight,
   Clock,
-  Star,
-  PlayCircle,
   Compass,
   Calendar,
   MessageCircle,
@@ -47,37 +43,13 @@ export default function MeuGPSPage() {
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-5xl">
-      {/* Page Header */}
+      {/* Page Header (sem badges) */}
       <motion.div variants={item}>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Início</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              {role?.title} · {currentPersona.cooperative}
-              {currentPersona.branch && ` · ${currentPersona.branch}`}
-            </p>
-          </div>
-          {(() => {
-            const avaliacao = avaliacoesMock.find(a => a.employeeId === employee.id && a.cicloId === 'ciclo-2026-1');
-            if (!avaliacao) return null;
-            const perfConfig = reguaPerformance[avaliacao.notaFinalPerformance - 1];
-            const prontConfig = avaliacao.prontidaoId ? reguaProntidao.find(r => r.id === avaliacao.prontidaoId) : null;
-            return (
-              <div className="flex items-center gap-2">
-                {perfConfig && (
-                  <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: perfConfig.bgCor, color: perfConfig.cor }}>
-                    {perfConfig.hashtag}
-                  </span>
-                )}
-                {prontConfig && (
-                  <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: prontConfig.bgCor, color: prontConfig.cor }}>
-                    {prontConfig.nome}
-                  </span>
-                )}
-              </div>
-            );
-          })()}
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900">Início</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          {role?.title} · {currentPersona.cooperative}
+          {currentPersona.branch && ` · ${currentPersona.branch}`}
+        </p>
       </motion.div>
 
       {currentPersona.role === 'colaborador' && <ColaboradorDashboard employee={employee} />}
@@ -91,7 +63,6 @@ export default function MeuGPSPage() {
 function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmployeeById> }) {
   if (!employee) return null;
   const readiness = employee.readinessScores[0];
-  const targetRole = readiness ? getRoleById(readiness.targetRoleId) : null;
   const aspiration = employee.aspirations[0];
   const aspirationRole = aspiration ? getRoleById(aspiration.targetRoleId) : null;
 
@@ -177,40 +148,28 @@ function ColaboradorDashboard({ employee }: { employee: ReturnType<typeof getEmp
         </motion.div>
       </div>
 
-      {/* Row 2: Theo Nudges + Checklist */}
+      {/* Row 2: Theo Nudges (TheoCard) + Checklist */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Theo Nudges (2 cols) */}
         <motion.div variants={item} className="md:col-span-2 space-y-3">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-6 h-6 rounded-md gradient-ai flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-white" />
-            </div>
-            <p className="text-xs font-semibold text-gray-500">Theo recomenda</p>
-          </div>
-          {[
-            {
-              text: 'Você ainda não preencheu a autoavaliação do ciclo atual. O prazo encerra em 5 dias.',
-              action: 'Preencher agora',
-              color: 'border-l-amber-400 bg-amber-50/30',
-            },
-            {
-              text: 'Há uma vivência prática de acompanhamento de Gerente de Agência disponível na Cooperativa Caminhos.',
-              action: 'Ver experiência',
-              color: 'border-l-verde-digital bg-verde-50/30',
-            },
-            {
-              text: 'Seu módulo de Liderança Essencial está parado há 2 semanas. Retomar pode acelerar sua prontidão.',
-              action: 'Retomar trilha',
-              color: 'border-l-purple-400 bg-purple-50/30',
-            },
-          ].map((nudge, i) => (
-            <div key={i} className={`card p-4 border-l-4 ${nudge.color}`}>
-              <p className="text-sm text-gray-700">{nudge.text}</p>
-              <button className="text-xs font-semibold text-verde-digital mt-2 hover:underline">
-                {nudge.action} →
-              </button>
-            </div>
-          ))}
+          <TheoCard
+            title="Autoavaliação pendente"
+            description="Você ainda não preencheu a autoavaliação do ciclo atual. O prazo encerra em 5 dias."
+            cta="Preencher agora"
+            ctaHref="/avaliacao"
+          />
+          <TheoCard
+            title="Vivência prática disponível"
+            description="Há uma experiência de acompanhamento de Gerente de Agência disponível na Cooperativa Caminhos."
+            cta="Ver experiência"
+            ctaHref="/experiencias"
+          />
+          <TheoCard
+            title="Retomar trilha de desenvolvimento"
+            description="Seu módulo de Liderança Essencial está parado há 2 semanas. Retomar pode acelerar sua prontidão."
+            cta="Retomar trilha"
+            ctaHref="/desenvolvimento"
+          />
         </motion.div>
 
         {/* Checklist semanal */}
@@ -277,15 +236,17 @@ function LiderDashboard({ employee }: { employee: ReturnType<typeof getEmployeeB
           <p className="text-lg font-bold text-gray-900">{aspirationRole?.title || 'Gerente Regional'}</p>
           <p className="text-xs text-gray-500 mt-1">Horizonte: {aspiration?.timeframe || '3-5 anos'}</p>
 
-          <div className="mt-3 space-y-1.5">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-3 h-3 text-purple-500" />
-              <p className="text-xs text-gray-600">Atualizar seu PDI do trimestre</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-3 h-3 text-verde-digital" />
-              <p className="text-xs text-gray-600">Programa Líderes com vagas abertas</p>
-            </div>
+          <div className="mt-3 space-y-2">
+            <TheoCard
+              variant="compact"
+              title="Atualizar seu PDI do trimestre"
+              description="Seu plano de desenvolvimento precisa de revisão."
+            />
+            <TheoCard
+              variant="compact"
+              title="Programa Líderes com vagas"
+              description="Vagas abertas no programa de líderes seniores."
+            />
           </div>
         </motion.div>
 
@@ -344,20 +305,16 @@ function LiderDashboard({ employee }: { employee: ReturnType<typeof getEmployeeB
 
       {/* Theo Nudges Líder */}
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {[
-          { text: 'Juliana Pereira não teve conversa de carreira nos últimos 3 meses', action: 'Agendar conversa', color: 'border-l-amber-400' },
-          { text: 'André Moreira concluiu a trilha de Crédito Rural Avançado', action: 'Dar reconhecimento', color: 'border-l-verde-digital' },
-        ].map((nudge, i) => (
-          <div key={i} className={`card p-4 border-l-4 ${nudge.color}`}>
-            <div className="flex items-start gap-2">
-              <Sparkles className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm text-gray-700">{nudge.text}</p>
-                <button className="text-xs font-semibold text-verde-digital mt-2 hover:underline">{nudge.action} →</button>
-              </div>
-            </div>
-          </div>
-        ))}
+        <TheoCard
+          title="Conversa de carreira pendente"
+          description="Juliana Pereira não teve conversa de carreira nos últimos 3 meses."
+          cta="Agendar conversa"
+        />
+        <TheoCard
+          title="Reconhecimento para André"
+          description="André Moreira concluiu a trilha de Crédito Rural Avançado."
+          cta="Dar reconhecimento"
+        />
       </motion.div>
     </motion.div>
   );
@@ -388,27 +345,22 @@ function PCAnalistaDashboard({ employee }: { employee: ReturnType<typeof getEmpl
 
       {/* Theo Nudges P&C */}
       <motion.div variants={item} className="space-y-3">
-        <div className="flex items-center gap-2 mb-1">
-          <div className="w-6 h-6 rounded-md gradient-ai flex items-center justify-center">
-            <Sparkles className="w-3 h-3 text-white" />
-          </div>
-          <p className="text-xs font-semibold text-gray-500">Theo recomenda</p>
-        </div>
-        {[
-          { text: '5 PDIs sem revisão há mais de 90 dias. Considere notificar os líderes responsáveis.', action: 'Gerar lista' },
-          { text: '12 colaboradores completarão 3 anos no grade este trimestre. Avaliar janela de movimentação.', action: 'Ver colaboradores' },
-          { text: 'Comitê de Carreira da Agência Ipê em 7 dias. 2 fichas de preparação pendentes.', action: 'Preparar comitê' },
-        ].map((nudge, i) => (
-          <div key={i} className="card p-4 border-l-4 border-l-purple-300 bg-purple-50/20">
-            <div className="flex items-start gap-2">
-              <Sparkles className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm text-gray-700">{nudge.text}</p>
-                <button className="text-xs font-semibold text-purple-600 mt-2 hover:underline">{nudge.action} →</button>
-              </div>
-            </div>
-          </div>
-        ))}
+        <TheoCard
+          title="PDIs sem revisão"
+          description="5 PDIs sem revisão há mais de 90 dias. Considere notificar os líderes responsáveis."
+          cta="Gerar lista"
+        />
+        <TheoCard
+          title="Janela de movimentação"
+          description="12 colaboradores completarão 3 anos no grade este trimestre. Avaliar janela de movimentação."
+          cta="Ver colaboradores"
+        />
+        <TheoCard
+          title="Comitê de Carreira próximo"
+          description="Comitê de Carreira da Agência Ipê em 7 dias. 2 fichas de preparação pendentes."
+          cta="Preparar comitê"
+          ctaHref="/comite-carreira"
+        />
       </motion.div>
 
       {/* Ações Rápidas */}

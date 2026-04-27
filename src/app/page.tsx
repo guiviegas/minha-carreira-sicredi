@@ -70,7 +70,7 @@ export default function HomePage() {
             </div>
             <p className="text-base md:text-lg text-white/70 max-w-2xl leading-relaxed font-medium">
               Este é um protótipo de como seria visualizar a interface integrada de gestão de carreira.
-              Escolha uma das personas abaixo para navegar pela plataforma a partir da visão de cada perfil profissional.
+              Escolha uma das personas abaixo para navegar pela interface a partir da visão de cada perfil profissional.
             </p>
           </motion.div>
         </div>

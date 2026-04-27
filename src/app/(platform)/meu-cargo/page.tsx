@@ -171,46 +171,24 @@ export default function MeuCargoPage() {
         <p className="text-sm text-gray-600 leading-relaxed">{role.dayInLife}</p>
       </motion.div>
 
-      {/* Movimentações Reais — De onde vieram + Para onde vão */}
-      {(origensReais.length > 0 || destinosReais.length > 0) && (
-        <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Origens */}
-          {origensReais.length > 0 && (
-            <div className="card p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-4 h-4 text-blue-500" />
-                <p className="text-sm font-semibold text-gray-800">De onde vêm os profissionais</p>
-              </div>
-              <div className="space-y-2">
-                {origensReais.map((m, i) => (
-                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-50 last:border-0">
-                    <span className="text-xs text-gray-700">{m.cargoAnterior}</span>
-                    <span className="text-xs font-semibold text-blue-600">{m.qtdColaboradores.toLocaleString('pt-BR')}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Destinos */}
-          {destinosReais.length > 0 && (
-            <div className="card p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <ArrowRight className="w-4 h-4 text-verde-digital" />
-                <p className="text-sm font-semibold text-gray-800">Para onde vão os profissionais</p>
-              </div>
-              <div className="space-y-2">
-                {destinosReais.map((m, i) => (
-                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-50 last:border-0">
-                    <span className="text-xs text-gray-700">{m.cargoAtual}</span>
-                    <span className="text-xs font-semibold text-verde-digital">{m.qtdColaboradores.toLocaleString('pt-BR')}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </motion.div>
-      )}
+      {/* Tempo e contexto do cargo */}
+      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="card p-5 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Tempo médio no cargo</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">2,4 anos</p>
+          <p className="text-xs text-gray-500 mt-1">Média do sistema</p>
+        </div>
+        <div className="card p-5 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Seu tempo no cargo</p>
+          <p className="text-2xl font-bold text-verde-digital mt-1">{employee.tenure > 0 ? `${employee.tenure} anos` : `${employee.tenureMonths || 0} meses`}</p>
+          <p className="text-xs text-gray-500 mt-1">Desde seu ingresso</p>
+        </div>
+        <div className="card p-5 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Nível / Grade</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">{role.level}</p>
+          <p className="text-xs text-gray-500 mt-1">de 3 faixas salariais</p>
+        </div>
+      </motion.div>
 
       {/* Skills Requirements Chart */}
       <motion.div variants={item} className="card p-5">

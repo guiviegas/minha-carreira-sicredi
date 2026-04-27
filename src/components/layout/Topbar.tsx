@@ -79,15 +79,6 @@ export default function Topbar() {
 
       {/* Right — Actions */}
       <div className="flex items-center gap-2">
-        {/* Gupy Link */}
-        <a
-          href={GUPY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden sm:flex items-center gap-1 text-[11px] font-medium text-neutral-400 hover:text-verde-digital transition-colors px-2 py-1 rounded"
-        >
-          Vagas Gupy <ExternalLink className="w-3 h-3" />
-        </a>
 
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
