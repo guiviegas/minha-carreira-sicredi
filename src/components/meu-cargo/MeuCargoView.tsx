@@ -1,67 +1,57 @@
 'use client';
 
 import { Role } from '@/types';
-import { getRoleById } from '@/data/roles';
 import { getPathsFromRole } from '@/data/career-paths';
+import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
+import { competenciasSicredi } from '@/data/competencias-sicredi';
 import { motion } from 'framer-motion';
 import {
   Briefcase,
   GraduationCap,
   Award,
-  Clock,
-  Users,
   ChevronRight,
-  BookOpen,
   Target,
   Star,
   ArrowUpRight,
-  BarChart3,
   Layers,
   ArrowLeft,
+  ListChecks,
+  Sparkles,
+  Wrench,
+  Heart,
+  Languages,
+  FileBadge,
+  Info,
 } from 'lucide-react';
 
-const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
+const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
 interface Props {
   role: Role;
-  /** Quando é o cargo da pessoa logada, mostra "Meu Cargo"; caso contrário, "Descrição do cargo" + breadcrumb. */
   isOwn: boolean;
-  /** Cargo aspirado (vindo da pessoa logada) — usado para mostrar bloco "Próximo passo". Apenas quando isOwn. */
   cargoAspirado?: Role | null;
-  /** Quando não é cargo próprio, mostra link "Voltar para o GPS" */
   backHref?: string;
   backLabel?: string;
 }
 
 /**
- * Componente que renderiza a descrição rica de um cargo.
- * Reaproveitado em /meu-cargo (cargo do usuário) e /meu-cargo/[roleId] (qualquer cargo).
+ * Renderiza o cargo conforme a estrutura oficial da Matriz de Atribuições do Sicredi:
+ *   Função → Responsabilidades Essenciais (+ Atividades) → Requisitos → Diferenciais → Preparo Técnico → Preparo Comportamental.
+ *
+ * Usado em /meu-cargo (cargo da pessoa logada) e /meu-cargo/[roleId] (qualquer cargo).
  */
 export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, backLabel }: Props) {
-  const formacao = role.formacao || 'Ensino Superior';
-  const experiencia = role.experiencia || '-';
-  const certificacoes = role.certificacoes || '-';
-  const areasFormacao = role.areasFormacao || '-';
-  const habilidades = role.habilidades || role.requiredSkills.map((s) => s.skillName);
-  const objetivoFamilia = role.objetivoFamilia || role.description;
-  const nivelMaturidade = role.nivelMaturidade || 'Em desenvolvimento';
-  const diretoria = role.diretoria || '-';
-  const estrutura = role.estrutura || '-';
-
+  const atrib = getAtribuicoesByRoleId(role.id);
   const careerPathsFromHere = getPathsFromRole(role.id);
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-5xl">
-      {/* Header */}
+      {/* Back link e title */}
       <motion.div variants={item}>
         {backHref && (
-          <a
-            href={backHref}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-700 mb-2"
-          >
-            <ArrowLeft className="w-3 h-3" />
-            {backLabel || 'Voltar'}
+          <a href={backHref} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-700 mb-2">
+            <ArrowLeft className="w-3 h-3" /> {backLabel || 'Voltar'}
           </a>
         )}
         <h1 className="text-2xl font-bold text-gray-900">
@@ -69,164 +59,143 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
         </h1>
         <p className="text-sm text-gray-500 mt-1">
           {isOwn
-            ? 'Suas atribuições, requisitos e o que o sistema espera de você.'
-            : `Detalhe completo de ${role.title}.`}
+            ? 'Suas atribuições, requisitos e o preparo esperado, conforme a Matriz oficial do Sicredi.'
+            : `Estrutura oficial completa de ${role.title}.`}
         </p>
       </motion.div>
 
-      {/* Role Card */}
+      {/* Função (header com fonte) */}
       <motion.div variants={item} className="card p-6 border-l-4" style={{ borderLeftColor: role.color }}>
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-              {isOwn ? 'Cargo Atual' : 'Cargo'}
-            </p>
-            <h2 className="text-xl font-bold text-gray-900 mt-1">{role.title}</h2>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Função</p>
+            <h2 className="text-xl font-bold text-gray-900">
+              {atrib?.tituloOficial || role.title}
+            </h2>
             <p className="text-sm text-gray-600 mt-1">
-              {role.family.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())} · Nível{' '}
-              {role.level}
+              {role.family.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())} · Nível {role.level}
             </p>
+            <div className="flex flex-wrap items-center gap-3 mt-3">
+              <span className="text-xs text-gray-400 inline-flex items-center gap-1">
+                <Layers className="w-3 h-3" />
+                {atrib ? 'Diretoria de Negócios' : (role.diretoria || '-')}
+              </span>
+              <span className="text-xs text-gray-400">📍 {role.estrutura || 'Agência'}</span>
+              {atrib && (
+                <FonteBadge fonte={atrib.fonte} />
+              )}
+            </div>
           </div>
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ backgroundColor: `${role.color}15` }}
-          >
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${role.color}15` }}>
             <Briefcase className="w-6 h-6" style={{ color: role.color }} />
           </div>
         </div>
-        <p className="text-sm text-gray-600 mt-4 leading-relaxed">{role.description}</p>
-        <div className="flex gap-4 mt-3">
-          <span className="text-xs text-gray-400">
-            <Layers className="w-3 h-3 inline mr-1" />
-            {diretoria}
-          </span>
-          <span className="text-xs text-gray-400">📍 {estrutura}</span>
-        </div>
       </motion.div>
 
-      {/* Objetivo da Família */}
-      <motion.div variants={item} className="card p-5 bg-verde-50/50 border-verde-100">
-        <div className="flex items-center gap-2 mb-2">
-          <Target className="w-4 h-4 text-verde-digital" />
-          <p className="text-xs font-semibold uppercase tracking-wider text-verde-digital">
-            Objetivo da Família
-          </p>
-        </div>
-        <p className="text-sm text-gray-700 leading-relaxed">{objetivoFamilia}</p>
-      </motion.div>
-
-      {/* Requirements Grid */}
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-blue-600" />
+      {/* Objetivo da Família + Nível de Maturidade */}
+      {atrib && (
+        <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="card p-5 bg-verde-50/50 border-verde-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Target className="w-4 h-4 text-verde-digital" />
+              <p className="text-xs font-semibold uppercase tracking-wider text-verde-digital">Objetivo da Família</p>
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Formação</p>
-              <p className="text-sm font-semibold text-gray-800">{formacao}</p>
-            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">{atrib.objetivoFamilia}</p>
           </div>
-          <p className="text-xs text-gray-500">{areasFormacao}</p>
-        </div>
-
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
-              <Clock className="w-4 h-4 text-amber-600" />
+          <div className="card p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <Info className="w-4 h-4 text-blue-500" />
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Nível de Maturidade</p>
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Experiência
-              </p>
-              <p className="text-sm font-semibold text-gray-800">{experiencia}</p>
-            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">{atrib.nivelMaturidade}</p>
           </div>
-          <p className="text-xs text-gray-500">Tempo médio na função: {role.avgTenureMonths} meses</p>
-        </div>
+        </motion.div>
+      )}
 
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
-              <Award className="w-4 h-4 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Certificações
-              </p>
-              <p className="text-sm font-semibold text-gray-800">{certificacoes}</p>
-            </div>
+      {/* Responsabilidades Essenciais */}
+      {atrib && atrib.responsabilidadesEssenciais.length > 0 && (
+        <motion.div variants={item} className="card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 flex items-center gap-2">
+              <ListChecks className="w-4 h-4 text-verde-digital" />
+              Responsabilidades essenciais
+              <span className="text-[10px] font-semibold text-gray-400 normal-case tracking-normal">
+                ({atrib.responsabilidadesEssenciais.length})
+              </span>
+            </h3>
           </div>
-        </div>
-
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
-              <Users className="w-4 h-4 text-green-600" />
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-              Nível de Maturidade
-            </p>
-          </div>
-          <p className="text-xs text-gray-600 leading-relaxed">{nivelMaturidade}</p>
-        </div>
-      </motion.div>
-
-      {/* Habilidades Desejáveis */}
-      <motion.div variants={item} className="card p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Star className="w-4 h-4 text-amber-500" />
-          <p className="text-sm font-semibold text-gray-800">Habilidades e Conhecimentos Desejáveis</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {habilidades.map((hab) => (
-            <span
-              key={hab}
-              className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
-            >
-              {hab}
-            </span>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Dia a Dia */}
-      <motion.div variants={item} className="card p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <BookOpen className="w-4 h-4 text-blue-500" />
-          <p className="text-sm font-semibold text-gray-800">Um Dia na Vida</p>
-        </div>
-        <p className="text-sm text-gray-600 leading-relaxed">{role.dayInLife}</p>
-      </motion.div>
-
-      {/* Competências Requeridas */}
-      <motion.div variants={item} className="card p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <BarChart3 className="w-4 h-4 text-indigo-500" />
-          <p className="text-sm font-semibold text-gray-800">Competências Requeridas</p>
-        </div>
-        <div className="space-y-3">
-          {role.requiredSkills.map((skill) => (
-            <div key={skill.skillId}>
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-gray-600">{skill.skillName}</span>
-                <span className="text-xs font-semibold text-gray-500">{skill.minLevel}%</span>
-              </div>
-              <div className="w-full bg-gray-100 rounded-full h-2">
-                <motion.div
-                  className="h-2 rounded-full"
+          <div className="space-y-3">
+            {atrib.responsabilidadesEssenciais.map((r, i) => (
+              <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[11px] font-bold shrink-0"
                   style={{ backgroundColor: role.color }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${skill.minLevel}%` }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                />
+                >
+                  {i + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-800">{r.titulo}</p>
+                  <p className="text-xs text-gray-600 mt-1 leading-relaxed">{r.descricao}</p>
+                  {r.atividades && r.atividades.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      {r.atividades.map((a, j) => (
+                        <p key={j} className="text-[11px] text-gray-500 pl-3 border-l-2 border-gray-200">
+                          {i + 1}.{j + 1} · {a}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
 
-      {/* Próximo passo (apenas quando é cargo próprio) */}
+      {/* Requisitos */}
+      {atrib && (
+        <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <RequisitosCard atrib={atrib} />
+          <DiferenciaisCard atrib={atrib} />
+        </motion.div>
+      )}
+
+      {/* Preparo: Técnico + Comportamental */}
+      {atrib && (
+        <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <PreparoCard
+            titulo="Preparo Técnico"
+            icon={Wrench}
+            color="#0EA5E9"
+            items={atrib.preparoTecnico}
+          />
+          <PreparoCard
+            titulo="Preparo Comportamental"
+            icon={Heart}
+            color="#E11D48"
+            items={atrib.preparoComportamental}
+          />
+        </motion.div>
+      )}
+
+      {/* Fallback se não há atribuições */}
+      {!atrib && (
+        <motion.div variants={item} className="card p-5">
+          <div className="flex items-start gap-3">
+            <Info className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-gray-800">Estrutura oficial em construção</p>
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                As atribuições deste cargo (Responsabilidades, Requisitos, Diferenciais e Preparo) ainda
+                não foram migradas para a Matriz oficial. Por enquanto, você vê apenas a descrição básica.
+              </p>
+              <p className="text-sm text-gray-600 mt-3 leading-relaxed">{role.description}</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Próximo cargo natural (apenas se for cargo da pessoa) */}
       {isOwn && cargoAspirado && (
         <motion.div
           variants={item}
@@ -270,12 +239,147 @@ export default function MeuCargoView({ role, isOwn, cargoAspirado, backHref, bac
                 href="/mapa-carreira"
                 className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-verde-digital hover:underline"
               >
-                Abrir Plano de rota no GPS <ArrowUpRight className="w-3 h-3" />
+                Abrir Plano de Rota no GPS <ArrowUpRight className="w-3 h-3" />
               </a>
             </div>
           )}
         </motion.div>
       )}
     </motion.div>
+  );
+}
+
+function FonteBadge({ fonte }: { fonte: 'planilha' | 'inferido' }) {
+  if (fonte === 'planilha') {
+    return (
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
+        <FileBadge className="w-2.5 h-2.5" />
+        Fonte oficial · Matriz
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+      <Sparkles className="w-2.5 h-2.5" />
+      Inferido · baseado em mercado
+    </span>
+  );
+}
+
+function RequisitosCard({ atrib }: { atrib: NonNullable<ReturnType<typeof getAtribuicoesByRoleId>> }) {
+  const r = atrib.requisitos;
+  return (
+    <div className="card p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <GraduationCap className="w-4 h-4 text-blue-600" />
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Requisitos</p>
+      </div>
+      <dl className="space-y-2.5 text-xs">
+        {r.formacao && (
+          <div>
+            <dt className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Formação</dt>
+            <dd className="text-gray-700 mt-0.5">{r.formacao}</dd>
+          </div>
+        )}
+        {r.experiencia && (
+          <div>
+            <dt className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Experiência</dt>
+            <dd className="text-gray-700 mt-0.5">{r.experiencia}</dd>
+          </div>
+        )}
+        {r.areasFormacao && (
+          <div>
+            <dt className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Áreas preferenciais</dt>
+            <dd className="text-gray-700 mt-0.5">{r.areasFormacao}</dd>
+          </div>
+        )}
+        {r.idiomas && (
+          <div className="flex items-start gap-2">
+            <Languages className="w-3 h-3 text-gray-400 mt-0.5 shrink-0" />
+            <div>
+              <dt className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Idiomas</dt>
+              <dd className="text-gray-700 mt-0.5">{r.idiomas}</dd>
+            </div>
+          </div>
+        )}
+        {r.certificacoes && r.certificacoes.length > 0 && (
+          <div>
+            <dt className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Certificações</dt>
+            <dd className="flex flex-wrap gap-1 mt-1">
+              {r.certificacoes.map((c) => (
+                <span key={c} className="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">
+                  {c}
+                </span>
+              ))}
+            </dd>
+          </div>
+        )}
+        {r.cbo && (
+          <div>
+            <dt className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">CBO</dt>
+            <dd className="text-gray-700 mt-0.5">{r.cbo}</dd>
+          </div>
+        )}
+      </dl>
+    </div>
+  );
+}
+
+function DiferenciaisCard({ atrib }: { atrib: NonNullable<ReturnType<typeof getAtribuicoesByRoleId>> }) {
+  return (
+    <div className="card p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <Award className="w-4 h-4 text-purple-600" />
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Diferenciais</p>
+      </div>
+      {atrib.diferenciais.length === 0 ? (
+        <p className="text-xs text-gray-400 italic">Nenhum diferencial específico cadastrado.</p>
+      ) : (
+        <ul className="space-y-2">
+          {atrib.diferenciais.map((d, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <Star className="w-3 h-3 text-purple-400 mt-1 shrink-0" />
+              <span className="text-xs text-gray-700 leading-relaxed">{d}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function PreparoCard({
+  titulo,
+  icon: Icon,
+  color,
+  items,
+}: {
+  titulo: string;
+  icon: typeof Wrench;
+  color: string;
+  items: string[];
+}) {
+  return (
+    <div className="card p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <Icon className="w-4 h-4" style={{ color }} />
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{titulo}</p>
+      </div>
+      {items.length === 0 ? (
+        <p className="text-xs text-gray-400 italic">Em construção.</p>
+      ) : (
+        <div className="flex flex-wrap gap-1.5">
+          {items.map((s, i) => (
+            <span
+              key={i}
+              className="text-[11px] px-2.5 py-1 rounded-full"
+              style={{ backgroundColor: `${color}10`, color: color }}
+            >
+              {s}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

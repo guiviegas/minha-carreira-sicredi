@@ -5,6 +5,7 @@ import { usePersona } from '@/contexts/PersonaContext';
 import { getPersonaHub } from '@/data/persona-hub';
 import { roles, getRoleById } from '@/data/roles';
 import { careerPaths, getPathsFromRole } from '@/data/career-paths';
+import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import { motion, AnimatePresence } from 'framer-motion';
 import OndeEstouView from '@/components/gps/OndeEstouView';
 import PossibilidadesView from '@/components/gps/PossibilidadesView';
@@ -16,16 +17,16 @@ import {
   Target,
   ArrowRight,
   ArrowLeftRight,
-  Lock,
   ChevronRight,
   X,
   Briefcase,
-  Star,
-  MapPin,
   Coins,
   Users,
-  Shield,
   ExternalLink,
+  ListChecks,
+  Wrench,
+  FileBadge,
+  Sparkles,
 } from 'lucide-react';
 
 type GpsTab = 'onde_estou' | 'possibilidades' | 'mapa_visual' | 'plano_rota';
@@ -487,35 +488,112 @@ function RoleDetailPanel({
           </div>
         </div>
 
-        {role.dayInLife && (
-          <div className="px-5 py-4 border-t border-gray-50">
-            <div className="flex items-center gap-1.5 mb-2">
-              <Briefcase className="w-3 h-3 text-gray-400" />
-              <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Um dia na vida</span>
-            </div>
-            <p className="text-[12px] text-gray-600 leading-relaxed">{role.dayInLife}</p>
-          </div>
-        )}
+        {(() => {
+          const atrib = getAtribuicoesByRoleId(role.id);
+          if (!atrib) return null;
 
-        <div className="px-5 py-4 border-t border-gray-50">
-          <div className="flex items-center gap-1.5 mb-3">
-            <Star className="w-3 h-3 text-gray-400" />
-            <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Competências-chave</span>
-          </div>
-          <div className="space-y-2.5">
-            {role.requiredSkills.map((skill) => (
-              <div key={skill.skillId}>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="text-gray-600 font-medium">{skill.skillName}</span>
-                  <span className="font-bold text-gray-700">{skill.minLevel}%</span>
-                </div>
-                <div className="h-[5px] bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${skill.minLevel}%`, backgroundColor: role.color }} />
-                </div>
+          return (
+            <>
+              {/* Fonte */}
+              <div className="px-5 pt-4 pb-2">
+                {atrib.fonte === 'planilha' ? (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
+                    <FileBadge className="w-2.5 h-2.5" />
+                    Matriz oficial
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                    <Sparkles className="w-2.5 h-2.5" />
+                    Inferido
+                  </span>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
+
+              {/* Responsabilidades essenciais (top 3) */}
+              <div className="px-5 py-3 border-t border-gray-50">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <ListChecks className="w-3 h-3 text-gray-400" />
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                    Responsabilidades essenciais ({atrib.responsabilidadesEssenciais.length})
+                  </span>
+                </div>
+                <ul className="space-y-1.5">
+                  {atrib.responsabilidadesEssenciais.slice(0, 4).map((r, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span
+                        className="w-4 h-4 rounded-md flex items-center justify-center text-[9px] font-bold text-white shrink-0 mt-0.5"
+                        style={{ backgroundColor: role.color }}
+                      >
+                        {i + 1}
+                      </span>
+                      <span className="text-[11px] text-gray-700 leading-snug">{r.titulo}</span>
+                    </li>
+                  ))}
+                  {atrib.responsabilidadesEssenciais.length > 4 && (
+                    <li className="text-[10px] text-gray-400 italic pl-6">
+                      + {atrib.responsabilidadesEssenciais.length - 4} responsabilidades…
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              {/* Preparo Técnico (chips) */}
+              {atrib.preparoTecnico.length > 0 && (
+                <div className="px-5 py-3 border-t border-gray-50">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Wrench className="w-3 h-3 text-gray-400" />
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                      Preparo Técnico
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {atrib.preparoTecnico.slice(0, 8).map((s, i) => (
+                      <span
+                        key={i}
+                        className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-700"
+                      >
+                        {s.length > 32 ? s.substring(0, 30) + '…' : s}
+                      </span>
+                    ))}
+                    {atrib.preparoTecnico.length > 8 && (
+                      <span className="text-[10px] text-gray-400 italic">
+                        +{atrib.preparoTecnico.length - 8}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Requisitos rápidos */}
+              <div className="px-5 py-3 border-t border-gray-50">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Briefcase className="w-3 h-3 text-gray-400" />
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Requisitos</span>
+                </div>
+                <dl className="space-y-1 text-[11px]">
+                  {atrib.requisitos.formacao && (
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-gray-400">Formação</dt>
+                      <dd className="text-gray-700 text-right truncate">{atrib.requisitos.formacao}</dd>
+                    </div>
+                  )}
+                  {atrib.requisitos.experiencia && (
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-gray-400">Experiência</dt>
+                      <dd className="text-gray-700 text-right truncate">{atrib.requisitos.experiencia}</dd>
+                    </div>
+                  )}
+                  {atrib.requisitos.certificacoes.length > 0 && (
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-gray-400">Cert.</dt>
+                      <dd className="text-gray-700 text-right">{atrib.requisitos.certificacoes.join(', ')}</dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
+            </>
+          );
+        })()}
 
         {outPaths.length > 0 && (
           <div className="px-5 py-4 border-t border-gray-50">

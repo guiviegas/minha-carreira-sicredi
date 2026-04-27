@@ -16,13 +16,17 @@ import {
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
 
-// Régua oficial Sicredi de 4 pontos
-const REGUA_4_PONTOS = [
-  { id: 1, hashtag: '#precisaevoluir', label: 'Precisa Evoluir', faixa: '0,80 a 0,89', cor: '#EF4444', bgCor: '#FEE2E2', desc: 'Resultado abaixo do esperado. Necessita de plano de ação imediato.' },
-  { id: 2, hashtag: '#quaselá', label: 'Quase Lá', faixa: '0,90 a 0,99', cor: '#F59E0B', bgCor: '#FEF3C7', desc: 'Resultado próximo, mas ainda não atingiu plenamente as expectativas.' },
-  { id: 3, hashtag: '#mandoubem', label: 'Mandou Bem', faixa: '1,00 a 1,10', cor: '#3FA110', bgCor: '#DCFCE7', desc: 'Atingiu as expectativas de forma consistente.' },
-  { id: 4, hashtag: '#arrasou', label: 'Arrasou', faixa: '1,11 a 1,20', cor: '#16A34A', bgCor: '#BBF7D0', desc: 'Superou as expectativas de forma expressiva.' },
-];
+// Régua oficial vinda de elofy-config.ts (cores e faixas numéricas oficiais Sicredi)
+// Substitui constante local que tinha cores e faixas erradas
+const REGUA_4_PONTOS = reguaPerformance.map((r) => ({
+  id: r.nivel,
+  hashtag: r.hashtag,
+  label: r.nome,
+  faixa: `${r.notaMinima.toFixed(2).replace('.', ',')} a ${r.notaMaxima.toFixed(2).replace('.', ',')}`,
+  cor: r.cor,
+  bgCor: r.bgCor,
+  desc: r.descricao,
+}));
 
 interface MetaNegocio {
   titulo: string;
