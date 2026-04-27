@@ -115,10 +115,10 @@ export const navigationSections: NavSection[] = [
         badge: 1,
       },
       {
-        id: 'avaliacao-time',
+        id: 'gestao-desempenho',
         label: 'Gestão de Desempenho',
         icon: 'clipboard-list',
-        href: '/avaliacao-time',
+        href: '/gestao-desempenho',
         roles: ['lider'],
       },
       {
