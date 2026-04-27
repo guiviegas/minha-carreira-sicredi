@@ -1,5 +1,5 @@
 // ============================================================
-// DEVELOPMENT TRACKS — Structured career transition tracks
+// DEVELOPMENT TRACKS: Structured career transition tracks
 // ============================================================
 
 export interface TrackCourse {
@@ -35,7 +35,7 @@ export interface DevelopmentTrack {
 }
 
 // ============================================================
-// TRACK DATA — Business-focused career tracks
+// TRACK DATA: Business-focused career tracks
 // ============================================================
 
 export const developmentTracks: DevelopmentTrack[] = [
@@ -59,16 +59,16 @@ export const developmentTracks: DevelopmentTrack[] = [
         courses: [
           { id: 'tc-1a', title: 'Prospecção Ativa e Captação', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-1b', title: 'Técnicas de Abordagem Consultiva', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-1c', title: 'Perfil do Associado PF — Necessidades e Ciclo de Vida', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-1c', title: 'Perfil do Associado PF: Necessidades e Ciclo de Vida', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
       {
         id: 'p2', name: 'Certificação CPA-10', description: 'Preparatório completo para certificação ANBIMA',
         progress: 0,
         courses: [
-          { id: 'tc-2a', title: 'Módulo 1 — Sistema Financeiro Nacional', type: 'video', duration: '5h', provider: 'Preparatório ANBIMA', completed: false },
-          { id: 'tc-2b', title: 'Módulo 2 — Ética e Regulamentação', type: 'video', duration: '4h', provider: 'Preparatório ANBIMA', completed: false },
-          { id: 'tc-2c', title: 'Módulo 3 — Produtos de Investimento', type: 'video', duration: '6h', provider: 'Preparatório ANBIMA', completed: false },
+          { id: 'tc-2a', title: 'Módulo 1: Sistema Financeiro Nacional', type: 'video', duration: '5h', provider: 'Preparatório ANBIMA', completed: false },
+          { id: 'tc-2b', title: 'Módulo 2: Ética e Regulamentação', type: 'video', duration: '4h', provider: 'Preparatório ANBIMA', completed: false },
+          { id: 'tc-2c', title: 'Módulo 3: Produtos de Investimento', type: 'video', duration: '6h', provider: 'Preparatório ANBIMA', completed: false },
           { id: 'tc-2d', title: 'Simulados CPA-10', type: 'certification', duration: '5h', provider: 'ANBIMA', completed: false },
         ],
       },
@@ -77,7 +77,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         progress: 0,
         courses: [
           { id: 'tc-3a', title: 'Organização de Agenda e Rotina do GN', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-3b', title: 'Cross-selling — Ofertas Integradas', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-3b', title: 'Cross-selling: Ofertas Integradas', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-3c', title: 'Indicadores de Carteira PF', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
@@ -86,7 +86,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         progress: 0,
         courses: [
           { id: 'tc-4a', title: 'Essência Cooperativista na Prática', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-4b', title: 'Entender para Atender — Escuta Ativa', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-4b', title: 'Entender para Atender: Escuta Ativa', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
     ],
@@ -110,7 +110,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p1', name: 'Análise de Crédito PF', description: 'Avaliação de risco, spread e garantias',
         progress: 0,
         courses: [
-          { id: 'tc-5a', title: 'Análise de Risco PF — Score e Capacidade', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-5a', title: 'Análise de Risco PF: Score e Capacidade', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-5b', title: 'Spread, Precificação e Garantias', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-5c', title: 'Estudo de Caso: Crédito Consignado e Pessoal', type: 'practice', duration: '2h', provider: 'Sicredi Aprende', completed: false },
         ],
@@ -137,8 +137,8 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p4', name: 'Investimentos Intermediário', description: 'Fundos, previdência e renda fixa avançada',
         progress: 0,
         courses: [
-          { id: 'tc-8a', title: 'Fundos de Investimento — Classes e Estratégias', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-8b', title: 'Previdência — PGBL, VGBL e Planejamento', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-8a', title: 'Fundos de Investimento: Classes e Estratégias', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-8b', title: 'Previdência: PGBL, VGBL e Planejamento', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-8c', title: 'LCI, LCA, CDB e Debêntures', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
@@ -163,8 +163,8 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p1', name: 'Carteira Alta Renda', description: 'Segmentação premium e wealth planning',
         progress: 60,
         courses: [
-          { id: 'tc-9a', title: 'Segmentação Premium — Perfil e Necessidades', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: true },
-          { id: 'tc-9b', title: 'Wealth Planning — Planejamento Patrimonial', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: true },
+          { id: 'tc-9a', title: 'Segmentação Premium: Perfil e Necessidades', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: true },
+          { id: 'tc-9b', title: 'Wealth Planning: Planejamento Patrimonial', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: true },
           { id: 'tc-9c', title: 'Assessoria Consultiva para Alta Renda', type: 'mentoring', duration: '2h', provider: 'Programa S2S', completed: false },
         ],
       },
@@ -172,7 +172,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p2', name: 'Liderança Informal', description: 'Mentoria de pares e referência técnica',
         progress: 50,
         courses: [
-          { id: 'tc-10a', title: 'Mentoria de Pares — Como Ser Referência', type: 'mentoring', duration: '3h', provider: 'Programa S2S', completed: true },
+          { id: 'tc-10a', title: 'Mentoria de Pares: Como Ser Referência', type: 'mentoring', duration: '3h', provider: 'Programa S2S', completed: true },
           { id: 'tc-10b', title: 'Formação de Equipe Comercial', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
@@ -180,9 +180,9 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p3', name: 'Certificação CEA', description: 'Especialização em investimentos (opcional, diferencial)',
         progress: 0,
         courses: [
-          { id: 'tc-11a', title: 'CEA — Planejamento Financeiro', type: 'video', duration: '10h', provider: 'Preparatório ANBIMA', completed: false },
-          { id: 'tc-11b', title: 'CEA — Alocação de Ativos', type: 'video', duration: '10h', provider: 'Preparatório ANBIMA', completed: false },
-          { id: 'tc-11c', title: 'CEA — Simulados e Revisão', type: 'certification', duration: '10h', provider: 'ANBIMA', completed: false },
+          { id: 'tc-11a', title: 'CEA: Planejamento Financeiro', type: 'video', duration: '10h', provider: 'Preparatório ANBIMA', completed: false },
+          { id: 'tc-11b', title: 'CEA: Alocação de Ativos', type: 'video', duration: '10h', provider: 'Preparatório ANBIMA', completed: false },
+          { id: 'tc-11c', title: 'CEA: Simulados e Revisão', type: 'certification', duration: '10h', provider: 'ANBIMA', completed: false },
         ],
       },
       {
@@ -212,9 +212,9 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p1', name: 'Liderança de Pessoas', description: 'Feedback, 1:1 e desenvolvimento de equipe',
         progress: 30,
         courses: [
-          { id: 'tc-13a', title: 'Feedback SCII — Situação, Comportamento, Impacto', type: 'mentoring', duration: '4h', provider: 'Programa S2S', completed: true },
-          { id: 'tc-13b', title: '1:1 Eficaz — Estrutura e Prática', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-13c', title: 'PDI da Equipe — Como Desenvolver Pessoas', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-13a', title: 'Feedback SCII: Situação, Comportamento, Impacto', type: 'mentoring', duration: '4h', provider: 'Programa S2S', completed: true },
+          { id: 'tc-13b', title: '1:1 Eficaz: Estrutura e Prática', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-13c', title: 'PDI da Equipe: Como Desenvolver Pessoas', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-13d', title: 'Gestão de Conflitos e Diversidade', type: 'mentoring', duration: '2h', provider: 'Programa S2S', completed: false },
         ],
       },
@@ -222,8 +222,8 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p2', name: 'Gestão de Agência', description: 'P&L, indicadores e compliance',
         progress: 0,
         courses: [
-          { id: 'tc-14a', title: 'P&L da Agência — Receita, Custo e Margem', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-14b', title: 'Indicadores Operacionais — NPS, TMA, Produtividade', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-14a', title: 'P&L da Agência: Receita, Custo e Margem', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-14b', title: 'Indicadores Operacionais: NPS, TMA, Produtividade', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-14c', title: 'Compliance e Prevenção à Lavagem de Dinheiro', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
@@ -231,8 +231,8 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p3', name: 'Governança Cooperativa', description: 'Assembleia, conselho e papel do dirigente',
         progress: 0,
         courses: [
-          { id: 'tc-15a', title: 'Governança Cooperativa — Estrutura e Papéis', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-15b', title: 'Estatuto e Regimento — Direitos e Deveres', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-15a', title: 'Governança Cooperativa: Estrutura e Papéis', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-15b', title: 'Estatuto e Regimento: Direitos e Deveres', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-15c', title: 'Relação com Conselho e Dirigentes', type: 'mentoring', duration: '1h', provider: 'Programa S2S', completed: false },
         ],
       },
@@ -240,15 +240,15 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p4', name: 'Assessment de Prontidão', description: 'Simulação de gestão e painel avaliador',
         progress: 0,
         courses: [
-          { id: 'tc-16a', title: 'Business Case — Simulação de Gestão', type: 'assessment', duration: '4h', provider: 'Avaliação Interna', completed: false },
-          { id: 'tc-16b', title: 'Painel Avaliador — Apresentação e Feedback', type: 'assessment', duration: '4h', provider: 'Avaliação Interna', completed: false },
+          { id: 'tc-16a', title: 'Business Case: Simulação de Gestão', type: 'assessment', duration: '4h', provider: 'Avaliação Interna', completed: false },
+          { id: 'tc-16b', title: 'Painel Avaliador: Apresentação e Feedback', type: 'assessment', duration: '4h', provider: 'Avaliação Interna', completed: false },
         ],
       },
       {
         id: 'p5', name: 'Experiência Prática', description: 'Job shadow como GA em outra agência',
         progress: 0,
         courses: [
-          { id: 'tc-17a', title: 'Job Shadow — 1 mês como GA sombra', type: 'practice', duration: '160h', provider: 'Experiência Prática', completed: false },
+          { id: 'tc-17a', title: 'Job Shadow: 1 mês como GA sombra', type: 'practice', duration: '160h', provider: 'Experiência Prática', completed: false },
         ],
       },
     ],
@@ -271,7 +271,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         progress: 0,
         courses: [
           { id: 'tc-18a', title: 'Tipos Societários e Regime Tributário', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-18b', title: 'DRE e Balanço — Leitura para GN', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-18b', title: 'DRE e Balanço: Leitura para GN', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-18c', title: 'Fluxo de Caixa e Capital de Giro', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
@@ -281,14 +281,14 @@ export const developmentTracks: DevelopmentTrack[] = [
         courses: [
           { id: 'tc-19a', title: 'Capital de Giro e Desconto de Duplicatas', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-19b', title: 'FINAME e Operações Estruturadas', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-19c', title: 'Análise de Crédito PJ — Estudo de Caso', type: 'practice', duration: '4h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-19c', title: 'Análise de Crédito PJ: Estudo de Caso', type: 'practice', duration: '4h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
       {
         id: 'p3', name: 'Prospecção B2B', description: 'Segmentação setorial e networking',
         progress: 0,
         courses: [
-          { id: 'tc-20a', title: 'Segmentação Setorial — Indústria, Comércio, Serviço', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-20a', title: 'Segmentação Setorial: Indústria, Comércio, Serviço', type: 'video', duration: '2h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-20b', title: 'Networking e Cadeia Produtiva', type: 'interactive', duration: '2h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-20c', title: 'Estudo de Caso: Prospecção PJ Regional', type: 'practice', duration: '2h', provider: 'Sicredi Aprende', completed: false },
         ],
@@ -314,7 +314,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         courses: [
           { id: 'tc-21a', title: 'Cadeias Produtivas do Agronegócio Brasileiro', type: 'video', duration: '4h', provider: 'Sicredi Aprende', completed: false },
           { id: 'tc-21b', title: 'Ciclo Agrícola e Sazonalidade', type: 'video', duration: '3h', provider: 'Sicredi Aprende', completed: false },
-          { id: 'tc-21c', title: 'Perfil do Produtor Rural — Necessidades e Desafios', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
+          { id: 'tc-21c', title: 'Perfil do Produtor Rural: Necessidades e Desafios', type: 'interactive', duration: '3h', provider: 'Sicredi Aprende', completed: false },
         ],
       },
       {
@@ -330,7 +330,7 @@ export const developmentTracks: DevelopmentTrack[] = [
         id: 'p3', name: 'Vivência de Campo', description: 'Experiência prática com produtores',
         progress: 0,
         courses: [
-          { id: 'tc-23a', title: 'Visita Técnica — Propriedade Rural', type: 'practice', duration: '4h', provider: 'Experiência Prática', completed: false },
+          { id: 'tc-23a', title: 'Visita Técnica: Propriedade Rural', type: 'practice', duration: '4h', provider: 'Experiência Prática', completed: false },
           { id: 'tc-23b', title: 'Case: Estruturação de Operação AGRO Completa', type: 'practice', duration: '4h', provider: 'Sicredi Aprende', completed: false },
         ],
       },

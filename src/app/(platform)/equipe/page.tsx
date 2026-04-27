@@ -96,7 +96,7 @@ export default function EquipePage() {
               <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-red-800">
-                  Alerta crítico: {t.name} — risco de saída
+                  Alerta crítico: {t.name} · risco de saída
                 </p>
                 <p className="text-sm text-red-700 mt-0.5">
                   Probabilidade de saída <strong>{t.turnoverRisk!.probability}%</strong> em{' '}

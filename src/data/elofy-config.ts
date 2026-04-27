@@ -46,7 +46,7 @@ export const reguaPerformance: NivelPerformance[] = [
     nivel: 4,
     hashtag: '#arrasou',
     nome: '#arrasou',
-    descricao: 'Pratica o comportamento e, em alguns casos, vai além — referência para os colegas.',
+    descricao: 'Pratica o comportamento e, em alguns casos, vai além, sendo referência para os colegas.',
     cor: '#2563EB',
     bgCor: '#EFF6FF',
     icone: 'star',

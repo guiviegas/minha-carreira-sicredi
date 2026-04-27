@@ -47,7 +47,7 @@ export const competenciasSicredi: CompetenciaSicredi[] = [
     id: 'vai-la-e-faz',
     nome: 'Vai lá e Faz',
     descricao:
-      'Age com proatividade e responsabilidade, buscando resultados com autonomia e senso de dono. Não espera ser mandado — identifica oportunidades e atua.',
+      'Age com proatividade e responsabilidade, buscando resultados com autonomia e senso de dono. Não espera ser mandado: identifica oportunidades e atua.',
     indicadores: [
       'Toma iniciativa diante de desafios e oportunidades',
       'Assume responsabilidade pelos resultados e entregas',

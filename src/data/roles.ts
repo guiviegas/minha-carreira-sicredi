@@ -469,7 +469,7 @@ export const roles: Role[] = [
   // ===== ENTIDADES DO SISTEMA =====
   {
     id: 'role-analista-central',
-    title: 'Analista — Central Regional',
+    title: 'Analista da Central Regional',
     shortTitle: 'Anal. Central',
     level: 4,
     family: 'central',
@@ -489,7 +489,7 @@ export const roles: Role[] = [
   },
   {
     id: 'role-analista-cas',
-    title: 'Analista — CAS',
+    title: 'Analista do CAS',
     shortTitle: 'Anal. CAS',
     level: 4,
     family: 'cas',
@@ -509,7 +509,7 @@ export const roles: Role[] = [
   },
   {
     id: 'role-fundacao',
-    title: 'Analista — Fundação Sicredi',
+    title: 'Analista da Fundação Sicredi',
     shortTitle: 'Fundação',
     level: 3,
     family: 'fundacao',
