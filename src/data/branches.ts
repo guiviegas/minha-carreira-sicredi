@@ -3,10 +3,10 @@ import { Branch } from '@/types';
 export const branches: Branch[] = [
   {
     id: 'branch-centro',
-    name: 'Agência Centro',
+    name: 'Agência Ipê',
     city: 'Porto Alegre',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 60,
     gaId: 'emp-010',
     careerHealthScore: 82,
@@ -16,10 +16,10 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-sul',
-    name: 'Agência Sul',
+    name: 'Agência Ipê',
     city: 'Porto Alegre',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 55,
     gaId: 'emp-002', // Roberto
     careerHealthScore: 71,
@@ -29,12 +29,12 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-norte',
-    name: 'Agência Norte',
+    name: 'Agência Mirante',
     city: 'Canoas',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 45,
-    gaId: null, // VACANT — succession gap
+    gaId: null, // VACANT, lacuna de sucesso
     careerHealthScore: 48,
     eNPS: 32,
     turnoverRate: 22.1,
@@ -42,10 +42,10 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-leste',
-    name: 'Agência Leste',
+    name: 'Agência Jardim',
     city: 'Novo Hamburgo',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 50,
     gaId: 'emp-020',
     careerHealthScore: 75,
@@ -55,10 +55,10 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-oeste',
-    name: 'Agência Oeste',
+    name: 'Agência Cedro',
     city: 'São Leopoldo',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 48,
     gaId: 'emp-025',
     careerHealthScore: 69,
@@ -68,10 +68,10 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-vale',
-    name: 'Agência Vale',
+    name: 'Agência Canela',
     city: 'Caxias do Sul',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 52,
     gaId: 'emp-030',
     careerHealthScore: 77,
@@ -81,10 +81,10 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-serra',
-    name: 'Agência Serra',
+    name: 'Agência Araucária',
     city: 'Bento Gonçalves',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 45,
     gaId: 'emp-035',
     careerHealthScore: 73,
@@ -94,12 +94,12 @@ export const branches: Branch[] = [
   },
   {
     id: 'branch-campanha',
-    name: 'Agência Campanha',
+    name: 'Agência Roseira',
     city: 'Pelotas',
     state: 'RS',
-    cooperativeId: 'coop-pioneira',
+    cooperativeId: 'coop-caminhos',
     headcount: 45,
-    gaId: null, // VACANT — succession gap
+    gaId: null, // VACANT, lacuna de sucesso
     careerHealthScore: 52,
     eNPS: 35,
     turnoverRate: 19.7,

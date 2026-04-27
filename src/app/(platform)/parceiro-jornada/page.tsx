@@ -298,7 +298,7 @@ export default function ParceiroJornadaPage() {
                 {personaLabel}
               </span>
             </div>
-            <p className="text-xs text-gray-500">Homenagem ao Padre Theodor Amstad, fundador do cooperativismo de crédito no Brasil</p>
+            <p className="text-xs text-gray-500">Seu copiloto de carreira, baseado nos seus dados de avaliação, PDI e aspiração</p>
           </div>
         </div>
       </motion.div>

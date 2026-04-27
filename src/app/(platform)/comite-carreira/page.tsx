@@ -97,7 +97,7 @@ export default function ComiteCarreiraPage() {
                   return (
                     <div className="p-2 rounded-lg text-center" style={{ backgroundColor: perfConfig?.bgCor || '#F3F4F6' }}>
                       <p className="text-[10px] uppercase font-semibold" style={{ color: perfConfig?.cor || '#6B7280' }}>Performance</p>
-                      <p className="text-xs font-bold" style={{ color: perfConfig?.cor || '#6B7280' }}>{perfConfig?.hashtag || '—'}</p>
+                      <p className="text-xs font-bold" style={{ color: perfConfig?.cor || '#6B7280' }}>{perfConfig?.hashtag || '-'}</p>
                     </div>
                   );
                 })()}

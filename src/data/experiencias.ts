@@ -1,5 +1,5 @@
 // ==========================================
-// EXPERIÊNCIAS E VIVÊNCIAS — Módulo de Dados
+// EXPERIÊNCIAS E VIVÊNCIAS: Módulo de Dados
 // Projetos especiais, job shadow, intercâmbios
 // ==========================================
 
@@ -27,7 +27,7 @@ export const experiencias: Experiencia[] = [
     titulo: 'Projeto de Satisfação do Associado Q3',
     tipo: 'projeto',
     duracao: '4 semanas',
-    local: 'Agência Centro',
+    local: 'Agência Ipê',
     skills: ['Liderança', 'Gestão de Equipe', 'Indicadores de Satisfação'],
     vagas: 1,
     icone: 'target',
@@ -39,10 +39,10 @@ export const experiencias: Experiencia[] = [
   },
   {
     id: 'exp-002',
-    titulo: 'Job Shadow — Gerente de Agência',
+    titulo: 'Job Shadow: Gerente de Agência',
     tipo: 'job_shadow',
     duracao: '1 semana',
-    local: 'Agência Norte',
+    local: 'Agência Mirante',
     skills: ['Liderança', 'Visão Estratégica', 'Gestão de Pessoas'],
     vagas: 2,
     icone: 'eye',
@@ -54,7 +54,7 @@ export const experiencias: Experiencia[] = [
   },
   {
     id: 'exp-003',
-    titulo: 'Intercâmbio — Central Regional',
+    titulo: 'Intercâmbio: Central Regional',
     tipo: 'intercambio',
     duracao: '2 semanas',
     local: 'Central PR/SP/RJ',
@@ -84,7 +84,7 @@ export const experiencias: Experiencia[] = [
   },
   {
     id: 'exp-005',
-    titulo: 'Mentoria Reversa — Transformação Digital',
+    titulo: 'Mentoria Reversa: Transformação Digital',
     tipo: 'mentoria_reversa',
     duracao: '3 meses',
     local: 'Remoto',
@@ -99,7 +99,7 @@ export const experiencias: Experiencia[] = [
   },
   {
     id: 'exp-006',
-    titulo: 'Projeto Agro Tech — Digitalização Rural',
+    titulo: 'Projeto Agro Tech: Digitalização Rural',
     tipo: 'projeto',
     duracao: '8 semanas',
     local: 'Cooperativas Rurais RS/PR',

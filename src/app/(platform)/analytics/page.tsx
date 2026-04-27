@@ -30,9 +30,9 @@ const kpis = [
 ];
 
 const insights = [
-  { tipo: 'alerta', texto: '14 colaboradores prontos para movimentação — 5 em risco de saída', cor: '#DC2626' },
+  { tipo: 'alerta', texto: '14 colaboradores prontos para movimentação. 5 em risco de saída', cor: '#DC2626' },
   { tipo: 'tendencia', texto: 'Família PF: tempo médio de prontidão caiu de 16 para 14 meses no último semestre', cor: '#16A34A' },
-  { tipo: 'alerta', texto: '23 PDIs com ações atrasadas — concentrados nas agências Norte e Serra', cor: '#D97706' },
+  { tipo: 'alerta', texto: '23 PDIs com ações atrasadas. Concentrados nas agências Mirante e Araucária', cor: '#D97706' },
   { tipo: 'oportunidade', texto: '8 GNs PF II com perfil para programa de aceleração para GA', cor: '#2563EB' },
 ];
 
@@ -45,7 +45,7 @@ export default function AnalyticsPage() {
       <motion.div variants={item} className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-sm text-gray-500 mt-1">People Analytics avançado · Cooperativa Pioneira</p>
+          <p className="text-sm text-gray-500 mt-1">People Analytics avançado · Cooperativa Caminhos</p>
         </div>
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">

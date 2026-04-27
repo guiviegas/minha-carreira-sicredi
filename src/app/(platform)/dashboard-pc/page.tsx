@@ -15,7 +15,7 @@ export default function DashboardPCPage() {
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-6xl space-y-6">
       <motion.div variants={item}>
         <h1 className="text-2xl font-bold text-gray-900">Dashboard P&C</h1>
-        <p className="text-sm text-gray-500 mt-1">Centro de Comando · Cooperativa Pioneira · 400 colaboradores</p>
+        <p className="text-sm text-gray-500 mt-1">Centro de Comando · Cooperativa Caminhos · 400 colaboradores</p>
       </motion.div>
 
       {/* Panel 1: Career Health */}

@@ -38,14 +38,14 @@ const courseImages: Record<string, string> = {
 
 const courses = [
   { id: 'c1', title: 'Essência Cooperativista na Prática', desc: 'Como viver os valores cooperativos no dia a dia e fortalecer vínculos com associados', type: 'video' as const, duration: '4h', provider: 'Sicredi Aprende', skills: ['Essência Cooperativista'], progress: 30, rating: 4.8, category: 'cooperativismo', icon: Building2 },
-  { id: 'c2', title: 'Entender para Atender — Escuta Ativa', desc: 'Técnicas de escuta empática e mediação de conflitos com associados', type: 'interactive' as const, duration: '2h', provider: 'Sicredi Aprende', skills: ['Entender para Atender', 'Comunicação'], progress: 0, rating: 4.6, category: 'soft', icon: Handshake },
-  { id: 'c3', title: 'Análise Financeira para GNs', desc: 'Leitura de balanços, DRE e indicadores — base para decisões de crédito', type: 'video' as const, duration: '6h', provider: 'Sicredi Aprende', skills: ['Análise Financeira'], progress: 0, rating: 4.5, category: 'financeira', icon: BarChart3 },
+  { id: 'c2', title: 'Entender para Atender: Escuta Ativa', desc: 'Técnicas de escuta empática e mediação de conflitos com associados', type: 'interactive' as const, duration: '2h', provider: 'Sicredi Aprende', skills: ['Entender para Atender', 'Comunicação'], progress: 0, rating: 4.6, category: 'soft', icon: Handshake },
+  { id: 'c3', title: 'Análise Financeira para GNs', desc: 'Leitura de balanços, DRE e indicadores, base para decisões de crédito', type: 'video' as const, duration: '6h', provider: 'Sicredi Aprende', skills: ['Análise Financeira'], progress: 0, rating: 4.5, category: 'financeira', icon: BarChart3 },
   { id: 'c4', title: 'Liderança e Feedback SCII', desc: 'Metodologia SCII (Situação, Comportamento, Intenção, Impacto) e conversas de PDI', type: 'mentoring' as const, duration: '8h', provider: 'Programa S2S', skills: ['Liderança', 'Feedback Contínuo'], progress: 0, rating: 4.9, category: 'lideranca', icon: Target },
   { id: 'c5', title: 'Governança Cooperativa', desc: 'Assembleia, conselho, comitês e o papel do associado na governança', type: 'article' as const, duration: '1.5h', provider: 'Sicredi Aprende', skills: ['Essência Cooperativista'], progress: 100, rating: 4.3, category: 'cooperativismo', icon: Building2 },
   { id: 'c6', title: 'OKRs e Planejamento Estratégico', desc: 'Como definir e cascatear objetivos alinhados à estratégia da cooperativa', type: 'interactive' as const, duration: '3h', provider: 'Sicredi Aprende', skills: ['Vai lá e faz', 'Estratégia'], progress: 0, rating: 4.7, category: 'estrategica', icon: Lightbulb },
   { id: 'c7', title: 'Gestão de Carteira Premium', desc: 'Estratégias de cross-selling e retenção para associados alta renda', type: 'video' as const, duration: '3h', provider: 'Sicredi Aprende', skills: ['Comercial', 'Relacionamento'], progress: 100, rating: 4.4, category: 'comercial', icon: Coins },
   { id: 'c8', title: 'Aprender e Mudar Rápido', desc: 'Mindset de crescimento, adaptabilidade e gestão de mudança organizacional', type: 'practice' as const, duration: '2h', provider: 'Programa Bem-Estar', skills: ['Aprender e Mudar Rápido'], progress: 65, rating: 4.8, category: 'soft', icon: Brain },
-  { id: 'c9', title: 'Inovar para Transformar — Design Thinking', desc: 'Ferramentas de inovação aplicadas ao contexto cooperativo', type: 'video' as const, duration: '2h', provider: 'Sicredi Aprende', skills: ['Inovar para Transformar'], progress: 0, rating: 4.5, category: 'estrategica', icon: TrendingUp },
+  { id: 'c9', title: 'Inovar para Transformar: Design Thinking', desc: 'Ferramentas de inovação aplicadas ao contexto cooperativo', type: 'video' as const, duration: '2h', provider: 'Sicredi Aprende', skills: ['Inovar para Transformar'], progress: 0, rating: 4.5, category: 'estrategica', icon: TrendingUp },
 ];
 
 export default function DesenvolvimentoPage() {
@@ -81,7 +81,7 @@ export default function DesenvolvimentoPage() {
       <motion.div variants={item} className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Trilhas de Desenvolvimento</h1>
-          <p className="text-sm text-gray-500 mt-1">Seu plano personalizado de crescimento — no seu ritmo</p>
+          <p className="text-sm text-gray-500 mt-1">Seu plano personalizado de crescimento, no seu ritmo</p>
         </div>
         <div className="flex gap-2">
           {(['netflix', 'hybrid'] as TrackMode[]).map((m) => (

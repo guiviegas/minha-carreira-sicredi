@@ -143,7 +143,7 @@ export default function PerfilPage() {
               {/* Aspiração */}
               <div className="p-3 rounded-lg bg-purple-50 text-center">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-purple-500">Aspiração</p>
-                <p className="text-sm font-bold text-purple-700 mt-1">{cargoAspirado?.shortTitle || '—'}</p>
+                <p className="text-sm font-bold text-purple-700 mt-1">{cargoAspirado?.shortTitle || '-'}</p>
                 {aspiracao && <p className="text-[10px] text-purple-400 mt-0.5">{aspiracao.timeframe}</p>}
               </div>
               {/* Performance */}
@@ -290,7 +290,7 @@ export default function PerfilPage() {
             <div className="relative pl-6 space-y-4">
               <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-gray-200" />
               {[
-                { date: '2023-04', title: 'Ingresso como GN PF1', desc: 'Agência Sul · Cooperativa Pioneira', highlight: false },
+                { date: '2023-04', title: 'Ingresso como GN PF1', desc: 'Agência Ipê · Cooperativa Caminhos', highlight: false },
                 { date: '2024-06', title: 'Promoção para GN PF2', desc: 'Carteira de média/alta renda', highlight: true },
                 { date: '2025-11', title: 'Certificação CPA-20', desc: 'Habilitação para investimentos', highlight: true },
                 { date: '2026-03', title: 'Top 3 Satisfação da Agência', desc: 'Reconhecimento do trimestre', highlight: false },
@@ -375,7 +375,7 @@ export default function PerfilPage() {
                       <p className="text-sm font-medium text-gray-800 truncate">{ach.title}</p>
                       <p className="text-[11px] text-gray-400">{ach.description}</p>
                     </div>
-                    <span className="text-xs text-amber-600 font-semibold group-hover:scale-110 transition-transform">+{ach.xp} XP</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   </div>
                 );
               })}

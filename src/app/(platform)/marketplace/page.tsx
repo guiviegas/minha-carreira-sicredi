@@ -216,7 +216,7 @@ export default function MarketplacePage() {
                   <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400 flex-wrap">
                     {opp.duration && <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {opp.duration}</span>}
                     <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {opp.applicants}{opp.maxApplicants ? `/${opp.maxApplicants}` : ''}</span>
-                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {opp.cooperativeId === 'coop-pioneira' ? 'Pioneira' : 'Serrana'}</span>
+                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {opp.cooperativeId === 'coop-caminhos' ? 'Caminhos' : 'Horizonte'}</span>
                   </div>
                 </div>
                 <div className="flex flex-col items-center gap-2">
@@ -362,7 +362,7 @@ export default function MarketplacePage() {
                       </div>
                       <div className="p-3 rounded-lg bg-gray-50 text-center">
                         <MapPin className="w-4 h-4 text-gray-400 mx-auto mb-1" />
-                        <p className="text-sm font-bold text-gray-800">{selectedOpp.cooperativeId === 'coop-pioneira' ? 'Pioneira' : 'Serrana'}</p>
+                        <p className="text-sm font-bold text-gray-800">{selectedOpp.cooperativeId === 'coop-caminhos' ? 'Caminhos' : 'Horizonte'}</p>
                         <p className="text-[10px] text-gray-400">Cooperativa</p>
                       </div>
                     </div>

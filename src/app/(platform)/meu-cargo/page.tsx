@@ -244,7 +244,7 @@ export default function MeuCargoPage() {
         <motion.div variants={item} className="card p-5 border-l-4 border-l-purple-400 bg-gradient-to-r from-purple-50/50 to-white">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-purple-500">Próximo Passo — Aspiração</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-purple-500">Próximo Passo: Aspiração</p>
               <h3 className="text-lg font-bold text-gray-900 mt-1">{cargoAspirado.title}</h3>
               <p className="text-sm text-gray-600 mt-1">{cargoAspirado.family.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} · Nível {cargoAspirado.level}</p>
             </div>
@@ -274,7 +274,7 @@ export default function MeuCargoPage() {
             )}
           </div>
 
-          {/* Gap Analysis — now dynamic based on career paths */}
+          {/* Gap Analysis, dinâmico based on career paths */}
           {careerPathsFromHere.length > 0 && (
             <div className="mt-4 pt-4 border-t border-purple-100">
               <p className="text-xs font-semibold text-purple-600 mb-2">O que falta para chegar lá:</p>

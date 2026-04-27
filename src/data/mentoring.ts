@@ -1,5 +1,5 @@
 // ==========================================
-// MENTORING — Módulo de Dados Sicreder2Sicreder
+// MENTORING: Módulo de Dados Sicreder2Sicreder
 // ==========================================
 
 export interface MentorProfile {
@@ -24,7 +24,7 @@ export const mentores: MentorProfile[] = [
     nome: 'Paulo Ferreira',
     cargo: 'Gerente de Agência III',
     cooperativa: 'Cooperativa Centro-Sul RS',
-    agencia: 'Agência Centro',
+    agencia: 'Agência Ipê',
     experienciaAnos: 12,
     especialidades: ['Liderança de Equipes', 'Gestão de Resultados', 'Desenvolvimento de GNs', 'Planejamento Comercial'],
     disponibilidade: 'disponivel',
@@ -82,7 +82,7 @@ export const mentores: MentorProfile[] = [
     id: 'mentor-005',
     nome: 'Fernando Santos',
     cargo: 'Assessor de Investimentos',
-    cooperativa: 'Cooperativa Pioneira',
+    cooperativa: 'Cooperativa Caminhos',
     agencia: 'Agência Premium',
     experienciaAnos: 7,
     especialidades: ['Investimentos', 'Wealth Management', 'CPA-20/CEA', 'Previdência'],
