@@ -47,6 +47,10 @@ export interface CompetenciaSicrediHub {
   consenso: 1 | 2 | 3 | 4;
   /** Conceito oficial (#mandoubem etc.) derivado do consenso */
   conceito: NivelPerformance;
+  /** Consenso do ciclo imediatamente anterior (para delta) */
+  consensoAnterior?: 1 | 2 | 3 | 4;
+  /** Delta entre ciclo atual e anterior (-3 a +3). Positivo = subiu. */
+  delta?: number;
   comentarioLider?: string;
 }
 
@@ -155,8 +159,12 @@ function buildCompetenciasSicredi(
   const aval = avaliacoesMock.find(
     (a) => a.employeeId === employeeId && a.cicloId === 'ciclo-2026-1',
   );
+  // Ciclo anterior (para delta)
+  const cicloAnterior = avaliacoesMock
+    .filter((a) => a.employeeId === employeeId && a.cicloId !== 'ciclo-2026-1')
+    .sort((a, b) => b.cicloId.localeCompare(a.cicloId))[0];
+
   if (!aval) {
-    // Fallback: usa #quaselá em todas
     return competenciasSicredi.map((c) => ({
       competencia: c,
       autoAvaliacao: 2,
@@ -170,12 +178,19 @@ function buildCompetenciasSicredi(
     const auto = (evalComp?.autoAvaliacao ?? 2) as 1 | 2 | 3 | 4;
     const lider = (evalComp?.avaliacaoLider ?? 2) as 1 | 2 | 3 | 4;
     const consenso = (evalComp?.consenso ?? lider) as 1 | 2 | 3 | 4;
+
+    const evalAnterior = cicloAnterior?.competencias.find((x) => x.competenciaId === c.id);
+    const consensoAnterior = evalAnterior?.consenso as (1 | 2 | 3 | 4) | undefined;
+    const delta = consensoAnterior !== undefined ? consenso - consensoAnterior : undefined;
+
     return {
       competencia: c,
       autoAvaliacao: auto,
       avaliacaoLider: lider,
       consenso,
       conceito: getConceitoFromNota(consenso),
+      consensoAnterior,
+      delta,
       comentarioLider: evalComp?.comentarioLider,
     };
   });

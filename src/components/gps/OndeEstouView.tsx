@@ -2,15 +2,20 @@
 
 import { motion } from 'framer-motion';
 import { PersonaHub } from '@/data/persona-hub';
+import { getAtribuicoesByRoleId } from '@/data/atribuicoes-cargos';
 import {
   Briefcase,
   Coins,
   MapPin,
-  Star,
   Target,
   Users,
   TrendingUp,
+  TrendingDown,
   ArrowRight,
+  Wrench,
+  CheckCircle2,
+  Calendar,
+  Clock,
 } from 'lucide-react';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
@@ -32,9 +37,7 @@ export default function OndeEstouView({
   onIrParaPossibilidades,
   onIrParaPlanoRota,
 }: Props) {
-  const { cargoAtual, employee, persona, competenciasSicredi, notaFinalPerformance, prontidao, potencial, habilidadesTecnicas, cargoAlvo } = hub;
-
-  const habilidadesDoCargo = habilidadesTecnicas.filter(h => h.nivelEsperadoCargoAtual > 0);
+  const { cargoAtual, employee, persona, competenciasSicredi, notaFinalPerformance, prontidao, potencial, cargoAlvo } = hub;
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" exit={{ opacity: 0 }} className="space-y-5">
@@ -112,28 +115,41 @@ export default function OndeEstouView({
         </div>
       </motion.div>
 
-      {/* 5 competências Jeito Sicredi com conceito atual */}
+      {/* 7 competências Jeito Sicredi com conceito atual + delta vs ciclo anterior */}
       <motion.div variants={item} className="card p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">
             Competências Jeito Sicredi de Ser
           </h3>
-          <span className="text-[10px] text-gray-400">Vindas da avaliação Q1/2026</span>
+          <span className="text-[10px] text-gray-400">Vindas da avaliação Ciclo 1/2026 (com delta vs ciclo anterior)</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {competenciasSicredi.map((c) => (
             <div key={c.competencia.id} className="p-3 rounded-lg bg-gray-50 border border-gray-100">
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.competencia.cor }} />
-                  <p className="text-sm font-semibold text-gray-800">{c.competencia.nome}</p>
+              <div className="flex items-center justify-between gap-2 mb-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.competencia.cor }} />
+                  <p className="text-sm font-semibold text-gray-800 truncate">{c.competencia.nome}</p>
                 </div>
-                <span
-                  className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                  style={{ backgroundColor: c.conceito.bgCor, color: c.conceito.cor }}
-                >
-                  {c.conceito.hashtag}
-                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {c.delta !== undefined && c.delta !== 0 && (
+                    <span
+                      className={`inline-flex items-center gap-0.5 text-[10px] font-bold ${
+                        c.delta > 0 ? 'text-green-600' : 'text-amber-600'
+                      }`}
+                      title={`Delta vs ciclo anterior: ${c.delta > 0 ? '+' : ''}${c.delta}`}
+                    >
+                      {c.delta > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                      {c.delta > 0 ? '+' : ''}{c.delta}
+                    </span>
+                  )}
+                  <span
+                    className="text-[11px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
+                    style={{ backgroundColor: c.conceito.bgCor, color: c.conceito.cor }}
+                  >
+                    {c.conceito.hashtag}
+                  </span>
+                </div>
               </div>
               <p className="text-[11px] text-gray-500 line-clamp-2">{c.competencia.descricao}</p>
               {c.comentarioLider && (
@@ -146,43 +162,69 @@ export default function OndeEstouView({
         </div>
       </motion.div>
 
-      {/* Habilidades técnicas do cargo atual */}
-      {habilidadesDoCargo.length > 0 && (
+      {/* Preparo Técnico (vindo da Matriz oficial) — substitui habilidades técnicas genéricas */}
+      {(() => {
+        const atrib = getAtribuicoesByRoleId(cargoAtual.id);
+        if (!atrib || atrib.preparoTecnico.length === 0) return null;
+        return (
+          <motion.div variants={item} className="card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 flex items-center gap-2">
+                <Wrench className="w-4 h-4 text-blue-600" />
+                Preparo Técnico esperado
+              </h3>
+              <span className="text-[10px] text-gray-400">
+                {atrib.fonte === 'planilha' ? 'Matriz oficial Sicredi' : 'Inferido (mercado)'}
+              </span>
+            </div>
+            <p className="text-[11px] text-gray-500 mb-3">
+              Conhecimentos e ferramentas que o cargo {cargoAtual.shortTitle} exige no dia a dia.
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {atrib.preparoTecnico.map((s, i) => (
+                <span
+                  key={i}
+                  className="text-[11px] px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 inline-flex items-center gap-1"
+                >
+                  <CheckCircle2 className="w-2.5 h-2.5" />
+                  {s}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        );
+      })()}
+
+      {/* Marcos da semana (vindos do hub.notificacoes) */}
+      {hub.notificacoes.length > 0 && (
         <motion.div variants={item} className="card p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">
-              Habilidades técnicas do cargo
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-amber-600" />
+              Próximos marcos
             </h3>
-            <span className="text-[10px] text-gray-400">Nível atual vs. esperado</span>
+            <span className="text-[10px] text-gray-400">Vindos das suas notificações</span>
           </div>
-          <div className="space-y-3">
-            {habilidadesDoCargo.map(({ skill, nivelEsperadoCargoAtual }) => {
-              const atende = skill.level >= nivelEsperadoCargoAtual;
-              return (
-                <div key={skill.id}>
-                  <div className="flex items-center justify-between text-[11px] mb-1">
-                    <span className="text-gray-700 font-medium">{skill.name}</span>
-                    <span className="font-bold" style={{ color: atende ? '#16A34A' : '#D97706' }}>
-                      {skill.level} / {nivelEsperadoCargoAtual}
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden relative">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: atende ? '#16A34A' : '#D97706' }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${Math.min(100, skill.level)}%` }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <div
-                      className="absolute top-0 bottom-0 w-0.5 bg-gray-700"
-                      style={{ left: `${nivelEsperadoCargoAtual}%` }}
-                    />
-                  </div>
+          <ul className="space-y-2">
+            {hub.notificacoes.slice(0, 4).map((n) => (
+              <li key={n.id} className="flex items-start gap-2.5">
+                <Clock
+                  className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${
+                    n.tipo === 'alerta'
+                      ? 'text-red-500'
+                      : n.tipo === 'pendencia'
+                      ? 'text-amber-500'
+                      : 'text-gray-400'
+                  }`}
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-gray-800">{n.titulo}</p>
+                  <p className="text-[11px] text-gray-500">{n.descricao}</p>
                 </div>
-              );
-            })}
-          </div>
+                <span className="text-[10px] text-gray-400 whitespace-nowrap">{n.data}</span>
+              </li>
+            ))}
+          </ul>
         </motion.div>
       )}
 
