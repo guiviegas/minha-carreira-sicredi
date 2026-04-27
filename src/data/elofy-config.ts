@@ -3,7 +3,13 @@
 // Espelha a ferramenta Elofy usada pelo Sicredi
 // ==========================================
 
-// --- Escala de Conceitos — Régua Sicredi (via Elofy) ---
+// --- Escala de Conceitos — Régua oficial Sicredi (via Elofy) ---
+// Cores e descrições conforme material oficial: Desempenho_Avaliação.pptx (slide 5)
+// Valores numéricos da escala: FASE 5 'realizando as avaliações' do +evolução
+//   #precisa evoluir → 0,01 a 0,79
+//   #quase lá        → 0,80 a 0,99
+//   #mandou bem      → 1,00 a 1,10
+//   #arrasou         → 1,11 a 1,20
 export interface NivelPerformance {
   nivel: 1 | 2 | 3 | 4;
   hashtag: string;
@@ -12,44 +18,59 @@ export interface NivelPerformance {
   cor: string;
   bgCor: string;
   icone: string;
+  /** Faixa numérica oficial dentro do quadrante (Elofy) */
+  notaMinima: number;
+  notaMaxima: number;
 }
 
 export const reguaPerformance: NivelPerformance[] = [
   {
     nivel: 1,
-    hashtag: '#precisaevoluir',
-    nome: '#precisaevoluir',
+    hashtag: '#precisa evoluir',
+    nome: '#precisa evoluir',
     descricao: 'Precisa evoluir aplicando na prática os comportamentos descritos.',
-    cor: '#DC2626',
-    bgCor: '#FEF2F2',
+    // Laranja oficial (não vermelho)
+    cor: '#EA580C',
+    bgCor: '#FFEDD5',
     icone: 'alert-triangle',
+    notaMinima: 0.01,
+    notaMaxima: 0.79,
   },
   {
     nivel: 2,
-    hashtag: '#quaselá',
-    nome: '#quaselá',
-    descricao: 'Em desenvolvimento. Pratica em algumas situações.',
-    cor: '#D97706',
-    bgCor: '#FFFBEB',
+    hashtag: '#quase lá',
+    nome: '#quase lá',
+    descricao: 'Está em desenvolvimento. Pratica o comportamento descrito em algumas situações.',
+    // Azul/ciano oficial (não amarelo)
+    cor: '#0EA5E9',
+    bgCor: '#E0F2FE',
     icone: 'trending-up',
+    notaMinima: 0.80,
+    notaMaxima: 0.99,
   },
   {
     nivel: 3,
-    hashtag: '#mandoubem',
-    nome: '#mandoubem',
+    hashtag: '#mandou bem',
+    nome: '#mandou bem',
     descricao: 'Pratica o comportamento descrito em todas as situações do dia a dia.',
     cor: '#16A34A',
-    bgCor: '#F0FDF4',
+    bgCor: '#DCFCE7',
     icone: 'check-circle',
+    notaMinima: 1.00,
+    notaMaxima: 1.10,
   },
   {
     nivel: 4,
     hashtag: '#arrasou',
     nome: '#arrasou',
-    descricao: 'Pratica o comportamento e, em alguns casos, vai além, sendo referência para os colegas.',
-    cor: '#2563EB',
-    bgCor: '#EFF6FF',
+    descricao:
+      'Pratica o comportamento descrito e, em alguns casos, vai além do que é esperado, sendo referência do comportamento para os colegas.',
+    // Rosa/magenta oficial (não azul)
+    cor: '#E11D48',
+    bgCor: '#FFE4E6',
     icone: 'star',
+    notaMinima: 1.11,
+    notaMaxima: 1.20,
   },
 ];
 
