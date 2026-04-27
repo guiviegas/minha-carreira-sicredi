@@ -5,6 +5,7 @@ import { usePersona } from '@/contexts/PersonaContext';
 import { getEmployeeById } from '@/data/employees';
 import { getRoleById } from '@/data/roles';
 import { mentores, getMentoresDisponiveis } from '@/data/mentoring';
+import { getPersonaHub } from '@/data/persona-hub';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   HeartHandshake,
@@ -35,7 +36,10 @@ export default function MentoriaPage() {
   const employee = getEmployeeById(currentPersona.employeeId);
   const aspiracao = employee?.aspirations[0];
   const cargoAspirado = aspiracao ? getRoleById(aspiracao.targetRoleId) : null;
-  const disponiveis = getMentoresDisponiveis();
+  const hub = getPersonaHub(currentPersona.id);
+  const sugeridos = hub?.mentoresSugeridos || [];
+  const sugeridosIds = new Set(sugeridos.map((m) => m.id));
+  const disponiveis = getMentoresDisponiveis().filter((m) => !sugeridosIds.has(m.id));
   const filteredMentores = disponiveis.filter(m =>
     !searchQuery || m.nome.toLowerCase().includes(searchQuery.toLowerCase()) || m.especialidades.some(a => a.toLowerCase().includes(searchQuery.toLowerCase()))
   );
@@ -77,6 +81,40 @@ export default function MentoriaPage() {
       {/* Tab: Encontrar Mentor */}
       {activeTab === 'encontrar' && (
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-5">
+          {/* Sugeridos para você (vindos do hub) */}
+          {sugeridos.length > 0 && cargoAspirado && (
+            <motion.div variants={item} className="card p-5 bg-gradient-to-r from-purple-50/50 to-white border-l-4 border-l-purple-400">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-purple-600" />
+                <p className="text-xs font-bold uppercase tracking-wider text-purple-600">
+                  Sugeridos para sua aspiração: {cargoAspirado.title}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {sugeridos.map((mentor) => (
+                  <div key={`sug-${mentor.id}`} className="p-3 rounded-lg bg-white border border-purple-100">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg avatar-initials text-[11px] shrink-0" style={{ backgroundColor: '#7C3AED' }}>
+                        {mentor.nome.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-gray-900 truncate">{mentor.nome}</p>
+                        <p className="text-[11px] text-gray-500 truncate">{mentor.cargo}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[10px] text-gray-400">{mentor.experienciaAnos}a exp</span>
+                          <span className="text-[10px] text-purple-600 font-semibold">★ Match alto</span>
+                        </div>
+                        <button className="mt-2 text-[11px] font-semibold text-purple-700 hover:underline">
+                          Pedir mentoria →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {/* Search */}
           <motion.div variants={item} className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -89,7 +127,8 @@ export default function MentoriaPage() {
             />
           </motion.div>
 
-          {/* Mentor Cards */}
+          {/* Outros mentores disponíveis */}
+          <p className="text-[11px] uppercase tracking-wider font-semibold text-gray-400">Outros mentores disponíveis</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredMentores.map((mentor) => (
               <motion.div key={mentor.id} variants={item} className="card p-5 hover:shadow-md transition-shadow">
