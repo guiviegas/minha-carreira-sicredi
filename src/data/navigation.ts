@@ -23,7 +23,7 @@ export const navigationSections: NavSection[] = [
         label: 'Meu Cargo',
         icon: 'briefcase',
         href: '/meu-cargo',
-        roles: ['colaborador', 'lider', 'pc_analista'],
+        roles: ['colaborador', 'lider'],
       },
       {
         id: 'perfil',
@@ -34,10 +34,10 @@ export const navigationSections: NavSection[] = [
       },
       {
         id: 'mapa-carreira',
-        label: 'Mapa de Carreira',
+        label: 'GPS de Carreira',
         icon: 'map',
         href: '/mapa-carreira',
-        roles: ['colaborador', 'lider', 'pc_analista'],
+        roles: ['colaborador', 'lider'],
       },
       {
         id: 'avaliacao',
@@ -58,14 +58,14 @@ export const navigationSections: NavSection[] = [
         label: 'Desenvolvimento',
         icon: 'book-open',
         href: '/desenvolvimento',
-        roles: ['colaborador', 'lider', 'pc_analista'],
+        roles: ['colaborador', 'lider'],
       },
       {
         id: 'marketplace',
-        label: 'Oportunidades',
+        label: 'Oportunidades Internas',
         icon: 'search',
         href: '/marketplace',
-        roles: ['colaborador', 'lider', 'pc_analista'],
+        roles: ['colaborador', 'lider'],
       },
       {
         id: 'parceiro-jornada',
@@ -77,25 +77,25 @@ export const navigationSections: NavSection[] = [
     ],
   },
 
-  // ===== POSSIBILIDADES DE FUTURO (todos, sub-seção) =====
+  // ===== POSSIBILIDADES DE FUTURO (só colaborador) =====
   {
     id: 'possibilidades',
     label: 'Possibilidades de Futuro',
-    roles: ['colaborador', 'lider', 'pc_analista'],
+    roles: ['colaborador'],
     items: [
       {
         id: 'sicreder2sicreder',
         label: 'Sicreder2Sicreder',
         icon: 'heart-handshake',
         href: '/sicreder2sicreder',
-        roles: ['colaborador', 'lider', 'pc_analista'],
+        roles: ['colaborador'],
       },
       {
         id: 'experiencias',
         label: 'Experiências e Vivências',
         icon: 'rocket',
         href: '/experiencias',
-        roles: ['colaborador', 'lider', 'pc_analista'],
+        roles: ['colaborador'],
       },
     ],
   },
@@ -112,27 +112,13 @@ export const navigationSections: NavSection[] = [
         icon: 'users',
         href: '/equipe',
         roles: ['lider'],
-        badge: 2,
+        badge: 1,
       },
       {
         id: 'avaliacao-time',
-        label: 'Avaliação do Time',
+        label: 'Gestão de Desempenho',
         icon: 'clipboard-list',
         href: '/avaliacao-time',
-        roles: ['lider'],
-      },
-      {
-        id: 'conversas-1a1',
-        label: 'Conversas 1:1',
-        icon: 'message-circle',
-        href: '/conversas-1a1',
-        roles: ['lider'],
-      },
-      {
-        id: 'prontidao-time',
-        label: 'Prontidão do Time',
-        icon: 'gauge',
-        href: '/prontidao-time',
         roles: ['lider'],
       },
       {
@@ -153,7 +139,7 @@ export const navigationSections: NavSection[] = [
     items: [
       {
         id: 'dashboard-pc',
-        label: 'Dashboard P&C',
+        label: 'Painel de Pessoas',
         icon: 'bar-chart-3',
         href: '/dashboard-pc',
         roles: ['pc_analista'],
@@ -172,16 +158,9 @@ export const navigationSections: NavSection[] = [
         href: '/comite-carreira',
         roles: ['pc_analista'],
       },
-      {
-        id: 'analytics',
-        label: 'Analytics',
-        icon: 'trending-up',
-        href: '/analytics',
-        roles: ['pc_analista'],
-      },
     ],
   },
 ];
 
-// Flatten helper — retorna todos os NavItems para compatibilidade
+// Flatten helper
 export const navigationItems: NavItem[] = navigationSections.flatMap(s => s.items);

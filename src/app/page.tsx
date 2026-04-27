@@ -4,27 +4,24 @@ import { useRouter } from 'next/navigation';
 import { usePersona } from '@/contexts/PersonaContext';
 import { motion } from 'framer-motion';
 import { PersonaId } from '@/types';
-import { Compass, ArrowRight, Users, Building2, BookOpen, BarChart3 } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
-const personaDetails: Record<PersonaId, { gradient: string; photo: string; challenge: string; modules: string }> = {
+const personaDetails: Record<PersonaId, { gradient: string; photo: string; challenge: string }> = {
   mariana: {
     gradient: 'from-[#1B5E20] via-[#2E7D32] to-[#4CAF50]',
     photo: '/personas/mariana.png',
     challenge: 'Quer crescer para Gerente de Agência. Busca clareza sobre o que desenvolver e oportunidades práticas de liderança.',
-    modules: 'Início · Meu Cargo · Mapa de Carreira · PDI · Theo Carreiras',
   },
   roberto: {
     gradient: 'from-[#0D47A1] via-[#1565C0] to-[#42A5F5]',
     photo: '/personas/roberto.png',
-    challenge: 'Lidera 12 pessoas e perdeu um GN para o Itaú. Precisa de ferramentas para desenvolver e reter talentos.',
-    modules: 'Minha Carreira · Minha Equipe · Prontidão do Time · Comitê de Carreira',
+    challenge: 'Lidera 5 pessoas na agência. Precisa de ferramentas para desenvolver, acompanhar e reter talentos do time.',
   },
   carla: {
     gradient: 'from-[#4A148C] via-[#6A1B9A] to-[#AB47BC]',
     photo: '/personas/carla.png',
-    challenge: 'Gerencia 400 pessoas com Excel e e-mail. Precisa de dados integrados e conexão com resultados do negócio.',
-    modules: 'Dashboard P&C · Mapa de Talentos · Comitê de Carreira · Analytics',
+    challenge: 'Responsável pela gestão de 400 colaboradores. Precisa de dados integrados e visão estratégica de gestão de pessoas.',
   },
 };
 
@@ -67,13 +64,13 @@ export default function HomePage() {
                 <Compass className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Minha Carreira</h1>
-                <p className="text-green-200/80 text-sm font-semibold mt-0.5">Sicredi · Plataforma de Gestão de Carreira</p>
+                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Minha Carreira Sicredi</h1>
+                <p className="text-green-200/80 text-sm font-semibold mt-0.5">Sicredi · Interface de Gestão de Carreira Integrada</p>
               </div>
             </div>
             <p className="text-base md:text-lg text-white/70 max-w-2xl leading-relaxed font-medium">
-              Navegue sua jornada profissional com protagonismo, dados e o apoio do seu Parceiro de Jornada.
-              Explore possibilidades — sem promessas, com autonomia.
+              Este é um protótipo de como seria visualizar a interface integrada de gestão de carreira.
+              Escolha uma das personas abaixo para navegar pela plataforma a partir da visão de cada perfil profissional.
             </p>
           </motion.div>
         </div>
@@ -130,30 +127,15 @@ export default function HomePage() {
                 <div className="px-5 py-4 space-y-3">
                   <p className="text-xs text-neutral-500">{persona.description}</p>
                   <p className="text-sm text-neutral-700 leading-relaxed">{details.challenge}</p>
-                  <div className="pt-2 border-t border-neutral-100">
-                    <p className="text-xs text-neutral-400 font-semibold">Módulos</p>
-                    <p className="text-xs text-neutral-600 mt-0.5">{details.modules}</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-verde-digital font-bold text-sm pt-1">
-                    <span>Explorar jornada</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                  <button className="flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-verde-digital text-white text-sm font-bold group-hover:bg-verde-600 transition-colors w-full justify-center">
+                    Acessar interface <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
               </motion.button>
             );
           })}
         </div>
-
-
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-neutral-200 py-6 px-6 bg-white">
-        <div className="max-w-6xl mx-auto flex items-center justify-between text-xs text-neutral-400">
-          <p>Minha Carreira · Protótipo MVP · Pulsar Consultoria × Sicredi</p>
-          <p>Dados fictícios para demonstração</p>
-        </div>
-      </footer>
     </div>
   );
 }
