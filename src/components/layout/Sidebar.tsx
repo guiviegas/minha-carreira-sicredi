@@ -54,7 +54,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { currentPersona } = usePersona();
+  const { currentPersona, clearPersona } = usePersona();
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
 
   const router = useRouter();
@@ -236,6 +236,7 @@ export default function Sidebar() {
                 <button
                   onClick={() => {
                     setShowTrocarPersona(false);
+                    clearPersona();
                     router.push('/');
                   }}
                   className="flex-1 py-2.5 rounded-lg bg-verde-digital text-white text-sm font-semibold hover:bg-verde-600 transition-colors"
