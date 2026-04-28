@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { usePersona } from '@/contexts/PersonaContext';
 import { navigationSections } from '@/data/navigation';
 import {
@@ -56,6 +56,9 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { currentPersona } = usePersona();
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+
+  const router = useRouter();
+  const [showTrocarPersona, setShowTrocarPersona] = useState(false);
 
   if (!currentPersona) return null;
 
@@ -179,22 +182,77 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom: Persona Info */}
+      {/* Bottom: Persona Info — botão de trocar persona com confirmação */}
       <div className="border-t border-neutral-100 p-4">
-        <Link href="/" className="flex items-center gap-3 group">
+        <button
+          onClick={() => setShowTrocarPersona(true)}
+          className="w-full flex items-center gap-3 group hover:bg-neutral-50 -m-1 p-1 rounded-lg transition-colors"
+          title="Trocar persona"
+        >
           <div
             className="w-9 h-9 rounded-lg avatar-initials text-xs"
             style={{ backgroundColor: currentPersona.color }}
           >
             {initials}
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 text-left">
             <p className="text-sm font-semibold text-neutral-800 truncate">{currentPersona.name}</p>
             <p className="text-[11px] text-neutral-400 truncate">{currentPersona.jobTitle}</p>
           </div>
           <LogOut className="w-4 h-4 text-neutral-300 group-hover:text-neutral-500 transition-colors" />
-        </Link>
+        </button>
       </div>
+
+      {/* Modal de confirmação para trocar persona */}
+      <AnimatePresence>
+        {showTrocarPersona && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowTrocarPersona(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-verde-50 flex items-center justify-center shrink-0">
+                  <LogOut className="w-5 h-5 text-verde-digital" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-gray-900">Trocar de persona?</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Você sairá da visão de <strong>{currentPersona.name}</strong> e voltará para a tela de seleção
+                    de personas.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={() => {
+                    setShowTrocarPersona(false);
+                    router.push('/');
+                  }}
+                  className="flex-1 py-2.5 rounded-lg bg-verde-digital text-white text-sm font-semibold hover:bg-verde-600 transition-colors"
+                >
+                  Sim, trocar persona
+                </button>
+                <button
+                  onClick={() => setShowTrocarPersona(false)}
+                  className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </aside>
   );
 }

@@ -60,13 +60,21 @@ export default function TheoCard({ title, description, cta, ctaHref, onCtaClick,
                 >
                   {cta} <ArrowRight className="w-3 h-3" />
                 </a>
-              ) : (
+              ) : onCtaClick ? (
                 <button
                   onClick={onCtaClick}
                   className="inline-flex items-center gap-1 text-xs font-semibold text-verde-digital hover:text-verde-600 transition-colors"
                 >
                   {cta} <ArrowRight className="w-3 h-3" />
                 </button>
+              ) : (
+                /* Fallback: sem href/onClick → leva ao Theo (assistente) */
+                <a
+                  href="/parceiro-jornada"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-verde-digital hover:text-verde-600 transition-colors"
+                >
+                  {cta} <ArrowRight className="w-3 h-3" />
+                </a>
               )}
             </div>
           )}
