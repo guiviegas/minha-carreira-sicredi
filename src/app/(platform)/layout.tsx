@@ -11,16 +11,18 @@ export default function PlatformLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { currentPersona, isPersonaSelected } = usePersona();
+  const { currentPersona, isPersonaSelected, isHydrated } = usePersona();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isPersonaSelected) {
+    // Só redireciona DEPOIS que a hidratação do localStorage terminou.
+    // Caso contrário, qualquer F5 ou URL direta jogaria o usuário na home.
+    if (isHydrated && !isPersonaSelected) {
       router.push('/');
     }
-  }, [isPersonaSelected, router]);
+  }, [isHydrated, isPersonaSelected, router]);
 
-  if (!currentPersona) {
+  if (!isHydrated || !currentPersona) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse-soft text-verde-digital text-lg">Carregando...</div>
